@@ -24,6 +24,11 @@ task startClient(type : JavaExec) {
     main = 'Client.ConsoleClientLauncher'
     standardInput = System.in
 }
+task startDualLauncher(type : JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'DualLauncher'
+    standardInput = System.in
+}
 
 test {
     useJUnitPlatform()

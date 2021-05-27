@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 public class TestDocumentService implements TextDocumentService {
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams completionParams) {
+        System.out.println("TestDocumentService->completion triggerd...");
         // Provide completion item.
         return CompletableFuture.supplyAsync(() -> {
             List<CompletionItem> completionItems = new ArrayList<>();

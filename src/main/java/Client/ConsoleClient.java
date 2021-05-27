@@ -5,6 +5,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ConsoleClient implements LanguageClient {
 
@@ -48,8 +49,11 @@ public class ConsoleClient implements LanguageClient {
         server.initialize(params);
     }
 
-    public void getCompletion(String comop){
+    public String getCompletion(String comop) throws ExecutionException, InterruptedException {
         CompletionParams params = new CompletionParams();
-        server.getTextDocumentService().completion(params);
+        CompletableFuture<?> completion = server.getTextDocumentService().completion(params);
+
+        var compGet = completion.get() ;
+       return compGet.toString();
     }
 }
