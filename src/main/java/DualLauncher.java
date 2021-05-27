@@ -40,7 +40,11 @@ public class DualLauncher {
 
 
         client.start(cLauncher.getRemoteProxy());
+        client.didOpenFile("...");
+        //System.out.println(client.hover());
         System.out.println(client.getCompletion("say"));
+        System.out.println(client.hover());
+        //System.out.println(client.getCompletion("say"));
 
         cListeningFuture.cancel(true);
         sListeningFuture.cancel(true);

@@ -52,8 +52,24 @@ public class ConsoleClient implements LanguageClient {
     public String getCompletion(String comop) throws ExecutionException, InterruptedException {
         CompletionParams params = new CompletionParams();
         CompletableFuture<?> completion = server.getTextDocumentService().completion(params);
-
         var compGet = completion.get() ;
-       return compGet.toString();
+        return compGet.toString();
+    }
+
+    public String hover() throws ExecutionException, InterruptedException {
+        HoverParams params = new HoverParams();
+        params.setTextDocument(new TextDocumentIdentifier("file:///folder/name.mo") );
+        params.setPosition(new Position(2,12));
+        CompletableFuture<?> hover = server.getTextDocumentService().hover(params);
+        var hoverGet = hover.get();
+        return hoverGet.toString();
+    }
+
+    public void didOpenFile(String path){
+        TextDocumentItem item = new TextDocumentItem();
+        item.setText("Hallo, ...");
+        DidOpenTextDocumentParams params = new DidOpenTextDocumentParams();
+        params.setTextDocument(item);
+        server.getTextDocumentService().didOpen(params);
     }
 }

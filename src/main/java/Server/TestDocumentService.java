@@ -43,7 +43,8 @@ public class TestDocumentService implements TextDocumentService {
 
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
-
+        System.out.println("TestDocumentService->didOpen triggerd...");
+        System.out.println(params.toString());
     }
 
     @Override
@@ -61,4 +62,12 @@ public class TestDocumentService implements TextDocumentService {
 
     }
 
+    @Override
+    public CompletableFuture<Hover> hover(HoverParams params) {
+        System.out.println("TestDocumentService->hover triggerd...");
+        System.out.println(params.toString());
+        Hover h = new Hover();
+        h.setContents(new MarkupContent("h1", "hallo"));
+        return CompletableFuture.supplyAsync(() -> { return h; });
+    }
 }
