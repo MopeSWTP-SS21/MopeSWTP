@@ -14,7 +14,6 @@ public class TestServerLauncher {
         TestServer testServer = new TestServer();
         Launcher<LanguageClient> launcher = LSPLauncher.createServerLauncher(testServer, System.in, System.out);
         LanguageClient client = launcher.getRemoteProxy();
-
         testServer.connect(client);
 
         Future<?> startListening = launcher.startListening();

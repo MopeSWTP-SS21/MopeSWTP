@@ -22,7 +22,7 @@ public class TestServer implements LanguageServer, LanguageClientAware
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
-        System.out.println("Srevr->initialize...");
+        System.out.println("Server->initialize...");
         this.client.showMessage(new MessageParams(MessageType.Info, "Hallo") );
         this.client.logMessage(new MessageParams());
         return CompletableFuture.supplyAsync(()->result);
