@@ -7,7 +7,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 
 public class ConsoleClientLauncher {
     public static void main(String[] args) throws Exception {
-        ConsoleClient client = new ConsoleClient();
+        /*ConsoleClient client = new ConsoleClient();
 
         Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(client, System.in, System.out);
         client.setServer(launcher.getRemoteProxy());
@@ -16,6 +16,6 @@ public class ConsoleClientLauncher {
         launcher.startListening();
         System.out.println("Listening...");
         client.start(launcher.getRemoteProxy());
-        client.getCompletion("say");
+        client.getCompletion("say");*/
     }
 }

@@ -1,9 +1,11 @@
 package Client;
 
+import Server.TestModelicaServer;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -43,8 +45,7 @@ public class ConsoleClient implements LanguageClient {
         System.out.println("Client->setServer");
         this.server = server;
     }
-    public void start(LanguageServer server){
-        System.out.println("Client->start");
+    public void initServer(){
         InitializeParams params = new InitializeParams();
         server.initialize(params);
     }
@@ -71,5 +72,29 @@ public class ConsoleClient implements LanguageClient {
         DidOpenTextDocumentParams params = new DidOpenTextDocumentParams();
         params.setTextDocument(item);
         server.getTextDocumentService().didOpen(params);
+    }
+
+    public Object checkModel(String model, String path)  {
+        try{
+            ExecuteCommandParams execute = new ExecuteCommandParams();
+            execute.setCommand("CheckModel");
+            execute.setArguments(List.of(model,path));
+            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            return x.get();
+        }catch(Exception e){
+            System.out.println("Error CheckModel");
+        }
+        return null;
+    }
+    public Object requestOMCVersion()  {
+        try{
+            ExecuteCommandParams execute = new ExecuteCommandParams();
+            execute.setCommand("Version");
+            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            return x.get();
+        }catch(Exception e){
+            System.out.println("Error RequestVersion");
+        }
+        return null;
     }
 }

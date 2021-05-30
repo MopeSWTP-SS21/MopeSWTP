@@ -1,17 +1,24 @@
 package Server;
 
+import omc.ZeroMQClient;
+import omc.corba.OMCInterface;
+import omc.corba.Result;
+import omc.ior.ZMQPortFileProvider;
 import org.eclipse.lsp4j.*;
+import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.services.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TestServer implements LanguageServer, LanguageClientAware
+public class TestServer implements TestModelicaServer
 {
     private LanguageClient client;// = new CopyOnWriteArrayList<>();
     private TextDocumentService textDocumentService;
-    private WorkspaceService workspaceService;
+    private TestWorkspaceService workspaceService;
+
 
     public TestServer(){
         this.workspaceService = new TestWorkspaceService();
@@ -19,12 +26,19 @@ public class TestServer implements LanguageServer, LanguageClientAware
     }
 
     @Override
+    public CompletableFuture<String> checkModel(String filename){
+        return CompletableFuture.supplyAsync(()->"checked");
+    }
+
+    @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
-        System.out.println("Server->initialize...");
-        this.client.showMessage(new MessageParams(MessageType.Info, "Hallo") );
-        this.client.logMessage(new MessageParams());
+        System.out.println("Server->initialize triggerd");
+        workspaceService.InitOMC();
+
+
+        this.client.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server") );
         return CompletableFuture.supplyAsync(()->result);
     }
 
