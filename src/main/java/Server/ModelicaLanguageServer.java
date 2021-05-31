@@ -6,7 +6,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface TestModelicaServer extends LanguageServer, LanguageClientAware {
+public interface ModelicaLanguageServer extends LanguageServer, LanguageClientAware {
     @JsonRequest
     default CompletableFuture<String> checkModel(String filename){
         throw new UnsupportedOperationException();

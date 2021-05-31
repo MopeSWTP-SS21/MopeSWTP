@@ -1,28 +1,22 @@
 package Server;
 
 import omc.ZeroMQClient;
-import omc.corba.OMCInterface;
-import omc.corba.Result;
 import omc.ior.ZMQPortFileProvider;
 import org.eclipse.lsp4j.*;
-import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.services.*;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TestServer implements TestModelicaServer
+public class MopeLSPServer implements ModelicaLanguageServer
 {
     private LanguageClient client;// = new CopyOnWriteArrayList<>();
-    private TextDocumentService textDocumentService;
-    private TestWorkspaceService workspaceService;
+    private MopeDocumentService documentService;
+    private MopeWorkspaceService workspaceService;
 
 
-    public TestServer(){
-        this.workspaceService = new TestWorkspaceService();
-        this.textDocumentService = new TestDocumentService();
+    public MopeLSPServer(){
+        this.workspaceService = new MopeWorkspaceService();
+        this.documentService = new MopeDocumentService();
     }
 
     @Override
@@ -35,7 +29,7 @@ public class TestServer implements TestModelicaServer
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
         System.out.println("Server->initialize triggerd");
-        workspaceService.InitOMC();
+        workspaceService.InitOMC(new ZeroMQClient("/usr/bin/omc", "us", new ZMQPortFileProvider("mope_local")));
 
 
         this.client.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server") );
@@ -55,7 +49,7 @@ public class TestServer implements TestModelicaServer
 
     @Override
     public TextDocumentService getTextDocumentService() {
-        return this.textDocumentService;
+        return this.documentService;
     }
 
     @Override

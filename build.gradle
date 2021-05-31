@@ -16,19 +16,14 @@ dependencies {
     compile 'de.thm.mni.mote:omc-java-api:0.3.5'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
 }
-task startServer(type : JavaExec) {
+task startMopeServer(type : JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'Server.TestServerLauncher'
     standardInput = System.in
 }
-task startClient(type : JavaExec) {
+task startConsoleClient(type : JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'Client.ConsoleClientLauncher'
-    standardInput = System.in
-}
-task startDualLauncher(type : JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'DualLauncher'
     standardInput = System.in
 }
 

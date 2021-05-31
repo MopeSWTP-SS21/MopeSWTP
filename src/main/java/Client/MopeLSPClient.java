@@ -1,6 +1,5 @@
 package Client;
 
-import Server.TestModelicaServer;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -9,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class ConsoleClient implements LanguageClient {
+public class MopeLSPClient implements IModelicaLanguageClient {
 
     private LanguageServer server;
 
@@ -74,11 +73,11 @@ public class ConsoleClient implements LanguageClient {
         server.getTextDocumentService().didOpen(params);
     }
 
-    public Object checkModel(String model, String path)  {
+    public Object checkModel(String modelName)  {
         try{
             ExecuteCommandParams execute = new ExecuteCommandParams();
             execute.setCommand("CheckModel");
-            execute.setArguments(List.of(model,path));
+            execute.setArguments(List.of(modelName));
             CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
             return x.get();
         }catch(Exception e){
@@ -86,7 +85,7 @@ public class ConsoleClient implements LanguageClient {
         }
         return null;
     }
-    public Object requestOMCVersion()  {
+    public Object compilerVersion()  {
         try{
             ExecuteCommandParams execute = new ExecuteCommandParams();
             execute.setCommand("Version");

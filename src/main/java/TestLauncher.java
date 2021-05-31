@@ -1,15 +1,11 @@
-import Client.ConsoleClient;
-import Server.TestModelicaServer;
-import Server.TestServer;
+import Client.MopeLSPClient;
+import Server.MopeLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageServer;
 
-import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -48,7 +44,7 @@ public  class TestLauncher {
 
     public static void startTestServer()  {
         try{
-            TestServer testServer = new TestServer();
+            MopeLSPServer testServer = new MopeLSPServer();
             ServerSocket socket = new ServerSocket(1234);
             System.out.println("Server socket listening");
             System.out.flush();//??
@@ -85,14 +81,14 @@ public  class TestLauncher {
 
     public static void startConsoleClient(){
         try{
-            ConsoleClient client = new ConsoleClient();
+            MopeLSPClient client = new MopeLSPClient();
             Socket socket = new Socket("127.0.0.1", 1234);
             System.out.println("Client socket connected");
             System.out.flush();
             ExecutorService executor = Executors.newFixedThreadPool(2);
-            Launcher<LanguageServer> cLauncher = new LSPLauncher.Builder<LanguageServer>()
+            Launcher<org.eclipse.lsp4j.services.LanguageServer> cLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageServer>()
                     .setLocalService(client)
-                    .setRemoteInterface(LanguageServer.class)
+                    .setRemoteInterface(org.eclipse.lsp4j.services.LanguageServer.class)
                     .setInput(socket.getInputStream())
                     .setOutput(socket.getOutputStream())
                     .setExecutorService(executor) //Not sure about this?
@@ -102,8 +98,9 @@ public  class TestLauncher {
             Future<Void>cListeningFuture = cLauncher.startListening();
             System.out.println("Client Listening");
             client.initServer();
-            System.out.println(client.requestOMCVersion());
-            System.out.println(client.checkModel("abc", "def"));
+            client.hover();
+            System.out.println(client.compilerVersion());
+            //System.out.println(client.checkModel("abc"));
             synchronized(clientLock) {
                 try { clientLock.wait(); } catch (InterruptedException e) { /* if interrupted, we exit anyway */ }
             }
