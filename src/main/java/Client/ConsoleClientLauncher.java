@@ -6,6 +6,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +20,7 @@ public class ConsoleClientLauncher {
     private static ExecutorService executor;
     private static String host;
     private static int port;
+    private static Scanner sc = new Scanner(System.in);
     private static Future<Void> clientListening;
     private static Future<Void> LaunchClient() throws IOException {
         client = new MopeLSPClient();
@@ -38,8 +40,10 @@ public class ConsoleClientLauncher {
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
+
         //client.shutdown();
         socket.close();
+
         executor.shutdown();
         clientListening.get();
         System.out.println("Client Finished");
@@ -47,15 +51,46 @@ public class ConsoleClientLauncher {
 
     public static void main(String[] args) throws Exception {
 
-        host = "127.0.0.1";
-        port = 1234;
-        clientListening = LaunchClient();
-        client.initServer();
-        System.out.println(client.compilerVersion());
+
+
         //System.out.println(client.checkModel("abc"));
-        System.in.read();
+
+        System.out.println("Serverip:");
+        host= sc.next();
+        System.out.println("Serverport:");
+        port = sc.nextInt();
+
+
+        clientListening = LaunchClient();
+
+        ConsoleMenue();
+
+
         StopClient();
 
+    }
+
+    private static void ConsoleMenue(){
+        boolean running=true;
+        while(running)
+        {
+            System.out.print("1: Initialize server\n2: Get compiler version\n3: Check model\n4: Exit\n");
+            int command= sc.nextInt();
+            switch(command){
+                case 1:
+                    client.initServer();
+                    break;
+                case 2:
+                    System.out.println(client.compilerVersion());
+                    break;
+                case 4:
+                    running=false;
+                    break;
+                default:
+                    System.out.println("wrong entry");
+                    break;
+            }
+        }
     }
 
 }
