@@ -28,5 +28,5 @@ task startConsoleClient(type : JavaExec) {
 }
 
 test {
-    useJUnitPlatform()
+    //useJUnitPlatform()
 }
