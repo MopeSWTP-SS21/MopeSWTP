@@ -1,8 +1,6 @@
 package Server;
 
 import Server.Compiler.OMCAdapter;
-import omc.ZeroMQClient;
-import omc.ior.ZMQPortFileProvider;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.services.*;
 
@@ -10,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class MopeLSPServer implements ModelicaLanguageServer
 {
-    private LanguageClient client;// = new CopyOnWriteArrayList<>();
+    private LanguageClient client;
     private MopeDocumentService documentService;
     private MopeWorkspaceService workspaceService;
 
@@ -30,7 +28,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
         System.out.println("Server->initialize triggerd");
-        workspaceService.InitOMC(new OMCAdapter());
+        workspaceService.InitOMC( new OMCAdapter("/usr/bin/omc", "us", "mope_local" ));
 
 
         this.client.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server") );

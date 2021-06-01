@@ -1,11 +1,9 @@
 package Server;
 
-import Client.MopeLSPClient;
-import org.apache.log4j.LogManager;
+
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,6 @@ public class MopeLSPServerLauncher {
     private static Future<Void> LaunchServer() throws IOException {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
-        //Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
 
         server = new MopeLSPServer();

@@ -42,7 +42,7 @@ public class OMCAdapter implements ICompilerAdapter{
         return false;
     }
 
-    public OMCAdapter(){
-        omc = new ZeroMQClient("/usr/bin/omc", "us", new ZMQPortFileProvider("mope_local"));
+    public OMCAdapter(String omcExecPath, String locale, String fileProviderSuffix){
+        omc = new ZeroMQClient(omcExecPath, locale, new ZMQPortFileProvider(fileProviderSuffix));
     }
 }
