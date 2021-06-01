@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Compiler.ICompilerAdapter;
 import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 import omc.corba.Result;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class MopeWorkspaceService implements WorkspaceService {
-    private OMCInterface omc;
+    private ICompilerAdapter compiler;
     @Override
     public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams workspaceSymbolParams) {
         return null;
@@ -40,10 +41,10 @@ public class MopeWorkspaceService implements WorkspaceService {
 
         switch(command){
             case "CheckModel":
-               result = this.checkModel((String) args.get(0).toString());
+               result = compiler.checkModel((String) args.get(0).toString());
                break;
             case "Version":
-                result = this.getCompilerVersion();
+                result = compiler.getCompilerVersion();
                 break;
         }
 
@@ -53,30 +54,11 @@ public class MopeWorkspaceService implements WorkspaceService {
             return finalResult;
         });
     }
-    private String checkModel(String modelName){
-        //TODO
-        //String result = omc.checkModel(modelName);
-        Result result = omc.sendExpression("model abc Real x=1; end abc;");
-        Optional<String> name = ScriptingHelper.getModelName("/home/swtp/modelica/exampleModels/example.mo");
-        String result2 = omc.checkModel(name.orElse("abc"));
-        return "Model " + modelName + " checked\n" + "->" + result2;
-    }
-    private String getCompilerVersion(){
-        Version v = omc.getVersion();
-        return v.toString();
-    }
 
 
-    public void InitOMC(OMCInterface omcClient){
 
-        try{
-            System.out.println("Init OMC");
-            omc = omcClient;
-            omc.connect();
-            System.out.println("OMC connected to TestWorkspaceService");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public void InitOMC(ICompilerAdapter compiler){
+        this.compiler = compiler;
+        compiler.connect();
     }
 }
