@@ -4,6 +4,7 @@ package Server.Compiler;
 import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 
+import omc.corba.Result;
 import omc.corba.ScriptingHelper;
 import omc.ior.ZMQPortFileProvider;
 import org.slf4j.Logger;
@@ -22,10 +23,10 @@ public class OMCAdapter implements ICompilerAdapter{
     public String checkModel(String modelName) {
         //TODO
         //String result = omc.checkModel(modelName);
-        //Result result = omc.sendExpression("model abc Real x=1; end abc;");
-        Optional<String> name = ScriptingHelper.getModelName("/home/swtp/modelica/exampleModels/example.mo");
-        String result2 = omc.checkModel(name.orElse("abc"));
-        return "Model " + modelName + " checked\n" + "->" + result2;
+        Result result = omc.sendExpression("loadFile(\"/home/swtp/modelica/Lotka-Volterra/lv.mo\")");
+        //Optional<String> name = ScriptingHelper.getModelName("/home/swtp/modelica/exampleModels/example.mo");
+        String result2 = omc.checkModel("lv");
+        return "Model " + modelName + " checked\n" + "->" + result2 +"\n->" + result.toString();
     }
 
     @Override

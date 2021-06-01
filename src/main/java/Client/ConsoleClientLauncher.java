@@ -83,6 +83,9 @@ public class ConsoleClientLauncher {
                 case 2:
                     System.out.println(client.compilerVersion());
                     break;
+                case 3:
+                    System.out.println(client.checkModel("sdf"));
+                    break;
                 case 4:
                     running=false;
                     break;
