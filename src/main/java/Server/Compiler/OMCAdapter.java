@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import version.Version;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 public class OMCAdapter implements ICompilerAdapter{
@@ -19,14 +20,19 @@ public class OMCAdapter implements ICompilerAdapter{
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     private final OMCInterface omc;
 
+
     @Override
     public String checkModel(String modelName) {
         //TODO
-        //String result = omc.checkModel(modelName);
-        Result result = omc.sendExpression("loadFile(\"/home/swtp/modelica/Lotka-Volterra/lv.mo\")");
-        //Optional<String> name = ScriptingHelper.getModelName("/home/swtp/modelica/exampleModels/example.mo");
-        String result2 = omc.checkModel("lv");
-        return "Model " + modelName + " checked\n" + "->" + result2 +"\n->" + result.toString();
+        Result result = omc.sendExpression("loadFile(\"/home/swtp/modelica/LotkaVolterra/LV_Manu/package.mo\")");
+        try{
+            Optional<String> name = ScriptingHelper.getModelName( Paths.get("/home/swtp/modelica/LotkaVolterra/LV_Manu/LV3Species.mo"));
+            String result2 = omc.checkModel(name.orElse("LV_Manu.LV2Species"));
+            return "Model " + modelName + " checked\n" + "->" + result2 +"\n->" + result.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Something went wrong";
     }
 
     @Override
