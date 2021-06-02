@@ -1,7 +1,8 @@
 package Server.Compiler;
 
 public interface ICompilerAdapter {
-    public String checkModel(String modelName);
-    public String getCompilerVersion();
-    public Boolean connect();
+    String loadFile(String path);
+    String checkModel(String modelName);
+    String getCompilerVersion();
+    Boolean connect();
 }

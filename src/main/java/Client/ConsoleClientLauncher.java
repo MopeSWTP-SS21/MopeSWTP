@@ -52,9 +52,6 @@ public class ConsoleClientLauncher {
     public static void main(String[] args) throws Exception {
 
 
-
-        //System.out.println(client.checkModel("abc"));
-
         System.out.println("Serverip:");
         host= sc.next();
         System.out.println("Serverport:");
@@ -74,7 +71,7 @@ public class ConsoleClientLauncher {
         boolean running=true;
         while(running)
         {
-            System.out.print("1: Initialize server\n2: Get compiler version\n3: Check model\n4: Exit\n");
+            System.out.print("1: Initialize server\n2: Get compiler version\n3: Load File\n4: Check model\n5: Exit\n");
             int command= sc.nextInt();
             switch(command){
                 case 1:
@@ -84,9 +81,16 @@ public class ConsoleClientLauncher {
                     System.out.println(client.compilerVersion());
                     break;
                 case 3:
-                    System.out.println(client.checkModel("sdf"));
+                    System.out.print("path: ");
+                    String path = sc.next();
+                    System.out.println(client.loadFile(path));
                     break;
                 case 4:
+                    System.out.print("modelName: ");
+                    String name = sc.next();
+                    System.out.println(client.checkModel(name));
+                    break;
+                case 5:
                     running=false;
                     break;
                 default:

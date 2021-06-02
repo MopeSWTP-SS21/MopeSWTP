@@ -22,18 +22,21 @@ public class OMCAdapter implements ICompilerAdapter{
 
 
     @Override
+    public String loadFile(String path) {
+        Result result = omc.sendExpression("loadFile(\"" + path + "\")");
+        return result.toString();
+    }
+
+    @Override
     public String checkModel(String modelName) {
         //TODO
-        Result result = omc.sendExpression("loadFile(\"/home/swtp/modelica/LotkaVolterra/LV_Manu/package.mo\")");
-        try{
-            Optional<String> name = ScriptingHelper.getModelName( Paths.get("/home/swtp/modelica/LotkaVolterra/LV_Manu/LV3Species.mo"));
-            String result2 = omc.checkModel(name.orElse("LV_Manu.LV2Species"));
-            return "Model " + modelName + " checked\n" + "->" + result2 +"\n->" + result.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "Something went wrong";
+        //Optional<String> name = ScriptingHelper.getModelName( Paths.get("/home/swtp/modelica/LotkaVolterra/LV_Manu/LV3Species.mo"));
+        //String result2 = omc.checkModel(name.orElse("LV_Manu.LV2Species"));
+        String result = omc.checkModel(modelName);
+        return "Model " + modelName + " checked\n" + "->" + result;
     }
+
+
 
     @Override
     public String getCompilerVersion() {

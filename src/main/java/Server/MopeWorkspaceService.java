@@ -29,11 +29,22 @@ public class MopeWorkspaceService implements WorkspaceService {
         String command = params.getCommand();
         List<Object> args = params.getArguments();
 
+        //This Part is for debugging purpose
+        System.out.println("Argument:");
+        for (Object arg: args) {
+
+            System.out.println(arg);
+            System.out.println(arg.toString());
+        }
+
         String result = "Cannot execute Command " + command + "!";
 
         switch(command){
+            case "LoadFile":
+                result = compiler.loadFile(args.get(0).toString().replaceAll("\"", ""));
+                break;
             case "CheckModel":
-               result = compiler.checkModel(args.get(0).toString());
+               result = compiler.checkModel(args.get(0).toString().replaceAll("\"", ""));
                break;
             case "Version":
                 result = compiler.getCompilerVersion();
@@ -42,9 +53,7 @@ public class MopeWorkspaceService implements WorkspaceService {
 
 
         String finalResult = result;
-        return CompletableFuture.supplyAsync(() -> {
-            return finalResult;
-        });
+        return CompletableFuture.supplyAsync(() -> finalResult);
     }
 
 

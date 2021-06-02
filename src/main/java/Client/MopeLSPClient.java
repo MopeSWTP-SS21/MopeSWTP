@@ -78,6 +78,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             ExecuteCommandParams execute = new ExecuteCommandParams();
             execute.setCommand("CheckModel");
             execute.setArguments(List.of(modelName));
+            System.out.println(modelName);
+            System.out.println(execute.getArguments());
             CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
             return x.get();
         }catch(Exception e){
@@ -85,6 +87,20 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         }
         return null;
     }
+
+    public Object loadFile(String path){
+        try{
+            ExecuteCommandParams execute = new ExecuteCommandParams();
+            execute.setCommand("LoadFile");
+            execute.setArguments(List.of(path));
+            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            return x.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Object compilerVersion()  {
         try{
             ExecuteCommandParams execute = new ExecuteCommandParams();
