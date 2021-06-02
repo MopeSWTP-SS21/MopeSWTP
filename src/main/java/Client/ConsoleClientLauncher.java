@@ -4,6 +4,10 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import version.Version;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -11,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 
 public class ConsoleClientLauncher {
 
@@ -21,6 +26,7 @@ public class ConsoleClientLauncher {
     private static String host;
     private static int port;
     private static Scanner sc = new Scanner(System.in);
+    private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     private static Future<Void> clientListening;
     private static Future<Void> LaunchClient() throws IOException {
         client = new MopeLSPClient();
@@ -35,7 +41,8 @@ public class ConsoleClientLauncher {
                 .create();
         client.setServer(cLauncher.getRemoteProxy());
         Future<Void> future = cLauncher.startListening();
-        System.out.println("Client Listening");
+        logger.info("Client listening");
+        //System.out.println("Client Listening");
         return future;
     }
 
@@ -46,7 +53,7 @@ public class ConsoleClientLauncher {
 
         executor.shutdown();
         clientListening.get();
-        System.out.println("Client Finished");
+        logger.info("Client Finished");
     }
 
     public static void main(String[] args) throws Exception {
@@ -55,9 +62,9 @@ public class ConsoleClientLauncher {
 
         //System.out.println(client.checkModel("abc"));
 
-        System.out.println("Serverip:");
+        logger.info("Serverip:");
         host= sc.next();
-        System.out.println("Serverport:");
+        logger.info("Serverport:");
         port = sc.nextInt();
 
 
@@ -74,7 +81,7 @@ public class ConsoleClientLauncher {
         boolean running=true;
         while(running)
         {
-            System.out.print("1: Initialize server\n2: Get compiler version\n3: Check model\n4: Exit\n");
+            System.out.println("1: Initialize server\n2: Get compiler version\n3: Check model\n4: Exit\n");
             int command= sc.nextInt();
             switch(command){
                 case 1:
@@ -87,7 +94,7 @@ public class ConsoleClientLauncher {
                     running=false;
                     break;
                 default:
-                    System.out.println("wrong entry");
+                    logger.info("wrong entry");
                     break;
             }
         }

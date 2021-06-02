@@ -4,6 +4,9 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public  class TestLauncher {
+    private static final Logger logger = LoggerFactory.getLogger(TestLauncher.class);
     private static final Object serverLock = new Object();
     private static final Object clientLock = new Object();
     public static void main(String[] args) throws Exception {
@@ -30,11 +34,11 @@ public  class TestLauncher {
 
 
 
-        System.out.println("finished");
+        logger.info("finished");
 
 
 
-        System.out.println("Press enter");
+        logger.info("Press enter");
         System.in.read();
         synchronized (serverLock) { serverLock.notify(); }
         synchronized (clientLock) { clientLock.notify(); }
@@ -46,10 +50,10 @@ public  class TestLauncher {
         try{
             MopeLSPServer testServer = new MopeLSPServer();
             ServerSocket socket = new ServerSocket(1234);
-            System.out.println("Server socket listening");
+            logger.info("Server socket listening");
             System.out.flush();//??
             Socket connection = socket.accept();
-            System.out.println("Server connected to client socket");
+            logger.info("Server connected to client socket");
             System.out.flush();
             ExecutorService executor = Executors.newFixedThreadPool(2);
             Launcher<LanguageClient> sLauncher = new LSPLauncher.Builder<LanguageClient>()
@@ -62,7 +66,7 @@ public  class TestLauncher {
 
             testServer.connect(sLauncher.getRemoteProxy());
             Future<Void>sListeningFuture = sLauncher.startListening();
-            System.out.println("Server Listening");
+            logger.info("Server Listening");
             synchronized(serverLock) {
                 try {
                     serverLock.wait();
@@ -72,7 +76,7 @@ public  class TestLauncher {
             connection.close();
             executor.shutdown();
             sListeningFuture.get();
-            System.out.println("Server Finished");
+            logger.info("Server Finished");
         }catch(Exception e){
 
         }
@@ -83,7 +87,7 @@ public  class TestLauncher {
         try{
             MopeLSPClient client = new MopeLSPClient();
             Socket socket = new Socket("127.0.0.1", 1234);
-            System.out.println("Client socket connected");
+            logger.info("Client socket connected");
             System.out.flush();
             ExecutorService executor = Executors.newFixedThreadPool(2);
             Launcher<org.eclipse.lsp4j.services.LanguageServer> cLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageServer>()
@@ -96,10 +100,10 @@ public  class TestLauncher {
 
             client.setServer(cLauncher.getRemoteProxy());
             Future<Void>cListeningFuture = cLauncher.startListening();
-            System.out.println("Client Listening");
+            logger.info("Client Listening");
             client.initServer();
             client.hover();
-            System.out.println(client.compilerVersion());
+            logger.info(client.compilerVersion().toString());
             //System.out.println(client.checkModel("abc"));
             synchronized(clientLock) {
                 try { clientLock.wait(); } catch (InterruptedException e) { /* if interrupted, we exit anyway */ }
@@ -107,7 +111,7 @@ public  class TestLauncher {
             socket.close();
             executor.shutdown();
             cListeningFuture.get();
-            System.out.println("Client Finished");
+            logger.info("Client Finished");
         }catch(Exception e){
 
         }

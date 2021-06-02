@@ -35,11 +35,10 @@ public class MopeLSPServerLauncher {
 
         server = new MopeLSPServer();
         serverSocket = new ServerSocket(port);
-        logger.info("Server socket Listeng");
-        System.out.println("Server socket listening");
+        logger.info("Server socket listening");
         System.out.flush();
         socket = serverSocket.accept();
-        System.out.println("Server connected to client socket");
+        logger.info("Server connected to client socket");
         System.out.flush();
         executor = Executors.newFixedThreadPool(2);
         sLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageClient>()
@@ -51,7 +50,7 @@ public class MopeLSPServerLauncher {
                 .create();
         server.connect(sLauncher.getRemoteProxy());
         Future<Void> future = sLauncher.startListening();
-        System.out.println("Server Listening");
+        logger.info("Server Listening");
         return future;
     }
 
@@ -64,7 +63,7 @@ public class MopeLSPServerLauncher {
             socket.close();
             executor.shutdown();
             serverListening.get();
-            System.out.println("Server Finished");
+            logger.info("Server Finished");
         }catch(Exception e){
 
         }

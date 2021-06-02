@@ -8,40 +8,45 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class MopeLSPClient implements IModelicaLanguageClient {
 
     private LanguageServer server;
+    private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
     @Override
     public void telemetryEvent(Object object) {
-        System.out.println("Client->telemetryEvent");
+        logger.info("Client->telemtryEvent");
     }
 
     @Override
     public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-        System.out.println("Client->publishDiagnostics");
+        logger.info("Client->publishDiagnostics");
     }
 
     @Override
     public void showMessage(MessageParams messageParams) {
-        System.out.println("Client->showMessage");
-        System.out.println(messageParams.toString());
+        logger.info("Client->showMessage");
+        logger.info(messageParams.toString());
     }
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams requestParams) {
-        System.out.println("Client->showMessageRequest");
+        logger.info("Client->showMessageRequest");
         return null;
     }
 
     @Override
     public void logMessage(MessageParams message) {
-        System.out.println("Client->logMessage");
-        System.out.println(message.toString());
+        logger.info("Client->logMessage");
+        logger.info(message.toString());
     }
 
     public void setServer(LanguageServer server){
-        System.out.println("Client->setServer");
+        logger.info("Client->setServer");
         this.server = server;
     }
     public void initServer(){
@@ -81,7 +86,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
             return x.get();
         }catch(Exception e){
-            System.out.println("Error CheckModel");
+            logger.error("Error CheckModel",e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -92,7 +98,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
             return x.get();
         }catch(Exception e){
-            System.out.println("Error RequestVersion");
+            logger.error("Error RequestVersion",e);
+            e.printStackTrace();
         }
         return null;
     }
