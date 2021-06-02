@@ -62,9 +62,9 @@ public class ConsoleClientLauncher {
 
         //System.out.println(client.checkModel("abc"));
 
-        logger.info("Serverip:");
+        System.out.println("Serverip:");
         host= sc.next();
-        logger.info("Serverport:");
+        System.out.println("Serverport:");
         port = sc.nextInt();
 
 
