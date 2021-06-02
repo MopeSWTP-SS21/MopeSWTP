@@ -36,6 +36,23 @@ public class OMCAdapter implements ICompilerAdapter{
         return "Model " + modelName + " checked\n" + "->" + result;
     }
 
+    @Override
+    public String addFolderToModelicaPath(String path){
+        Result result = omc.sendExpression("setModelicaPath(getModelicaPath()+\":\"+\"" + path + "\")");
+        return result.toString();
+    }
+
+    @Override
+    public String getModelicaPath(){
+        Result result = omc.sendExpression("getModelicaPath()");
+        return result.toString();
+    }
+
+    @Override
+    public String loadModel(String name){
+        Result result = omc.sendExpression("loadModel(" + name + ")");
+        return result.toString();
+    }
 
 
     @Override

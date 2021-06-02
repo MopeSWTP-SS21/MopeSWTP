@@ -30,12 +30,12 @@ public class MopeWorkspaceService implements WorkspaceService {
         List<Object> args = params.getArguments();
 
         //This Part is for debugging purpose
-        System.out.println("Argument:");
+        /*System.out.println("Argument:");
         for (Object arg: args) {
 
             System.out.println(arg);
             System.out.println(arg.toString());
-        }
+        }*/
 
         String result = "Cannot execute Command " + command + "!";
 
@@ -46,6 +46,15 @@ public class MopeWorkspaceService implements WorkspaceService {
             case "CheckModel":
                result = compiler.checkModel(args.get(0).toString().replaceAll("\"", ""));
                break;
+            case "AddPath":
+                result = compiler.addFolderToModelicaPath(args.get(0).toString().replaceAll("\"", ""));
+                break;
+            case "GetPath":
+                result = compiler.getModelicaPath();
+                break;
+            case "LoadModel":
+                result = compiler.loadModel(args.get(0).toString().replaceAll("\"", ""));
+                break;
             case "Version":
                 result = compiler.getCompilerVersion();
                 break;
