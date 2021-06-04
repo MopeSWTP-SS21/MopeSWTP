@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,8 +37,11 @@ public class MopeLSPServerLauncher {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-        ClassLoader classLoader = MopeLSPServerLauncher.class.getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("server.cfg");
+
+
+
+        //ClassLoader classLoader = MopeLSPServerLauncher.class.getClassLoader();
+        //InputStream inputStream = classLoader.getResourceAsStream("server.cfg");
         //String data = readFromInputStream(inputStream);
         ConfigObject config = new ConfigObject("1234");
         //ConfigObject config = readFile("server.cfg");
@@ -63,7 +68,20 @@ public class MopeLSPServerLauncher {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         try{
-            port =1234;
+
+            Properties prop = new Properties();
+            String configPath = "src/main/java/Server/server.config";
+            InputStream configStream;
+            try{
+                configStream = new FileInputStream(configPath);
+                prop.load(configStream);
+                port = Integer.parseInt(prop.getProperty("server.port"));
+                logger.info("Read Port " + port + " from " + configPath);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                port =1234;
+            }
             serverListening = LaunchServer();
             System.in.read();
             serverSocket.close();
