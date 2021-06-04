@@ -15,11 +15,12 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private LanguageClient client;
     private MopeDocumentService documentService;
     private MopeWorkspaceService workspaceService;
+    private ConfigObject cfg;
 
-
-    public MopeLSPServer(){
+    public MopeLSPServer(ConfigObject config){
         this.workspaceService = new MopeWorkspaceService();
         this.documentService = new MopeDocumentService();
+        this.cfg = config;
     }
 
     @Override

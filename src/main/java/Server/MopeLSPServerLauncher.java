@@ -10,12 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static org.antlr.v4.runtime.misc.Utils.readFile;
 
 public class MopeLSPServerLauncher {
     private static Socket socket;
@@ -32,8 +35,12 @@ public class MopeLSPServerLauncher {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-
-        server = new MopeLSPServer();
+        ClassLoader classLoader = MopeLSPServerLauncher.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("server.cfg");
+        //String data = readFromInputStream(inputStream);
+        ConfigObject config = new ConfigObject("1234");
+        //ConfigObject config = readFile("server.cfg");
+        server = new MopeLSPServer(config);
         serverSocket = new ServerSocket(port);
         logger.info("Server socket listening");
         System.out.flush();

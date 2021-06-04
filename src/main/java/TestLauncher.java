@@ -1,4 +1,5 @@
 import Client.MopeLSPClient;
+import Server.ConfigObject;
 import Server.MopeLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
@@ -48,7 +49,7 @@ public  class TestLauncher {
 
     public static void startTestServer()  {
         try{
-            MopeLSPServer testServer = new MopeLSPServer();
+            MopeLSPServer testServer = new MopeLSPServer(new ConfigObject("1234"));
             ServerSocket socket = new ServerSocket(1234);
             logger.info("Server socket listening");
             System.out.flush();//??
