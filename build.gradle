@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.example'
-version '1.0-SNAPSHOT'
+version '0.1.0'
 
 repositories {
     mavenCentral()
@@ -25,6 +25,18 @@ task startConsoleClient(type : JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'Client.ConsoleClientLauncher'
     standardInput = System.in
+}
+
+task buildMopeServerJar(type : Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'MopeLspServer',
+                'Implementation-Version': version,
+                'Main-Class': 'Server.MopeLSPServerLauncher'
+    }
+    baseName = project.name + '-MopeLspServer'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
+    with jar
+
 }
 
 test {
