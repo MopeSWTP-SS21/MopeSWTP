@@ -28,14 +28,22 @@ task startConsoleClient(type : JavaExec) {
 }
 
 task buildMopeServerJar(type : Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'MopeLspServer',
-                'Implementation-Version': version,
-                'Main-Class': 'Server.MopeLSPServerLauncher'
-    }
     baseName = project.name + '-MopeLspServer'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
-    with jar
+    manifest {
+        attributes  'Implementation-Title': 'MopeLspServer',
+                'Implementation-Version': version,
+                'Class-path' : baseName + '-' + version + '.jar',
+                'Main-Class': 'Server.MopeLSPServerLauncher'
+
+    }
+
+    jar {
+        doFirst {
+
+            from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
+        }
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
 
 }
 
