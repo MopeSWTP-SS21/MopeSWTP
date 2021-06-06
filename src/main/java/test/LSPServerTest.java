@@ -18,7 +18,7 @@ class LSPServerTest{
 
     private static Future<Void> serverListening;
     private static Future<Void> clientListening;
-    private static CompletableFuture<Void> semaphore;
+
     MopeLSPServerLauncher serverLauncher;
     {
         try {
@@ -57,7 +57,6 @@ class LSPServerTest{
     }
     @Test
     public void initializeServer() throws IOException, InterruptedException {
-        semaphore = new CompletableFuture<>();
         startServer();
         Thread.currentThread().sleep(1000);
         startClient();

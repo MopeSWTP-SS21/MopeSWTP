@@ -34,8 +34,9 @@ public class MopeLSPServerLauncher {
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
 
     public MopeLSPServerLauncher(int port) throws IOException {
+        ConfigObject config = new ConfigObject("1234");
         this.port = port;
-        server = new MopeLSPServer();
+        server = new MopeLSPServer(config);
         serverSocket = new ServerSocket(port);
     }
 
@@ -43,14 +44,6 @@ public class MopeLSPServerLauncher {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-
-        //ClassLoader classLoader = MopeLSPServerLauncher.class.getClassLoader();
-        //InputStream inputStream = classLoader.getResourceAsStream("server.cfg");
-        //String data = readFromInputStream(inputStream);
-        ConfigObject config = new ConfigObject("1234");
-        //ConfigObject config = readFile("server.cfg");
-        server = new MopeLSPServer(config);
-        serverSocket = new ServerSocket(port);
         logger.info("Server socket listening");
         System.out.flush();
         socket = serverSocket.accept();
