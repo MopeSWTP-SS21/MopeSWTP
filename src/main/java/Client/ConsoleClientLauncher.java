@@ -15,16 +15,22 @@ import java.util.concurrent.Future;
 public class ConsoleClientLauncher {
 
     private static Socket socket;
-    private static MopeLSPClient client;
-    private static Launcher<LanguageServer> cLauncher;
+    public static MopeLSPClient client;
+    private Launcher<LanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port;
     private static Scanner sc = new Scanner(System.in);
     private static Future<Void> clientListening;
-    private static Future<Void> LaunchClient() throws IOException {
+
+    public ConsoleClientLauncher(String host, int port) throws IOException {
+        this.host = host;
+        this.port = port;
         client = new MopeLSPClient();
         socket = new Socket(host, port);
+    }
+
+    public Future<Void> LaunchClient() throws IOException {
         executor = Executors.newFixedThreadPool(2);
         cLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageServer>()
                 .setLocalService(client)
@@ -57,8 +63,9 @@ public class ConsoleClientLauncher {
         System.out.println("Serverport:");
         port = sc.nextInt();
 
+        ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
-        clientListening = LaunchClient();
+        clientListening = launcher.LaunchClient();
 
         ConsoleMenue();
 

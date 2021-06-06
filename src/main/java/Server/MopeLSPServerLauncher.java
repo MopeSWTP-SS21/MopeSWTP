@@ -21,21 +21,24 @@ public class MopeLSPServerLauncher {
     private static Socket socket;
     private static ServerSocket serverSocket;
     private static MopeLSPServer server;
-    private static Launcher<LanguageClient> sLauncher;
+    private Launcher<LanguageClient> sLauncher;
     private static ExecutorService executor;
     private static String host;
-    private static int port;
+    private static int port = 1234;
     private static Future<Void> serverListening;
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
 
-    private static Future<Void> LaunchServer() throws IOException {
+    public MopeLSPServerLauncher(int port) throws IOException {
+        this.port = port;
+        server = new MopeLSPServer();
+        serverSocket = new ServerSocket(port);
+    }
+
+    public Future<Void> LaunchServer() throws IOException {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-
-        server = new MopeLSPServer();
-        serverSocket = new ServerSocket(port);
-        logger.info("Server socket Listeng");
+        logger.info("Server socket Listening");
         System.out.println("Server socket listening");
         System.out.flush();
         socket = serverSocket.accept();
@@ -57,8 +60,8 @@ public class MopeLSPServerLauncher {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         try{
-            port =1234;
-            serverListening = LaunchServer();
+            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(1234);
+            serverListening = launcher.LaunchServer();
             System.in.read();
             serverSocket.close();
             socket.close();
