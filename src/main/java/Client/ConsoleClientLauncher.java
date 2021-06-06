@@ -15,14 +15,15 @@ import java.util.concurrent.Future;
 public class ConsoleClientLauncher {
 
     private static Socket socket;
-    private static MopeLSPClient client;
+    public static MopeLSPClient client;
     private static Launcher<LanguageServer> cLauncher;
     private static ExecutorService executor;
-    private static String host;
-    private static int port;
+    private static String host = "localhost";
+    private static int port = 1234;
     private static Scanner sc = new Scanner(System.in);
-    private static Future<Void> clientListening;
-    private static Future<Void> LaunchClient() throws IOException {
+    public static Future<Void> clientListening;
+
+    public static Future<Void> LaunchClient() throws IOException {
         client = new MopeLSPClient();
         socket = new Socket(host, port);
         executor = Executors.newFixedThreadPool(2);
