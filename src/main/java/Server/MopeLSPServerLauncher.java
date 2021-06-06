@@ -9,13 +9,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static org.antlr.v4.runtime.misc.Utils.readFile;
 
 public class MopeLSPServerLauncher {
     private static Socket socket;
@@ -38,11 +43,18 @@ public class MopeLSPServerLauncher {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-        logger.info("Server socket Listening");
-        System.out.println("Server socket listening");
+
+        //ClassLoader classLoader = MopeLSPServerLauncher.class.getClassLoader();
+        //InputStream inputStream = classLoader.getResourceAsStream("server.cfg");
+        //String data = readFromInputStream(inputStream);
+        ConfigObject config = new ConfigObject("1234");
+        //ConfigObject config = readFile("server.cfg");
+        server = new MopeLSPServer(config);
+        serverSocket = new ServerSocket(port);
+        logger.info("Server socket listening");
         System.out.flush();
         socket = serverSocket.accept();
-        System.out.println("Server connected to client socket");
+        logger.info("Server connected to client socket");
         System.out.flush();
         executor = Executors.newFixedThreadPool(2);
         sLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageClient>()
@@ -54,20 +66,34 @@ public class MopeLSPServerLauncher {
                 .create();
         server.connect(sLauncher.getRemoteProxy());
         Future<Void> future = sLauncher.startListening();
-        System.out.println("Server Listening");
+        logger.info("Server Listening");
         return future;
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         try{
-            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(1234);
+            Properties prop = new Properties();
+            String configPath = "src/main/java/Server/server.config";
+            InputStream configStream;
+            try{
+                configStream = new FileInputStream(configPath);
+                prop.load(configStream);
+                port = Integer.parseInt(prop.getProperty("server.port"));
+                logger.info("Read Port " + port + " from " + configPath);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                port =1234;
+            }
+            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(port);
             serverListening = launcher.LaunchServer();
+
             System.in.read();
             serverSocket.close();
             socket.close();
             executor.shutdown();
             serverListening.get();
-            System.out.println("Server Finished");
+            logger.info("Server Finished");
         }catch(Exception e){
 
         }

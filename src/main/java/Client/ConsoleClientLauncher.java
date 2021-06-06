@@ -4,6 +4,10 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import version.Version;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -11,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 
 public class ConsoleClientLauncher {
 
@@ -21,6 +26,7 @@ public class ConsoleClientLauncher {
     private static String host;
     private static int port;
     private static Scanner sc = new Scanner(System.in);
+    private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     private static Future<Void> clientListening;
 
     public ConsoleClientLauncher(String host, int port) throws IOException {
@@ -41,7 +47,8 @@ public class ConsoleClientLauncher {
                 .create();
         client.setServer(cLauncher.getRemoteProxy());
         Future<Void> future = cLauncher.startListening();
-        System.out.println("Client Listening");
+        logger.info("Client listening");
+        //System.out.println("Client Listening");
         return future;
     }
 
@@ -52,7 +59,7 @@ public class ConsoleClientLauncher {
 
         executor.shutdown();
         clientListening.get();
-        System.out.println("Client Finished");
+        logger.info("Client Finished");
     }
 
     public static void main(String[] args) throws Exception {
@@ -90,10 +97,12 @@ public class ConsoleClientLauncher {
 
         while(running)
         {
+
             for (String item: menuItems ) {
                 System.out.println(item);
             }
             System.out.print(">");
+
             int command= sc.nextInt();
             switch(command){
                 case 1:
@@ -132,7 +141,7 @@ public class ConsoleClientLauncher {
                     System.out.println(client.modelicaPath());
                     break;
                 default:
-                    System.out.println("wrong entry");
+                    logger.info("wrong entry");
                     break;
             }
         }
