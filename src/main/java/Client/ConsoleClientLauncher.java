@@ -16,7 +16,7 @@ public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
-    private static Launcher<LanguageServer> cLauncher;
+    private Launcher<LanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port;

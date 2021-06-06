@@ -8,15 +8,17 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LSPServerTest{
 
     private static Future<Void> serverListening;
     private static Future<Void> clientListening;
-
+    private static CompletableFuture<Void> semaphore;
     MopeLSPServerLauncher serverLauncher;
     {
         try {
@@ -34,17 +36,16 @@ class LSPServerTest{
             e.printStackTrace();
         }
     }
-    @BeforeEach
     public void startServer() throws IOException {
         new Thread(() -> {
             try {
                 serverListening = serverLauncher.LaunchServer();
+                //test.get();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
     }
-    @BeforeEach
     public void startClient() throws IOException {
         new Thread(() -> {
             try {
@@ -55,10 +56,13 @@ class LSPServerTest{
         }).start();
     }
     @Test
-    public void initializeServer() throws IOException {
-       // startServer();
-       // startClient();
-       // clientLauncher.client.initServer();
-
+    public void initializeServer() throws IOException, InterruptedException {
+        semaphore = new CompletableFuture<>();
+        startServer();
+        Thread.currentThread().sleep(1000);
+        startClient();
+        Thread.currentThread().sleep(1000);
+        clientLauncher.client.initServer();
+        Thread.currentThread().sleep(90000);
     }
 }

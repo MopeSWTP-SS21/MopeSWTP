@@ -21,7 +21,7 @@ public class MopeLSPServerLauncher {
     private static Socket socket;
     private static ServerSocket serverSocket;
     private static MopeLSPServer server;
-    private static Launcher<LanguageClient> sLauncher;
+    private Launcher<LanguageClient> sLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port = 1234;
