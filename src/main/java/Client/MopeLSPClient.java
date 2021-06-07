@@ -2,9 +2,6 @@ package Client;
 
 import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.*;
-import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageServer;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +34,9 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams requestParams) {
         logger.info("Client->showMessageRequest");
-        return null;
+        MessageActionItem result = new MessageActionItem();
+        result.setTitle("MessageRequestArrived");
+        return CompletableFuture.completedFuture(result) ;
     }
 
     @Override
@@ -50,10 +49,15 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         logger.info("Client->setServer");
         this.server = server;
     }
-    public void initServer() throws ExecutionException, InterruptedException {
-        InitializeParams params = new InitializeParams();
-        CompletableFuture<InitializeResult> result = server.initialize(params);
-        result.get();
+    public String initServer() {
+        try{
+            InitializeParams params = new InitializeParams();
+            CompletableFuture<InitializeResult> result = server.initialize(params);
+            return result.get().toString();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getCompletion(String comop) throws ExecutionException, InterruptedException {
@@ -140,5 +144,18 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             System.out.println("Error Get Path");
         }
         return null;
+    }
+
+    @Override
+    public CompletableFuture<List<WorkspaceFolder>> workspaceFolders(){
+        CompletableFuture<List<WorkspaceFolder>> result = new CompletableFuture<>();
+        logger.info("WorkspaceFolders requested by Server");
+        WorkspaceFolder f = new WorkspaceFolder();
+        f.setName("ExampleModels");
+        f.setUri("/home/swtp/modelica/exampleModels");
+        //List<WorkspaceFolder> result = new ArrayList<>();
+        //result.add(f);
+        logger.info("WorkspaceFoldersResult created");
+        return result;
     }
 }
