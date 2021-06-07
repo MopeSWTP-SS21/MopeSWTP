@@ -15,6 +15,12 @@ public class MopeModelicaService implements ModelicaService {
     private ICompilerAdapter compiler;
     @Override
     public CompletableFuture<String> checkModel(String modelname){
-        return CompletableFuture.supplyAsync(()->"checked");
+        String result = compiler.checkModel(modelname);//args.get(0).toString().replaceAll("\"", ""));
+        return CompletableFuture.supplyAsync(()->result);
+    }
+
+    public void InitOMC(ICompilerAdapter compiler){
+        this.compiler = compiler;
+        compiler.connect();
     }
 }

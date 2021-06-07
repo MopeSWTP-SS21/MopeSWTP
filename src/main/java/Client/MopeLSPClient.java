@@ -87,7 +87,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             System.out.println(modelName);
             System.out.println(execute.getArguments());
             CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);*/
-            CompletableFuture<String> x = server.getModelicaService().checkModel("test");
+            CompletableFuture<String> x = server.getModelicaService().checkModel(modelName);
             return x.get();
         }catch(Exception e){
             logger.error("Error CheckModel",e);

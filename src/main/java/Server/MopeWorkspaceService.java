@@ -65,10 +65,4 @@ public class MopeWorkspaceService implements WorkspaceService {
         return CompletableFuture.supplyAsync(() -> finalResult);
     }
 
-
-
-    public void InitOMC(ICompilerAdapter compiler){
-        this.compiler = compiler;
-        compiler.connect();
-    }
 }
