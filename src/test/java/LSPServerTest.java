@@ -57,11 +57,14 @@ class LSPServerTest{
             }
         }).start();
     }
-    @Test
     public void initializeServer() throws IOException, InterruptedException {
-
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
         Thread.currentThread().sleep(15000);
+    }
+    @Test
+    public void getOMCVersion() throws IOException, InterruptedException {
+        initializeServer();
+        clientLauncher.client.compilerVersion();
     }
 }
