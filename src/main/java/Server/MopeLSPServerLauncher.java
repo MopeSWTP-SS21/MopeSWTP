@@ -61,6 +61,15 @@ public class MopeLSPServerLauncher {
         server.connect(sLauncher.getRemoteProxy());
         Future<Void> future = sLauncher.startListening();
         logger.info("Server Listening");
+        try {
+            System.out.println( sLauncher.getRemoteProxy().showMessageRequest(new ShowMessageRequestParams()).get(15, TimeUnit.SECONDS).getTitle());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
         return future;
     }
 
