@@ -1,5 +1,6 @@
 package Client;
 
+import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -21,7 +22,7 @@ public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
-    private Launcher<LanguageServer> cLauncher;
+    private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port;
@@ -38,9 +39,9 @@ public class ConsoleClientLauncher {
 
     public Future<Void> LaunchClient() throws IOException {
         executor = Executors.newFixedThreadPool(2);
-        cLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageServer>()
+        cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
                 .setLocalService(client)
-                .setRemoteInterface(org.eclipse.lsp4j.services.LanguageServer.class)
+                .setRemoteInterface(ModelicaLanguageServer.class)
                 .setInput(socket.getInputStream())
                 .setOutput(socket.getOutputStream())
                 .setExecutorService(executor) //Not sure about this?

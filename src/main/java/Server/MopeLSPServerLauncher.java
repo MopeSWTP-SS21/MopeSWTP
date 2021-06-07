@@ -1,6 +1,7 @@
 package Server;
 
 
+import Client.IModelicaLanguageClient;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -26,7 +27,7 @@ public class MopeLSPServerLauncher {
     private static Socket socket;
     private static ServerSocket serverSocket;
     private static MopeLSPServer server;
-    private Launcher<LanguageClient> sLauncher;
+    private Launcher<IModelicaLanguageClient> sLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port = 1234;
@@ -50,9 +51,9 @@ public class MopeLSPServerLauncher {
         logger.info("Server connected to client socket");
         System.out.flush();
         executor = Executors.newFixedThreadPool(2);
-        sLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageClient>()
+        sLauncher = new LSPLauncher.Builder<IModelicaLanguageClient>()
                 .setLocalService(server)
-                .setRemoteInterface(org.eclipse.lsp4j.services.LanguageClient.class)
+                .setRemoteInterface(IModelicaLanguageClient.class)
                 .setInput(socket.getInputStream())
                 .setOutput(socket.getOutputStream())
                 .setExecutorService(executor) //Not sure about this?

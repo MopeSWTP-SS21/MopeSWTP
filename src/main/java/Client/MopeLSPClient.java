@@ -1,5 +1,6 @@
 package Client;
 
+import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class MopeLSPClient implements IModelicaLanguageClient {
 
-    private LanguageServer server;
+    private ModelicaLanguageServer server;
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
     @Override
@@ -45,7 +46,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         logger.info(message.toString());
     }
 
-    public void setServer(LanguageServer server){
+    public void setServer(ModelicaLanguageServer server){
         logger.info("Client->setServer");
         this.server = server;
     }
