@@ -85,8 +85,9 @@ public class ConsoleClientLauncher {
     private static void ConsoleMenue(){
         boolean running=true;
 
-        String[] menuItems = new String[] {   "1: Initialize server",
-                                            "2: Get compiler version",
+        String[] menuItems = new String[] {
+                "1: Initialize server",
+                "2: Get compiler version",
                 "3: Load File",
                 "4: Load model",
                 "5: Check Model",
@@ -94,7 +95,7 @@ public class ConsoleClientLauncher {
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
                 "9 : Exit"
-        }                ;
+        };
 
         while(running)
         {

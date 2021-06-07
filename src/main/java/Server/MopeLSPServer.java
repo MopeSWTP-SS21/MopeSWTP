@@ -34,7 +34,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
         logger.info("Server->initialize triggerd");
-        //modelicaService.InitOMC( new OMCAdapter("/usr/bin/omc", "us", "mope_local" ));
         compiler.connect();
 
         this.client.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server") );

@@ -50,9 +50,10 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         logger.info("Client->setServer");
         this.server = server;
     }
-    public void initServer(){
+    public void initServer() throws ExecutionException, InterruptedException {
         InitializeParams params = new InitializeParams();
-        server.initialize(params);
+        CompletableFuture<InitializeResult> result = server.initialize(params);
+        result.get();
     }
 
     public String getCompletion(String comop) throws ExecutionException, InterruptedException {
