@@ -36,6 +36,7 @@ class LSPServerTest{
             e.printStackTrace();
         }
     }
+    @BeforeAll
     public void startServer() throws IOException {
         new Thread(() -> {
             try {
@@ -46,6 +47,7 @@ class LSPServerTest{
             }
         }).start();
     }
+    @BeforeAll
     public void startClient() throws IOException {
         new Thread(() -> {
             try {
@@ -57,11 +59,9 @@ class LSPServerTest{
     }
     @Test
     public void initializeServer() throws IOException, InterruptedException {
-        startServer();
-        Thread.currentThread().sleep(1000);
-        startClient();
+
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
-        Thread.currentThread().sleep(90000);
+        Thread.currentThread().sleep(10000);
     }
 }
