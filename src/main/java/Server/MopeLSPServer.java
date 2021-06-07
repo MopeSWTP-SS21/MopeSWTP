@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Compiler.ICompilerAdapter;
 import Server.Compiler.OMCAdapter;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.services.*;
@@ -16,27 +17,25 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private MopeDocumentService documentService;
     private MopeWorkspaceService workspaceService;
     private MopeModelicaService modelicaService;
+    private static ICompilerAdapter compiler;
     private ConfigObject cfg;
 
     public MopeLSPServer(ConfigObject config){
-        this.workspaceService = new MopeWorkspaceService();
-        this.documentService = new MopeDocumentService();
-        this.modelicaService = new MopeModelicaService();
+        this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local" );
+        this.workspaceService = new MopeWorkspaceService(compiler);
+        this.documentService = new MopeDocumentService(compiler);
+        this.modelicaService = new MopeModelicaService(compiler);
         this.cfg = config;
     }
 
-    /*@Override
-    public CompletableFuture<String> checkModel(String modelname){
-        return CompletableFuture.supplyAsync(()->"checked");
-    }*/
 
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
         logger.info("Server->initialize triggerd");
-        modelicaService.InitOMC( new OMCAdapter("/usr/bin/omc", "us", "mope_local" ));
-
+        //modelicaService.InitOMC( new OMCAdapter("/usr/bin/omc", "us", "mope_local" ));
+        compiler.connect();
 
         this.client.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server") );
         return CompletableFuture.supplyAsync(()->result);

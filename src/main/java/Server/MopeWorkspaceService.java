@@ -31,30 +31,18 @@ public class MopeWorkspaceService implements WorkspaceService {
 
         String result = "Cannot execute Command " + command + "!";
 
-       /* switch(command){
-            case "LoadFile":
-                result = compiler.loadFile(args.get(0).toString().replaceAll("\"", ""));
+        switch(command){
+            case "known":
+                result = "This command is known... ";
                 break;
-            case "CheckModel":
-               result = compiler.checkModel(args.get(0).toString().replaceAll("\"", ""));
-               break;
-            case "AddPath":
-                result = compiler.addFolderToModelicaPath(args.get(0).toString().replaceAll("\"", ""));
-                break;
-            case "GetPath":
-                result = compiler.getModelicaPath();
-                break;
-            case "LoadModel":
-                result = compiler.loadModel(args.get(0).toString().replaceAll("\"", ""));
-                break;
-            case "Version":
-                result = compiler.getCompilerVersion();
-                break;
-        }*/
+        }
 
 
         String finalResult = result;
         return CompletableFuture.supplyAsync(() -> finalResult);
     }
-
+    public MopeWorkspaceService(ICompilerAdapter comp){
+        super();
+        compiler = comp;
+    }
 }

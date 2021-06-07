@@ -49,8 +49,12 @@ public class MopeModelicaService implements ModelicaService {
         return CompletableFuture.supplyAsync(()->result);
     }
 
-    public void InitOMC(ICompilerAdapter compiler){
+    public MopeModelicaService(ICompilerAdapter comp){
+        super();
+        compiler = comp;
+    }
+    /*public void InitOMC(ICompilerAdapter compiler){
         this.compiler = compiler;
         compiler.connect();
-    }
+    }*/
 }
