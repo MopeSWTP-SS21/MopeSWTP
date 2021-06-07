@@ -29,17 +29,9 @@ public class MopeWorkspaceService implements WorkspaceService {
         String command = params.getCommand();
         List<Object> args = params.getArguments();
 
-        //This Part is for debugging purpose
-        /*System.out.println("Argument:");
-        for (Object arg: args) {
-
-            System.out.println(arg);
-            System.out.println(arg.toString());
-        }*/
-
         String result = "Cannot execute Command " + command + "!";
 
-        switch(command){
+       /* switch(command){
             case "LoadFile":
                 result = compiler.loadFile(args.get(0).toString().replaceAll("\"", ""));
                 break;
@@ -58,7 +50,7 @@ public class MopeWorkspaceService implements WorkspaceService {
             case "Version":
                 result = compiler.getCompilerVersion();
                 break;
-        }
+        }*/
 
 
         String finalResult = result;

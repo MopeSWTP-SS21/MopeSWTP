@@ -14,8 +14,38 @@ public class MopeModelicaService implements ModelicaService {
 
     private ICompilerAdapter compiler;
     @Override
-    public CompletableFuture<String> checkModel(String modelname){
-        String result = compiler.checkModel(modelname);//args.get(0).toString().replaceAll("\"", ""));
+    public CompletableFuture<String> checkModel(String modelName){
+        String result = compiler.checkModel(modelName);//args.get(0).toString().replaceAll("\"", ""));
+        return CompletableFuture.supplyAsync(()->result);
+    }
+
+    @Override
+    public CompletableFuture<String> loadModel(String modelName){
+        String result = compiler.loadModel(modelName);//args.get(0).toString().replaceAll("\"", ""));
+        return CompletableFuture.supplyAsync(()->result);
+    }
+
+    @Override
+    public CompletableFuture<String> loadFile(String path){
+        String result = compiler.loadFile(path);//args.get(0).toString().replaceAll("\"", ""));
+        return CompletableFuture.supplyAsync(()->result);
+    }
+
+    @Override
+    public CompletableFuture<String> getModelicaPath(){
+        String result = compiler.getModelicaPath();
+        return CompletableFuture.supplyAsync(()->result);
+    }
+
+    @Override
+    public CompletableFuture<String> addModelicaPath(String path){
+        String result = compiler.addFolderToModelicaPath(path);//args.get(0).toString().replaceAll("\"", ""));
+        return CompletableFuture.supplyAsync(()->result);
+    }
+
+    @Override
+    public CompletableFuture<String> getCompilerVersion(){
+        String result = compiler.getCompilerVersion();
         return CompletableFuture.supplyAsync(()->result);
     }
 
