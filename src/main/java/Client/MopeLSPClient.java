@@ -81,12 +81,13 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     public Object checkModel(String modelName)  {
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
+            /*ExecuteCommandParams execute = new ExecuteCommandParams();
             execute.setCommand("CheckModel");
             execute.setArguments(List.of(modelName));
             System.out.println(modelName);
             System.out.println(execute.getArguments());
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);*/
+            CompletableFuture<String> x = server.getModelicaService().checkModel("test");
             return x.get();
         }catch(Exception e){
             logger.error("Error CheckModel",e);

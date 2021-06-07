@@ -15,18 +15,20 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private LanguageClient client;
     private MopeDocumentService documentService;
     private MopeWorkspaceService workspaceService;
+    private MopeModelicaService modelicaService;
     private ConfigObject cfg;
 
     public MopeLSPServer(ConfigObject config){
         this.workspaceService = new MopeWorkspaceService();
         this.documentService = new MopeDocumentService();
+        this.modelicaService = new MopeModelicaService();
         this.cfg = config;
     }
 
-    @Override
-    public CompletableFuture<String> checkModel(String filename){
+    /*@Override
+    public CompletableFuture<String> checkModel(String modelname){
         return CompletableFuture.supplyAsync(()->"checked");
-    }
+    }*/
 
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
@@ -60,6 +62,9 @@ public class MopeLSPServer implements ModelicaLanguageServer
     public WorkspaceService getWorkspaceService() {
         return this.workspaceService;
     }
+
+    @Override
+    public ModelicaService getModelicaService() { return this.modelicaService; }
 
     @Override
     public void connect(LanguageClient client) {
