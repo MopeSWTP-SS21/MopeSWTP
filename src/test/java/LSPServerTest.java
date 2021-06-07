@@ -1,4 +1,4 @@
-package test;
+
 
 import Client.ConsoleClientLauncher;
 import Client.MopeLSPClient;
@@ -62,6 +62,6 @@ class LSPServerTest{
 
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
-        Thread.currentThread().sleep(10000);
+        Thread.currentThread().sleep(15000);
     }
 }
