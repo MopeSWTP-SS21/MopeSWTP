@@ -5,6 +5,7 @@ name: Java CI with Gradle
 
 on:
   push:
+  
     branches:
     - dev
     - main
@@ -14,7 +15,7 @@ on:
     - dev
     - main
     - feature/*
-
+    
 jobs:
   build:
 
@@ -27,6 +28,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+        
     - name: Install OpenModelica
       uses: THM-MoTE/setup-openmodelica@v1
       with:
