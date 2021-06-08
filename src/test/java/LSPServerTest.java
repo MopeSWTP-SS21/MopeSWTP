@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LSPServerTest{
 
-    private static Future<Void> serverListening;
-    private static Future<Void> clientListening;
+    private  Future<Void> serverListening;
+    private  Future<Void> clientListening;
 
     MopeLSPServerLauncher serverLauncher;
     {
