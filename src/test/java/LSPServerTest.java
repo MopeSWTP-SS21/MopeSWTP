@@ -65,6 +65,6 @@ class LSPServerTest{
     @Test
     public void getOMCVersion() throws IOException, InterruptedException {
         initializeServer();
-        clientLauncher.client.compilerVersion();
+        assertEquals("V 1.17.0",clientLauncher.client.compilerVersion());
     }
 }
