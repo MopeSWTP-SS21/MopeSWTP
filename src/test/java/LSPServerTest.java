@@ -1,4 +1,4 @@
-package test;
+
 
 import Client.ConsoleClientLauncher;
 import Client.MopeLSPClient;
@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LSPServerTest{
 
-    private static Future<Void> serverListening;
-    private static Future<Void> clientListening;
+    private  Future<Void> serverListening;
+    private  Future<Void> clientListening;
 
     MopeLSPServerLauncher serverLauncher;
     {
@@ -36,6 +36,7 @@ class LSPServerTest{
             e.printStackTrace();
         }
     }
+    @BeforeAll
     public void startServer() throws IOException {
         new Thread(() -> {
             try {
@@ -46,6 +47,7 @@ class LSPServerTest{
             }
         }).start();
     }
+    @BeforeAll
     public void startClient() throws IOException {
         new Thread(() -> {
             try {
@@ -55,13 +57,14 @@ class LSPServerTest{
             }
         }).start();
     }
-    @Test
     public void initializeServer() throws IOException, InterruptedException {
-        startServer();
-        Thread.currentThread().sleep(1000);
-        startClient();
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
-        Thread.currentThread().sleep(90000);
+        Thread.currentThread().sleep(15000);
+    }
+    @Test
+    public void getOMCVersion() throws IOException, InterruptedException {
+        initializeServer();
+        assertEquals("V 1.17.0",clientLauncher.client.compilerVersion());
     }
 }
