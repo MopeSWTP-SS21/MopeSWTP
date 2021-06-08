@@ -1,6 +1,7 @@
 package Server;
 
 import Client.MopeLSPClient;
+import Server.Compiler.ICompilerAdapter;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MopeDocumentService implements TextDocumentService {
+    private ICompilerAdapter compiler;
     private static final Logger logger = LoggerFactory.getLogger(MopeDocumentService.class);
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams completionParams) {
@@ -74,5 +76,10 @@ public class MopeDocumentService implements TextDocumentService {
         Hover h = new Hover();
         h.setContents(new MarkupContent("h1", "hallo"));
         return CompletableFuture.supplyAsync(() -> { return h; });
+    }
+
+    public MopeDocumentService(ICompilerAdapter comp){
+        super();
+        compiler = comp;
     }
 }

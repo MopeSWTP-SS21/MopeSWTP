@@ -1,9 +1,10 @@
 package Server;
 
 
+import Client.IModelicaLanguageClient;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
-import org.eclipse.lsp4j.services.LanguageClient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +16,13 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import static org.antlr.v4.runtime.misc.Utils.readFile;
+import java.util.concurrent.*;
 
 public class MopeLSPServerLauncher {
     private static Socket socket;
     private static ServerSocket serverSocket;
     private static MopeLSPServer server;
-    private Launcher<LanguageClient> sLauncher;
+    private Launcher<IModelicaLanguageClient> sLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port = 1234;
@@ -50,9 +46,9 @@ public class MopeLSPServerLauncher {
         logger.info("Server connected to client socket");
         System.out.flush();
         executor = Executors.newFixedThreadPool(2);
-        sLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageClient>()
+        sLauncher = new LSPLauncher.Builder<IModelicaLanguageClient>()
                 .setLocalService(server)
-                .setRemoteInterface(org.eclipse.lsp4j.services.LanguageClient.class)
+                .setRemoteInterface(IModelicaLanguageClient.class)
                 .setInput(socket.getInputStream())
                 .setOutput(socket.getOutputStream())
                 .setExecutorService(executor) //Not sure about this?
@@ -60,6 +56,15 @@ public class MopeLSPServerLauncher {
         server.connect(sLauncher.getRemoteProxy());
         Future<Void> future = sLauncher.startListening();
         logger.info("Server Listening");
+        try {
+            System.out.println( sLauncher.getRemoteProxy().showMessageRequest(new ShowMessageRequestParams()).get(15, TimeUnit.SECONDS).getTitle());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
         return future;
     }
 

@@ -29,9 +29,6 @@ public class OMCAdapter implements ICompilerAdapter{
 
     @Override
     public String checkModel(String modelName) {
-        //TODO
-        //Optional<String> name = ScriptingHelper.getModelName( Paths.get("/home/swtp/modelica/LotkaVolterra/LV_Manu/LV3Species.mo"));
-        //String result2 = omc.checkModel(name.orElse("LV_Manu.LV2Species"));
         String result = omc.checkModel(modelName);
         return "Model " + modelName + " checked\n" + "->" + result;
     }
