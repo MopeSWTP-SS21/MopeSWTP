@@ -1,52 +1,63 @@
 package Client;
 
+import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.*;
-import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageServer;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class MopeLSPClient implements IModelicaLanguageClient {
 
-    private LanguageServer server;
+    private ModelicaLanguageServer server;
+    private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
     @Override
     public void telemetryEvent(Object object) {
-        System.out.println("Client->telemetryEvent");
+        logger.info("Client->telemtryEvent");
     }
 
     @Override
     public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-        System.out.println("Client->publishDiagnostics");
+        logger.info("Client->publishDiagnostics");
     }
 
     @Override
     public void showMessage(MessageParams messageParams) {
-        System.out.println("Client->showMessage");
-        System.out.println(messageParams.toString());
+        logger.info("Client->showMessage");
+        logger.info(messageParams.toString());
     }
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams requestParams) {
-        System.out.println("Client->showMessageRequest");
-        return null;
+        logger.info("Client->showMessageRequest");
+        MessageActionItem result = new MessageActionItem();
+        result.setTitle("MessageRequestArrived");
+        return CompletableFuture.completedFuture(result) ;
     }
 
     @Override
     public void logMessage(MessageParams message) {
-        System.out.println("Client->logMessage");
-        System.out.println(message.toString());
+        logger.info("Client->logMessage");
+        logger.info(message.toString());
     }
 
-    public void setServer(LanguageServer server){
-        System.out.println("Client->setServer");
+    public void setServer(ModelicaLanguageServer server){
+        logger.info("Client->setServer");
         this.server = server;
     }
-    public void initServer(){
-        InitializeParams params = new InitializeParams();
-        server.initialize(params);
+    public String initServer() {
+        try{
+            InitializeParams params = new InitializeParams();
+            CompletableFuture<InitializeResult> result = server.initialize(params);
+            return result.get().toString();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getCompletion(String comop) throws ExecutionException, InterruptedException {
@@ -75,25 +86,18 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     public Object checkModel(String modelName)  {
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
-            execute.setCommand("CheckModel");
-            execute.setArguments(List.of(modelName));
-            System.out.println(modelName);
-            System.out.println(execute.getArguments());
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<String> x = server.getModelicaService().checkModel(modelName);
             return x.get();
         }catch(Exception e){
-            System.out.println("Error CheckModel");
+            logger.error("Error CheckModel",e);
+            e.printStackTrace();
         }
         return null;
     }
 
     public Object loadFile(String path){
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
-            execute.setCommand("LoadFile");
-            execute.setArguments(List.of(path));
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<String> x = server.getModelicaService().loadFile(path);
             return x.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -103,10 +107,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     public Object addPath(String path){
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
-            execute.setCommand("AddPath");
-            execute.setArguments(List.of(path));
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<String> x = server.getModelicaService().addModelicaPath(path);
             return x.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -116,10 +117,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     public Object loadModel(String name){
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
-            execute.setCommand("LoadModel");
-            execute.setArguments(List.of(name));
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<String> x = server.getModelicaService().loadModel(name);
             return x.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -129,25 +127,35 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     public Object compilerVersion()  {
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
-            execute.setCommand("Version");
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<String> x = server.getModelicaService().getCompilerVersion();
             return x.get();
         }catch(Exception e){
-            System.out.println("Error RequestVersion");
+            logger.error("Error RequestVersion",e);
+            e.printStackTrace();
         }
         return null;
     }
 
     public Object modelicaPath()  {
         try{
-            ExecuteCommandParams execute = new ExecuteCommandParams();
-            execute.setCommand("GetPath");
-            CompletableFuture<Object> x = server.getWorkspaceService().executeCommand(execute);
+            CompletableFuture<String> x = server.getModelicaService().getModelicaPath();
             return x.get();
         }catch(Exception e){
             System.out.println("Error Get Path");
         }
         return null;
+    }
+
+    @Override
+    public CompletableFuture<List<WorkspaceFolder>> workspaceFolders(){
+        CompletableFuture<List<WorkspaceFolder>> result = new CompletableFuture<>();
+        logger.info("WorkspaceFolders requested by Server");
+        WorkspaceFolder f = new WorkspaceFolder();
+        f.setName("ExampleModels");
+        f.setUri("/home/swtp/modelica/exampleModels");
+        //List<WorkspaceFolder> result = new ArrayList<>();
+        //result.add(f);
+        logger.info("WorkspaceFoldersResult created");
+        return result;
     }
 }
