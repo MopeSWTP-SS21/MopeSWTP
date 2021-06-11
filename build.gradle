@@ -32,12 +32,26 @@ task startConsoleClient(type : JavaExec) {
 }
 
 shadowJar {
-    baseName = project.group + '-Server'
+    //mergeServiceFiles()
+}
+
+task shadowServerJar(type: Jar, dependsOn: shadowJar) {
+    archiveBaseName = project.group
     version = project.version
-    classifier = null
+    archiveClassifier.set('Server')
     manifest {
         attributes 'Main-Class': 'Server.MopeLSPServerLauncher'
     }
+    from zipTree(shadowJar.archiveFile)
+}
+task shadowClientJar(type: Jar, dependsOn: shadowJar){
+    archiveBaseName = project.group
+    version = project.version
+    archiveClassifier.set('ConsoleCLient')
+    manifest {
+        attributes 'Main-Class': 'Client.ConsoleClientLauncher'
+    }
+    from zipTree(shadowJar.archiveFile)
 }
 
 
