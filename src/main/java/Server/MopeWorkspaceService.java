@@ -32,25 +32,17 @@ public class MopeWorkspaceService implements WorkspaceService {
         String result = "Cannot execute Command " + command + "!";
 
         switch(command){
-            case "CheckModel":
-               result = compiler.checkModel(args.get(0).toString());
-               break;
-            case "Version":
-                result = compiler.getCompilerVersion();
+            case "known":
+                result = "This command is known... ";
                 break;
         }
 
 
         String finalResult = result;
-        return CompletableFuture.supplyAsync(() -> {
-            return finalResult;
-        });
+        return CompletableFuture.supplyAsync(() -> finalResult);
     }
-
-
-
-    public void InitOMC(ICompilerAdapter compiler){
-        this.compiler = compiler;
-        compiler.connect();
+    public MopeWorkspaceService(ICompilerAdapter comp){
+        super();
+        compiler = comp;
     }
 }
