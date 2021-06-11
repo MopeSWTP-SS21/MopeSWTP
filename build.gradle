@@ -1,9 +1,12 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-group 'org.example'
+group 'thm.mope.lsp'
 version '0.1.0'
+
+
 
 repositories {
     mavenCentral()
@@ -28,25 +31,15 @@ task startConsoleClient(type : JavaExec) {
     standardInput = System.in
 }
 
-task buildMopeServerJar(type : Jar) {
-    baseName = project.name + '-MopeLspServer'
+shadowJar {
+    baseName = project.group + '-Server'
+    version = project.version
+    classifier = null
     manifest {
-        attributes  'Implementation-Title': 'MopeLspServer',
-                'Implementation-Version': version,
-                'Class-path' : baseName + '-' + version + '.jar',
-                'Main-Class': 'Server.MopeLSPServerLauncher'
-
+        attributes 'Main-Class': 'Server.MopeLSPServerLauncher'
     }
-
-    jar {
-        doFirst {
-
-            from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
-        }
-        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    }
-
 }
+
 
 test {
     useJUnitPlatform()
