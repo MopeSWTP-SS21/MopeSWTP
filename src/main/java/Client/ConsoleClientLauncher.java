@@ -49,7 +49,6 @@ public class ConsoleClientLauncher {
         client.setServer(cLauncher.getRemoteProxy());
         Future<Void> future = cLauncher.startListening();
         logger.info("Client listening");
-        //System.out.println("Client Listening");
         return future;
     }
 

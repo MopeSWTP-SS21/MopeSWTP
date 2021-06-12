@@ -1,5 +1,6 @@
 package Server;
 
+import Client.MopeLSPClient;
 import Server.Compiler.ICompilerAdapter;
 import Server.Compiler.OMCAdapter;
 import org.eclipse.lsp4j.*;
@@ -8,12 +9,14 @@ import org.eclipse.lsp4j.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MopeLSPServer implements ModelicaLanguageServer
 {
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPServer.class);
-    private LanguageClient client;
+    private List<LanguageClient> clients;
     private MopeDocumentService documentService;
     private MopeWorkspaceService workspaceService;
     private MopeModelicaService modelicaService;
@@ -25,6 +28,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
         this.modelicaService = new MopeModelicaService(compiler);
+        this.clients = new ArrayList<>();
         this.cfg = config;
     }
 
@@ -36,7 +40,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
         logger.info("Server->initialize triggerd");
         compiler.connect();
 
-        this.client.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server") );
         return CompletableFuture.supplyAsync(()->result);
     }
 
@@ -67,7 +70,14 @@ public class MopeLSPServer implements ModelicaLanguageServer
     @Override
     public void connect(LanguageClient client) {
         logger.info("server->Connect");
-        this.client = client;
+        this.clients.add(client);
         logger.info("Added Client to Server");
+        sayHelloToAllClients();
+    }
+
+    private void sayHelloToAllClients(){
+        for (var c: clients) {
+            c.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server"));
+        }
     }
 }

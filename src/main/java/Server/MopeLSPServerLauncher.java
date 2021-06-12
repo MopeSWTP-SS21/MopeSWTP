@@ -19,14 +19,10 @@ import java.util.Properties;
 import java.util.concurrent.*;
 
 public class MopeLSPServerLauncher {
-    private static Socket socket;
     private static ServerSocket serverSocket;
     private static MopeLSPServer server;
-    private Launcher<IModelicaLanguageClient> sLauncher;
     private static ExecutorService executor;
-    private static String host;
     private static int port = 1234;
-    private static Future<Void> serverListening;
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
 
     public MopeLSPServerLauncher(int port) throws IOException {
@@ -36,27 +32,31 @@ public class MopeLSPServerLauncher {
         serverSocket = new ServerSocket(port);
     }
 
-    public Future<Void> LaunchServer() throws IOException {
+    public void LaunchServer() throws IOException {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-        logger.info("Server socket listening");
+        logger.info("Server socket listening on port " + port );
         System.out.flush();
-        socket = serverSocket.accept();
-        logger.info("Server connected to client socket");
-        System.out.flush();
-        executor = Executors.newFixedThreadPool(2);
-        sLauncher = new LSPLauncher.Builder<IModelicaLanguageClient>()
-                .setLocalService(server)
-                .setRemoteInterface(IModelicaLanguageClient.class)
-                .setInput(socket.getInputStream())
-                .setOutput(socket.getOutputStream())
-                .setExecutorService(executor) //Not sure about this?
-                .create();
-        server.connect(sLauncher.getRemoteProxy());
-        Future<Void> future = sLauncher.startListening();
-        logger.info("Server Listening");
-        try {
+        executor = Executors.newCachedThreadPool();
+        executor.submit(() -> {
+            while (true) {
+                Socket socket = serverSocket.accept();
+                logger.info("Server connected to client socket");
+                System.out.flush();
+                Launcher<IModelicaLanguageClient> sLauncher = new LSPLauncher.Builder<IModelicaLanguageClient>()
+                        .setLocalService(server)
+                        .setRemoteInterface(IModelicaLanguageClient.class)
+                        .setInput(socket.getInputStream())
+                        .setOutput(socket.getOutputStream())
+                        .setExecutorService(executor) //Not sure about this?
+                        .create();
+                server.connect(sLauncher.getRemoteProxy());
+                sLauncher.startListening();
+            }
+        });
+
+        /*try {
             System.out.println( sLauncher.getRemoteProxy().showMessageRequest(new ShowMessageRequestParams()).get(15, TimeUnit.SECONDS).getTitle());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -64,8 +64,9 @@ public class MopeLSPServerLauncher {
             e.printStackTrace();
         } catch (TimeoutException e) {
             e.printStackTrace();
-        }
-        return future;
+        }*/
+        //return future;
+        return ;
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -84,13 +85,13 @@ public class MopeLSPServerLauncher {
                 port =1234;
             }
             MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(port);
-            serverListening = launcher.LaunchServer();
+            //serverListening =
+            launcher.LaunchServer();
 
             System.in.read();
             serverSocket.close();
-            socket.close();
             executor.shutdown();
-            serverListening.get();
+            //serverListening.get();
             logger.info("Server Finished");
         }catch(Exception e){
 
