@@ -6,6 +6,7 @@ import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 
+import org.eclipse.lsp4j.services.LanguageClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
@@ -51,8 +52,22 @@ public class MopeLSPServerLauncher {
                         .setOutput(socket.getOutputStream())
                         .setExecutorService(executor) //Not sure about this?
                         .create();
-                server.connect(sLauncher.getRemoteProxy());
-                sLauncher.startListening();
+                LanguageClient consumer = sLauncher.getRemoteProxy();
+                server.connect(consumer);
+
+                /*CompletableFuture<Void> listening =  */
+                CompletableFuture.supplyAsync(() ->{
+                    Future listening = sLauncher.startListening();
+                    try {
+                        listening.get();
+                        server.remove(consumer);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                } );
             }
         });
 

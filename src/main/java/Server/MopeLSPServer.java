@@ -75,6 +75,11 @@ public class MopeLSPServer implements ModelicaLanguageServer
         sayHelloToAllClients();
     }
 
+    public void remove(LanguageClient client){
+        this.clients.remove(client);
+        logger.info("Removed Client from Server");
+    }
+
     private void sayHelloToAllClients(){
         for (var c: clients) {
             c.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server"));
