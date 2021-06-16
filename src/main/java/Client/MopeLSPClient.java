@@ -60,10 +60,27 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         return null;
     }
 
-    public String getCompletion(String comop) throws ExecutionException, InterruptedException {
+    public String complete(String file, int line, int col) {
+        TextDocumentIdentifier doc = new TextDocumentIdentifier();
+        doc.setUri(file);
         CompletionParams params = new CompletionParams();
+        params.setTextDocument(doc);
+        CompletionContext c = new CompletionContext();
+        c.setTriggerCharacter(".");
+        params.setContext(c);
+        Position p = new Position();
+        p.setCharacter(col);
+        p.setLine(line);
+        params.setPosition(p);
         CompletableFuture<?> completion = server.getTextDocumentService().completion(params);
-        var compGet = completion.get() ;
+        Object compGet = null;
+        try {
+            compGet = completion.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return compGet.toString();
     }
 
@@ -158,4 +175,6 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         logger.info("WorkspaceFoldersResult created");
         return result;
     }
+
+
 }
