@@ -13,6 +13,7 @@ import version.Version;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,8 @@ public class OMCAdapter implements ICompilerAdapter{
     public List<String> searchLoadedClassNames(String search){
         logger.info("Searching loaded Classes for " + search);
         Result result = omc.sendExpression("searchClassNames(\"" + search + "\")"); //Todo \" ?
-        String[] classes = result.result.split(",");
+        String[] classes = result.result.substring(1, result.result.length() -1 ).split(",");
+        if(classes.length <= 0 || classes[0].length() <= 0  ) return new ArrayList<String>();
         return Arrays.asList(classes);
     }
     @Override
@@ -89,6 +91,7 @@ public class OMCAdapter implements ICompilerAdapter{
         logger.info(info);
         Result result = omc.sendExpression(expression);
         String[] libs = result.result.substring(1, result.result.length() -1 ).split(",");
+        if(libs.length <= 0 || libs[0].length() <= 0  ) return new ArrayList<String>();
         return Arrays.asList(libs);
     }
 

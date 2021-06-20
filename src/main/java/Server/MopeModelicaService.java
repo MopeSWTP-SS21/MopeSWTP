@@ -10,7 +10,7 @@ public class MopeModelicaService implements ModelicaService {
     @Override
     public CompletableFuture<String> checkModel(String modelName){
         String result = compiler.checkModel(modelName);
-        return CompletableFuture.supplyAsync(()->6result);
+        return CompletableFuture.supplyAsync(()->result);
     }
 
     @Override
