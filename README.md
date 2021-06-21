@@ -77,6 +77,7 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 5. `1: Initialize server`
 
    Currently it is _necessary to proceed this instruction as the first one_ to initialize the server and its capabilities.
+   The Server will launch an Instance of OMC, connect to it and Load the ModelicaStandardLibrary.
 
 6. After Initialization you can view the compiler version by typing `2` in the menue
 
