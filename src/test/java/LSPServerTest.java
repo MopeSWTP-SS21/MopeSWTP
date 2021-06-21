@@ -16,6 +16,14 @@ class LSPServerTest{
 
     private  Future<Void> serverListening;
     private  Future<Void> clientListening;
+    private String userName;
+    private String refPath;
+
+    @BeforeAll
+    public void getCurrentUserAndSetRefPath() {
+         userName = System.getProperty("user.name");
+        refPath = "/home/"+userName+"/MopeSWTP/src/test/java/resources/exampleModels";
+    }
 
     MopeLSPServerLauncher serverLauncher;
     {
@@ -70,36 +78,36 @@ class LSPServerTest{
     @Test
     public void showModelicaPath() throws IOException, InterruptedException {
         initializeServer();
-        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/\", error=Optional.empty]", clientLauncher.client.modelicaPath());
+        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/\", error=Optional.empty]", clientLauncher.client.modelicaPath());
     }
     // Tests the adding of a new modelicafolder to the modelicapath and checks the result the server is responding
     @Test
     public void addFolderToModPathAndShow() throws IOException, InterruptedException {
         initializeServer();
-        clientLauncher.client.addPath("/home/swtp/modelica/exampleModels");
-        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/:/home/swtp/modelica/exampleModels\", error=Optional.empty]",clientLauncher.client.modelicaPath());
+        clientLauncher.client.addPath(refPath);
+        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/:"+refPath+"\", error=Optional.empty]",clientLauncher.client.modelicaPath());
     }
     // Tests the loading of a modelica file and checks the result the server is responding
     @Test
     public void loadFile() throws IOException, InterruptedException {
         initializeServer();
-        clientLauncher.client.addPath("/home/swtp/modelica/exampleModels");
-        assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadFile("/home/swtp/modelica/exampleModels/FunctionNames.mo"));
+        clientLauncher.client.addPath(refPath);
+        assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo"));
     }
     //Tests the loading of a model and checks the result the server is responding
     @Test
     public void loadModel() throws IOException, InterruptedException {
         initializeServer();
-        clientLauncher.client.addPath("/home/swtp/modelica/exampleModels");
-        clientLauncher.client.loadFile("/home/swtp/modelica/exampleModels/FunctionNames.mo");
+        clientLauncher.client.addPath(refPath);
+        clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
         assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadModel("FunctionNames"));
     }
     //Tests the checking of a correct model and checks the result, the server is responding
     @Test
     public void checkModel() throws IOException, InterruptedException {
         initializeServer();
-        clientLauncher.client.addPath("/home/swtp/modelica/exampleModels");
-        clientLauncher.client.loadFile("/home/swtp/modelica/exampleModels/FunctionNames.mo");
+        clientLauncher.client.addPath(refPath);
+        clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
         clientLauncher.client.loadModel("FunctionNames");
         assertEquals("Model FunctionNames checked\n" +
                 "->\"Check of FunctionNames completed successfully.\n" +
