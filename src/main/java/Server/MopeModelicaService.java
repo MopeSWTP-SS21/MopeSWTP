@@ -50,27 +50,6 @@ public class MopeModelicaService implements ModelicaService {
         return CompletableFuture.supplyAsync(()->result);
     }
 
-    public CompletableFuture<ResponseMessage> getErrorMessage(){
-        ResponseMessage message = new ResponseMessage();
-        ResponseError error = new ResponseError();
-        ModelicaErrorObject obj = new ModelicaErrorObject();
-        obj.documentURI = "test/foo.bar";
-        obj.pos = new Position();
-        obj.pos.setLine(1);
-        obj.pos.setCharacter(1);
-        error.setMessage("Something went wrong:(");
-        error.setCode(666);
-        message.setError(error);
-        return CompletableFuture.supplyAsync(() -> message);
-    }
-
-    private class ModelicaErrorObject{
-        public Position pos;
-        public Range range;
-        public String documentURI;
-
-    }
-
     public MopeModelicaService(ICompilerAdapter comp){
         super();
         compiler = comp;
