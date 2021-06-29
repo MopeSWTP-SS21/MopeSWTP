@@ -1,6 +1,7 @@
 package Server.Compiler;
 
 
+import Server.DiagnosticHandler;
 import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 
@@ -22,6 +23,7 @@ public class OMCAdapter implements ICompilerAdapter{
 
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     private final OMCInterface omc;
+    private DiagnosticHandler diagnosticHandler;
 
 
     @Override
@@ -51,7 +53,7 @@ public class OMCAdapter implements ICompilerAdapter{
     @Override
     public String loadModel(String name){
         Result result = omc.sendExpression("loadModel(" + name + ")");
-        List<ModelicaDiagnostic> diag = ModelicaDiagnostic.CreateDiagnostics(result);
+        diagnosticHandler.addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return result.toString();
     }
 
@@ -115,8 +117,9 @@ public class OMCAdapter implements ICompilerAdapter{
         return false;
     }
 
-    public OMCAdapter(String omcExecPath, String locale, String fileProviderSuffix){
+    public OMCAdapter(String omcExecPath, String locale, String fileProviderSuffix, DiagnosticHandler diagnosticHandler){
         omc = new ZeroMQClient(omcExecPath, locale, new ZMQPortFileProvider(fileProviderSuffix));
+         this.diagnosticHandler = diagnosticHandler;
         logger.info("OMCAdapter initialized");
     }
 }

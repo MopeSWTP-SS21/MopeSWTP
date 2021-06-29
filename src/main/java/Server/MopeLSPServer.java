@@ -20,15 +20,17 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private MopeDocumentService documentService;
     private MopeWorkspaceService workspaceService;
     private MopeModelicaService modelicaService;
+    private DiagnosticHandler diagnosticHandler;
     private static ICompilerAdapter compiler;
     private ConfigObject cfg;
 
     public MopeLSPServer(ConfigObject config){
-        this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local" );
+        this.clients = new ArrayList<>();
+        this.diagnosticHandler = new DiagnosticHandler();
+        this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local", this.diagnosticHandler );
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
         this.modelicaService = new MopeModelicaService(compiler);
-        this.clients = new ArrayList<>();
         this.cfg = config;
     }
 
