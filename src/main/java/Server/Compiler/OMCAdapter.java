@@ -34,8 +34,11 @@ public class OMCAdapter implements ICompilerAdapter{
 
     @Override
     public String checkModel(String modelName) {
-        Result result = omc.sendExpression("loadModel(" + modelName + ")");
-        return "Model " + modelName + " checked\n" + "->" + result.toString();
+        //Todo send correct expression and create Diagnostic
+        //Result result = omc.sendExpression("loadModel(" + modelName + ")");
+        String result = omc.checkModel(modelName);
+        //diagnosticHandler.addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
+        return "Model " + modelName + " checked\n" + "->" + result;//.toString();
     }
 
     @Override
