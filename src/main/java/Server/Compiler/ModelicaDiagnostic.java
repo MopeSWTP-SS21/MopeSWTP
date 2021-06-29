@@ -15,11 +15,12 @@ import java.util.regex.Pattern;
 public class ModelicaDiagnostic extends Diagnostic {
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]");
-    final static Pattern location = Pattern.compile("\\[\\[(.*\\.mo:[0-9]*:[0-9]*-[0-9]*:[0-9]*:.*)]");
-    final static Pattern range = Pattern.compile(":([0-9]*:[0-9]*)-([0-9]*:[0-9]*):");
+    final static Pattern location = Pattern.compile("\\[\\[(.*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*)]");
+    //final static Pattern range = Pattern.compile(":([0-9]*:[0-9]*)-([0-9]*:[0-9]*):");
 
-
+    public String pathToFile;
     public ModelicaDiagnostic(Result result){
+
         parseErrorString(result.error.toString());
     }
 
@@ -53,35 +54,30 @@ public class ModelicaDiagnostic extends Diagnostic {
     }
 
     private void _parseErrorLocation(String str){
-        //TODO setUri
         Matcher m = location.matcher(str);
         if(m.find()){
-            String locationStr = m.group(1);
-            logger.debug("Location: " + locationStr);
-            Matcher n = range.matcher(locationStr);
-            _parseErrorRange(locationStr);
+            pathToFile = m.group(1);
+            logger.debug("Path: " + pathToFile);
+            _parseErrorRange(m.group(2), m.group(3));
         }
     }
 
-    private void _parseErrorRange(String str){
+    private void _parseErrorRange(String start, String end){
         Range errorRange = new Range();
-        Position start = new Position();
-        Position end = new Position();
-        String[] startRange = {"0","0"};
-        String[] endRange = {"0","0"};
-        Matcher m = range.matcher(str);
-        if(m.find()){
-            startRange = m.group(1).split(":");
-            endRange = m.group(2).split(":");
-        }
+        Position startP = new Position();
+        Position endP = new Position();
+        String[] startRange = start.split(":");
+        String[] endRange = end.split(":");
 
-        start.setLine(Integer.parseInt(startRange[0]));
-        start.setCharacter(Integer.parseInt(startRange[1]));
-        end.setLine(Integer.parseInt(endRange[0]));
-        end.setCharacter(Integer.parseInt(endRange[1]));
 
-        errorRange.setStart(start);
-        errorRange.setEnd(end);
+
+        startP.setLine(Integer.parseInt(startRange[0]));
+        startP.setCharacter(Integer.parseInt(startRange[1]));
+        endP.setLine(Integer.parseInt(endRange[0]));
+        endP.setCharacter(Integer.parseInt(endRange[1]));
+
+        errorRange.setStart(startP);
+        errorRange.setEnd(endP);
         setRange(errorRange);
         logger.debug("Range: " + getRange().toString());
     }
