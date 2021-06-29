@@ -34,8 +34,8 @@ public class OMCAdapter implements ICompilerAdapter{
 
     @Override
     public String checkModel(String modelName) {
-        String result = omc.checkModel(modelName);
-        return "Model " + modelName + " checked\n" + "->" + result;
+        Result result = omc.sendExpression("loadModel(" + modelName + ")");
+        return "Model " + modelName + " checked\n" + "->" + result.toString();
     }
 
     @Override
