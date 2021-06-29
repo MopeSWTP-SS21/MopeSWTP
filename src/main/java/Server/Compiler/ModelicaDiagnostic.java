@@ -16,7 +16,7 @@ public class ModelicaDiagnostic extends Diagnostic {
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]");
     final static Pattern location = Pattern.compile("\\[\\[(.*\\.mo:[0-9]*:[0-9]*-[0-9]*:[0-9]*:.*)]");
-    final static Pattern range = Pattern.compile(":[0-9]*:[0-9]*-[0-9]*:[0-9]*:");
+    final static Pattern range = Pattern.compile(":([0-9]*:[0-9]*)-([0-9]*:[0-9]*):");
 
 
     public ModelicaDiagnostic(Result result){
@@ -56,10 +56,10 @@ public class ModelicaDiagnostic extends Diagnostic {
         //TODO setUri
         Matcher m = location.matcher(str);
         if(m.find()){
-            String lcoStr = m.group(1);
-            String[] loc = lcoStr.split(":", 2);
-            logger.debug("Location: " + lcoStr);
-            _parseErrorRange(loc[1]);
+            String locationStr = m.group(1);
+            logger.debug("Location: " + locationStr);
+            Matcher n = range.matcher(locationStr);
+            _parseErrorRange(locationStr);
         }
     }
 
@@ -67,12 +67,18 @@ public class ModelicaDiagnostic extends Diagnostic {
         Range errorRange = new Range();
         Position start = new Position();
         Position end = new Position();
-        String[] rangeValues = str.split(":");
+        String[] startRange = {"0","0"};
+        String[] endRange = {"0","0"};
+        Matcher m = range.matcher(str);
+        if(m.find()){
+            startRange = m.group(1).split(":");
+            endRange = m.group(2).split(":");
+        }
 
-        start.setLine(Integer.parseInt(rangeValues[0]));
-        start.setCharacter(Integer.parseInt(rangeValues[1]));
-        end.setLine(Integer.parseInt(rangeValues[2]));
-        end.setCharacter(Integer.parseInt(rangeValues[3]));
+        start.setLine(Integer.parseInt(startRange[0]));
+        start.setCharacter(Integer.parseInt(startRange[1]));
+        end.setLine(Integer.parseInt(endRange[0]));
+        end.setCharacter(Integer.parseInt(endRange[1]));
 
         errorRange.setStart(start);
         errorRange.setEnd(end);
