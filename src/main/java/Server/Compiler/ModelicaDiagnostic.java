@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 public class ModelicaDiagnostic extends Diagnostic {
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]");
-    final static Pattern location = Pattern.compile("\\[\\[(.*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*)]");
+    final static Pattern location = Pattern.compile("\\[\\[(.*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
     //final static Pattern range = Pattern.compile(":([0-9]*:[0-9]*)-([0-9]*:[0-9]*):");
 
-    public String pathToFile;
+    private String uri;
     public ModelicaDiagnostic(Result result){
 
         parseErrorString(result.error.toString());
@@ -34,6 +34,10 @@ public class ModelicaDiagnostic extends Diagnostic {
 
     public static void parseResultString(String str){
 
+    }
+
+    public String getUri(){
+        return uri;
     }
 
     /**
@@ -56,8 +60,8 @@ public class ModelicaDiagnostic extends Diagnostic {
     private void _parseErrorLocation(String str){
         Matcher m = location.matcher(str);
         if(m.find()){
-            pathToFile = m.group(1);
-            logger.debug("Path: " + pathToFile);
+            uri = m.group(1);
+            logger.debug("Path: " + uri);
             _parseErrorRange(m.group(2), m.group(3));
         }
     }
