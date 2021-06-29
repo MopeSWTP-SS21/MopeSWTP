@@ -51,6 +51,7 @@ public class OMCAdapter implements ICompilerAdapter{
     @Override
     public String loadModel(String name){
         Result result = omc.sendExpression("loadModel(" + name + ")");
+        List<ModelicaDiagnostic> diag = ModelicaDiagnostic.CreateDiagnostics(result);
         return result.toString();
     }
 
