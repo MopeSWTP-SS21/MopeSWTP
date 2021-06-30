@@ -24,13 +24,11 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     @Override
     public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-        logger.info("Client->publishDiagnostics");
-        String diags = "";
+        String log = "DiagnosticLocation: " + diagnostics.getUri() + "\nDiagnostics: \n" ;
         for(var d : diagnostics.getDiagnostics()){
-            diags += d.toString() + "\n";
+            log += d.toString() + "\n";
         }
-        logger.info("DiagnosticLocation: " + diagnostics.getUri());
-        logger.info("Diagnostics: \n" + diags);
+        logger.info(log);
 
     }
 
