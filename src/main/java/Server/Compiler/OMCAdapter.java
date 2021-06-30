@@ -6,18 +6,15 @@ import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 
 import omc.corba.Result;
-import omc.corba.ScriptingHelper;
 import omc.ior.ZMQPortFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import version.Version;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class OMCAdapter implements ICompilerAdapter{
 
@@ -34,11 +31,9 @@ public class OMCAdapter implements ICompilerAdapter{
 
     @Override
     public String checkModel(String modelName) {
-        //Todo send correct expression and create Diagnostic
-        //Result result = omc.sendExpression("loadModel(" + modelName + ")");
         String result = omc.checkModel(modelName);
-        //diagnosticHandler.addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
-        return "Model " + modelName + " checked\n" + "->" + result;//.toString();
+        diagnosticHandler.addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
+        return "Model " + modelName + " checked\n" + "->" + result;
     }
 
     @Override

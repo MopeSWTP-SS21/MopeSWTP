@@ -14,14 +14,16 @@ import java.util.regex.Pattern;
 
 public class ModelicaDiagnostic extends Diagnostic {
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
-    final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]");
-    final static Pattern location = Pattern.compile("\\[\\[(.*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
-    //final static Pattern range = Pattern.compile(":([0-9]*:[0-9]*)-([0-9]*:[0-9]*):");
+    final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]*");
+    final static Pattern location = Pattern.compile("\\[([^\\[]*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
 
     private String uri;
-    public ModelicaDiagnostic(Result result){
+    private ModelicaDiagnostic(Result result){
 
         parseErrorString(result.error.toString());
+    }
+    private ModelicaDiagnostic(String str){
+        parseErrorString(str);
     }
 
     public static List<ModelicaDiagnostic>CreateDiagnostics(Result result){
@@ -29,6 +31,12 @@ public class ModelicaDiagnostic extends Diagnostic {
         if(result.error.isPresent()){
             diagnostics.add(new ModelicaDiagnostic(result));
         }
+        return diagnostics;
+    }
+
+    public static List<ModelicaDiagnostic>CreateDiagnostics(String str){
+        ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
+        diagnostics.add(new ModelicaDiagnostic(str));
         return diagnostics;
     }
 
