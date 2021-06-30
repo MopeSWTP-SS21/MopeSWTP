@@ -26,13 +26,7 @@ public class ModelicaDiagnostic extends Diagnostic {
         parseErrorString(str);
     }
 
-    public static List<ModelicaDiagnostic>CreateDiagnostics(Result result){
-        ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
-        if(result.error.isPresent()){
-            diagnostics.add(new ModelicaDiagnostic(result));
-        }
-        return diagnostics;
-    }
+
 
     public static List<ModelicaDiagnostic>CreateDiagnostics(String str){
         ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
