@@ -2,6 +2,7 @@ package Server.Compiler;
 
 import omc.corba.Result;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.slf4j.Logger;
@@ -23,14 +24,19 @@ public class ModelicaDiagnostic extends Diagnostic {
 
         parseErrorString(result.error.toString());
     }
-    private ModelicaDiagnostic(String str){
+    private ModelicaDiagnostic(String str, DiagnosticSeverity severity){
+        setSeverity(severity);
         parseErrorString(str);
+    }
+
+    private static ModelicaDiagnostic ModelicaErrorDiagnostic(String str){
+        return new ModelicaDiagnostic(str, DiagnosticSeverity.Error);
     }
 
     public static List<ModelicaDiagnostic>CreateDiagnostics(String str){
         ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
         Matcher hasErrorMatcher = hasError.matcher(str);
-        if(hasErrorMatcher.find()) diagnostics.add(new ModelicaDiagnostic(str));
+        if(hasErrorMatcher.find()) diagnostics.add(ModelicaErrorDiagnostic(str));
         return diagnostics;
     }
 
