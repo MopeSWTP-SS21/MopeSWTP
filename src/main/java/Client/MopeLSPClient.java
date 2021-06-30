@@ -15,6 +15,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     private ModelicaLanguageServer server;
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
+
+
     @Override
     public void telemetryEvent(Object object) {
         logger.info("Client->telemtryEvent");
@@ -23,6 +25,13 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     @Override
     public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
         logger.info("Client->publishDiagnostics");
+        String diags = "";
+        for(var d : diagnostics.getDiagnostics()){
+            diags += d.toString() + "\n";
+        }
+        logger.info("DiagnosticLocation: " + diagnostics.getUri());
+        logger.info("Diagnostics: \n" + diags);
+
     }
 
     @Override

@@ -26,7 +26,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
 
     public MopeLSPServer(ConfigObject config){
         this.clients = new ArrayList<>();
-        this.diagnosticHandler = new DiagnosticHandler();
+        this.diagnosticHandler = new DiagnosticHandler(this);
         this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local", this.diagnosticHandler );
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
@@ -85,6 +85,12 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private void sayHelloToAllClients(){
         for (var c: clients) {
             c.showMessage(new MessageParams(MessageType.Info, "Hallo vom Server"));
+        }
+    }
+
+    public void publishDiagnosticsToAllClients(PublishDiagnosticsParams params){
+        for (var c: clients) {
+            c.publishDiagnostics(params);
         }
     }
 }

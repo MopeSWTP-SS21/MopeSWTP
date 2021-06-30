@@ -1,17 +1,30 @@
 package Server;
 
 import Server.Compiler.ModelicaDiagnostic;
+import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.services.LanguageClient;
 
 import java.util.*;
 
 public class DiagnosticHandler {
 
+    private HashMap<String, List<Diagnostic>> Diagnostics;
+    private MopeLSPServer server;
 
-    private HashMap<String, List<ModelicaDiagnostic>> Diagnostics;
-
-    public DiagnosticHandler(){
+    public DiagnosticHandler(MopeLSPServer server){
+        this.server = server;
         Diagnostics = new HashMap<>();
+    }
+
+    public void publishDiagnostics(){
+        for(String location : Diagnostics.keySet()){
+            var params = new PublishDiagnosticsParams();
+            params.setUri(location);
+            params.setDiagnostics(Diagnostics.get(location));
+            server.publishDiagnosticsToAllClients(params);
+        }
     }
 
     public void addDiagnostics(List<ModelicaDiagnostic> diagnostics){
@@ -23,6 +36,7 @@ public class DiagnosticHandler {
                 Diagnostics.get(dia.getUri()).add(dia);
             }
         }
+        publishDiagnostics();
     }
 
     public void clearDiagnostics(){
