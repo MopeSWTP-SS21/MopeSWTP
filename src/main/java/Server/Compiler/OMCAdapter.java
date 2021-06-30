@@ -20,8 +20,6 @@ public class OMCAdapter implements ICompilerAdapter{
 
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     private final OMCInterface omc;
-    private DiagnosticHandler diagnosticHandler;
-
 
     @Override
     public String loadFile(String path) {
@@ -32,7 +30,6 @@ public class OMCAdapter implements ICompilerAdapter{
     @Override
     public String checkModel(String modelName) {
         String result = omc.checkModel(modelName);
-        diagnosticHandler.addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return "Model " + modelName + " checked\n" + "->" + result;
     }
 
@@ -51,7 +48,6 @@ public class OMCAdapter implements ICompilerAdapter{
     @Override
     public String loadModel(String name){
         Result result = omc.sendExpression("loadModel(" + name + ")");
-        diagnosticHandler.addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return result.toString();
     }
 
@@ -115,9 +111,8 @@ public class OMCAdapter implements ICompilerAdapter{
         return false;
     }
 
-    public OMCAdapter(String omcExecPath, String locale, String fileProviderSuffix, DiagnosticHandler diagnosticHandler){
+    public OMCAdapter(String omcExecPath, String locale, String fileProviderSuffix){
         omc = new ZeroMQClient(omcExecPath, locale, new ZMQPortFileProvider(fileProviderSuffix));
-         this.diagnosticHandler = diagnosticHandler;
         logger.info("OMCAdapter initialized");
     }
 }

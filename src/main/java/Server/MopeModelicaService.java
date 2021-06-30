@@ -14,15 +14,18 @@ import java.util.concurrent.CompletableFuture;
 public class MopeModelicaService implements ModelicaService {
 
     private ICompilerAdapter compiler;
+    private MopeLSPServer server;
     @Override
     public CompletableFuture<String> checkModel(String modelName){
         String result = compiler.checkModel(modelName);
+        server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return CompletableFuture.supplyAsync(()->result);
     }
 
     @Override
     public CompletableFuture<String> loadModel(String modelName){
         String result = compiler.loadModel(modelName);
+        server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return CompletableFuture.supplyAsync(()->result);
     }
 
@@ -50,8 +53,9 @@ public class MopeModelicaService implements ModelicaService {
         return CompletableFuture.supplyAsync(()->result);
     }
 
-    public MopeModelicaService(ICompilerAdapter comp){
+    public MopeModelicaService(ICompilerAdapter comp, MopeLSPServer server){
         super();
+        this.server = server;
         compiler = comp;
     }
 }

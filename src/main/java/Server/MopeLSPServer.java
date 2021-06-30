@@ -27,13 +27,16 @@ public class MopeLSPServer implements ModelicaLanguageServer
     public MopeLSPServer(ConfigObject config){
         this.clients = new ArrayList<>();
         this.diagnosticHandler = new DiagnosticHandler(this);
-        this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local", this.diagnosticHandler );
+        this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local" );
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
-        this.modelicaService = new MopeModelicaService(compiler);
+        this.modelicaService = new MopeModelicaService(compiler, this);
         this.cfg = config;
     }
 
+    public DiagnosticHandler getDiagnosticHandler(){
+        return this.diagnosticHandler;
+    }
 
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
