@@ -28,6 +28,7 @@ public class DiagnosticHandler {
     }
 
     public void addDiagnostics(List<ModelicaDiagnostic> diagnostics){
+        if(diagnostics.isEmpty()) return;
         for(ModelicaDiagnostic dia : diagnostics){
 
             if(Diagnostics.containsKey(dia.getUri())) Diagnostics.get(dia.getUri()).add(dia);
