@@ -16,7 +16,7 @@ public class ModelicaDiagnostic extends Diagnostic {
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     final static Pattern hasError = Pattern.compile("Error:");
     final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]*");
-    final static Pattern location = Pattern.compile("\\[([^\\[]*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
+    final static Pattern location = Pattern.compile("\\[([^\\[]*\\..+):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
 
     private String uri;
     private ModelicaDiagnostic(Result result){
