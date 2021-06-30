@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 public class ModelicaDiagnostic extends Diagnostic {
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
+    final static Pattern hasError = Pattern.compile("Error:");
     final static Pattern errorMessage = Pattern.compile("Error:.*[\\n\\]]*");
     final static Pattern location = Pattern.compile("\\[([^\\[]*\\.mo):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
 
@@ -26,11 +27,10 @@ public class ModelicaDiagnostic extends Diagnostic {
         parseErrorString(str);
     }
 
-
-
     public static List<ModelicaDiagnostic>CreateDiagnostics(String str){
         ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
-        diagnostics.add(new ModelicaDiagnostic(str));
+        Matcher hasErrorMatcher = hasError.matcher(str);
+        if(hasErrorMatcher.find()) diagnostics.add(new ModelicaDiagnostic(str));
         return diagnostics;
     }
 
