@@ -32,6 +32,7 @@ public class MopeModelicaService implements ModelicaService {
     @Override
     public CompletableFuture<String> loadFile(String path){
         String result = compiler.loadFile(path);
+        server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return CompletableFuture.supplyAsync(()->result);
     }
 
