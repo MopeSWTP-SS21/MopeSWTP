@@ -33,7 +33,7 @@ public class MopeLSPServerLauncher {
         serverSocket = new ServerSocket(port);
     }
 
-    public void LaunchServer() throws IOException {
+    public void LaunchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
@@ -50,12 +50,11 @@ public class MopeLSPServerLauncher {
                         .setRemoteInterface(IModelicaLanguageClient.class)
                         .setInput(socket.getInputStream())
                         .setOutput(socket.getOutputStream())
-                        .setExecutorService(executor) //Not sure about this?
+                        .setExecutorService(executor)
                         .create();
                 LanguageClient consumer = sLauncher.getRemoteProxy();
                 server.connect(consumer);
 
-                /*CompletableFuture<Void> listening =  */
                 CompletableFuture.supplyAsync(() ->{
                     Future listening = sLauncher.startListening();
                     try {
@@ -71,20 +70,11 @@ public class MopeLSPServerLauncher {
             }
         });
 
-        /*try {
-            System.out.println( sLauncher.getRemoteProxy().showMessageRequest(new ShowMessageRequestParams()).get(15, TimeUnit.SECONDS).getTitle());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }*/
-        //return future;
+
         return ;
     }
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) {
         try{
             Properties prop = new Properties();
             String configPath = "src/main/java/Server/server.config";
@@ -100,13 +90,11 @@ public class MopeLSPServerLauncher {
                 port =1234;
             }
             MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(port);
-            //serverListening =
             launcher.LaunchServer();
 
             System.in.read();
             serverSocket.close();
             executor.shutdown();
-            //serverListening.get();
             logger.info("Server Finished");
         }catch(Exception e){
 

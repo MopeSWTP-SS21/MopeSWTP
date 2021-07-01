@@ -1,7 +1,7 @@
 
 
 import Client.ConsoleClientLauncher;
-import Client.MopeLSPClient;
+
 import Server.MopeLSPServer;
 import Server.MopeLSPServerLauncher;
 import org.junit.jupiter.api.*;
@@ -9,10 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +38,7 @@ class LSPServerTest{
         }
     }
     @BeforeAll
-    public void startServer() throws IOException, ExecutionException, InterruptedException {
+    public void startServer(){
         new Thread(() -> {
             try {
                 serverLauncher.LaunchServer();
@@ -52,7 +50,7 @@ class LSPServerTest{
         }).start();
     }
     @BeforeAll
-    public void startClient() throws IOException {
+    public void startClient() {
         new Thread(() -> {
             try {
                 clientLauncher.LaunchClient();
@@ -63,7 +61,7 @@ class LSPServerTest{
             }
         }).start();
     }
-    public void initializeServer() throws IOException, InterruptedException {
+    public void initializeServer() throws InterruptedException {
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
         Thread.currentThread().sleep(15000);
@@ -71,7 +69,7 @@ class LSPServerTest{
 
 
     @Test
-    public void getOMCVersion() throws IOException, InterruptedException {
+    public void getOMCVersion() throws InterruptedException {
         initializeServer();
         assertEquals("V 1.17.0",clientLauncher.client.compilerVersion());
     }

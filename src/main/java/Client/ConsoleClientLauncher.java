@@ -44,7 +44,7 @@ public class ConsoleClientLauncher {
                 .setRemoteInterface(ModelicaLanguageServer.class)
                 .setInput(socket.getInputStream())
                 .setOutput(socket.getOutputStream())
-                .setExecutorService(executor) //Not sure about this?
+                .setExecutorService(executor)
                 .create();
         client.setServer(cLauncher.getRemoteProxy());
         Future<Void> future = cLauncher.startListening();
@@ -53,8 +53,6 @@ public class ConsoleClientLauncher {
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-
-        //client.shutdown();
         socket.close();
 
         executor.shutdown();
