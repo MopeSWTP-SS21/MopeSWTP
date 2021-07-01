@@ -7,6 +7,7 @@ import org.eclipse.lsp4j.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.print.attribute.standard.Severity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,10 +44,16 @@ public class ModelicaDiagnostic extends Diagnostic {
 
     public static List<ModelicaDiagnostic>CreateModelNotLoadedDiagnostic(String modelName, boolean topLevelLoaded){
         ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
-        ModelicaDiagnostic diagnostic = new ModelicaDiagnostic();
+
+        DiagnosticSeverity severity = DiagnosticSeverity.Error;
         String message = "Could not load Model " + modelName;
-        if(topLevelLoaded) message += ", loaded top level model instead";
+        if(topLevelLoaded){
+            message += ", loaded top level model instead";
+            severity = DiagnosticSeverity.Warning;
+        }
+        ModelicaDiagnostic diagnostic = new ModelicaDiagnostic();
         diagnostic.setMessage(message);
+        diagnostic.setSeverity(severity);
         diagnostics.add(diagnostic);
         return diagnostics;
     }
