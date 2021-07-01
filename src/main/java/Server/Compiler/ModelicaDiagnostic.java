@@ -1,6 +1,5 @@
 package Server.Compiler;
 
-import omc.corba.Result;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
@@ -20,10 +19,7 @@ public class ModelicaDiagnostic extends Diagnostic {
     final static Pattern location = Pattern.compile("\\[([^\\[]*\\..+):([0-9]*:[0-9]*)-([0-9]*:[0-9]*):.*]");
 
     private String uri;
-    private ModelicaDiagnostic(Result result){
 
-        parseErrorString(result.error.toString());
-    }
     private ModelicaDiagnostic(String str, DiagnosticSeverity severity){
         setSeverity(severity);
         parseErrorString(str);
