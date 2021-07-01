@@ -70,10 +70,6 @@ public class ModelicaDiagnostic extends Diagnostic {
         return;
     }
 
-    public static void parseResultString(String str){
-
-    }
-
     public String getUri(){
         return uri;
     }

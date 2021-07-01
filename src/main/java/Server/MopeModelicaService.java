@@ -2,12 +2,8 @@ package Server;
 
 import Server.Compiler.ICompilerAdapter;
 import Server.Compiler.ModelicaDiagnostic;
-import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
-import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
-import org.eclipse.lsp4j.jsonrpc.messages.ResponseMessage;
-
+import omc.corba.Result;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -24,9 +20,19 @@ public class MopeModelicaService implements ModelicaService {
 
     @Override
     public CompletableFuture<String> loadModel(String modelName){
-        String result = compiler.loadModel(modelName);
-        server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
-        return CompletableFuture.supplyAsync(()->result);
+        ArrayList<ModelicaDiagnostic> diagnostics= new ArrayList();
+        Result result = compiler.loadModel(modelName);
+        diagnostics.addAll(
+                ModelicaDiagnostic.CreateDiagnostics(result.toString())
+        );
+        Result loaded = compiler.existClass(modelName);
+        if(!Boolean.parseBoolean(loaded.result)){
+            diagnostics.addAll(
+                    ModelicaDiagnostic.CreateModelNotLoadedDiagnostic(modelName, Boolean.parseBoolean(result.result))
+            );
+        }
+        server.getDiagnosticHandler().addDiagnostics(diagnostics);
+        return CompletableFuture.supplyAsync(()->result.toString());
     }
 
     @Override

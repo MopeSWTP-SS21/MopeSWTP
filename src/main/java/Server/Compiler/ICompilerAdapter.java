@@ -1,6 +1,7 @@
 package Server.Compiler;
 
 import java.util.List;
+import omc.corba.Result;
 
 public interface ICompilerAdapter {
 
@@ -16,7 +17,9 @@ public interface ICompilerAdapter {
 
     String getModelicaPath();
 
-    String loadModel(String name);
+    Result loadModel(String name);
+
+    Result existClass(String className);
 
     String getCompilerVersion();
 

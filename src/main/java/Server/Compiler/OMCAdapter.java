@@ -46,11 +46,15 @@ public class OMCAdapter implements ICompilerAdapter{
     }
 
     @Override
-    public String loadModel(String name){
+    public Result loadModel(String name){
         Result result = omc.sendExpression("loadModel(" + name + ")");
-        return result.toString();
+        return result;
     }
-
+    @Override
+    public Result existClass(String className){
+        Result result = omc.sendExpression("existClass(" + className + ")");
+        return result;
+    }
 
     @Override
     public String getCompilerVersion() {
