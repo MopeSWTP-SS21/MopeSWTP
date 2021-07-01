@@ -25,6 +25,11 @@ public class ModelicaDiagnostic extends Diagnostic {
         parseErrorString(str);
     }
 
+    private ModelicaDiagnostic(){
+        addEmptyRange();
+        addDefaultLocation();
+    }
+
     private static ModelicaDiagnostic ModelicaErrorDiagnostic(String str){
         return new ModelicaDiagnostic(str, DiagnosticSeverity.Error);
     }
@@ -34,6 +39,35 @@ public class ModelicaDiagnostic extends Diagnostic {
         Matcher hasErrorMatcher = hasError.matcher(str);
         if(hasErrorMatcher.find()) diagnostics.add(ModelicaErrorDiagnostic(str));
         return diagnostics;
+    }
+
+    public static List<ModelicaDiagnostic>CreateModelNotLoadedDiagnostic(String modelName, boolean topLevelLoaded){
+        ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
+        ModelicaDiagnostic diagnostic = new ModelicaDiagnostic();
+        String message = "Could not load Model " + modelName;
+        if(topLevelLoaded) message += ", loaded top level model instead";
+        diagnostic.setMessage(message);
+        diagnostics.add(diagnostic);
+        return diagnostics;
+    }
+
+    private void addEmptyRange(){
+        Range errorRange = new Range();
+        Position startP = new Position();
+        Position endP = new Position();
+        startP.setLine(0);
+        startP.setCharacter(0);
+        endP.setLine(0);
+        endP.setCharacter(0);
+        errorRange.setStart(startP);
+        errorRange.setEnd(endP);
+        setRange(errorRange);
+    }
+
+    private void addDefaultLocation(){
+        //TODO maybe add Workspace Location
+        uri = "path/to/project";
+        return;
     }
 
     public static void parseResultString(String str){
