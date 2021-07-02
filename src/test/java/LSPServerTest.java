@@ -126,4 +126,5 @@ class LSPServerTest{
     public void endTests(){
         logger.info("All tests done... Completing Future");
         testsFinished.complete(true);
+    }
 }
