@@ -15,14 +15,21 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     private ModelicaLanguageServer server;
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
+
+
     @Override
     public void telemetryEvent(Object object) {
-        logger.info("Client->telemtryEvent");
+        logger.info("Client->telemetryEvent");
     }
 
     @Override
     public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-        logger.info("Client->publishDiagnostics");
+        StringBuilder log = new StringBuilder("DiagnosticLocation: " + diagnostics.getUri() + "\nDiagnostics: \n");
+        for(var d : diagnostics.getDiagnostics()){
+            log.append(d.toString()).append("\n");
+        }
+        logger.info(log.toString());
+
     }
 
     @Override
@@ -72,13 +79,11 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         p.setCharacter(col);
         p.setLine(line);
         params.setPosition(p);
-        CompletableFuture<?> completion = server.getTextDocumentService().completion(params);
+        var completion = server.getTextDocumentService().completion(params);
         Object compGet = null;
         try {
             compGet = completion.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return compGet.toString();

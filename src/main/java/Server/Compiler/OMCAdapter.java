@@ -1,28 +1,25 @@
 package Server.Compiler;
 
 
+import Server.DiagnosticHandler;
 import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 
 import omc.corba.Result;
-import omc.corba.ScriptingHelper;
 import omc.ior.ZMQPortFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import version.Version;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class OMCAdapter implements ICompilerAdapter{
 
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     private final OMCInterface omc;
-
 
     @Override
     public String loadFile(String path) {
@@ -49,11 +46,15 @@ public class OMCAdapter implements ICompilerAdapter{
     }
 
     @Override
-    public String loadModel(String name){
+    public Result loadModel(String name){
         Result result = omc.sendExpression("loadModel(" + name + ")");
-        return result.toString();
+        return result;
     }
-
+    @Override
+    public Result existClass(String className){
+        Result result = omc.sendExpression("existClass(" + className + ")");
+        return result;
+    }
 
     @Override
     public String getCompilerVersion() {
