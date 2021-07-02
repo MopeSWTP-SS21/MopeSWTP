@@ -9,8 +9,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class MopeModelicaService implements ModelicaService {
 
-    private ICompilerAdapter compiler;
-    private MopeLSPServer server;
+    private final ICompilerAdapter compiler;
+    private final MopeLSPServer server;
     @Override
     public CompletableFuture<String> checkModel(String modelName){
         server.getDiagnosticHandler().clearDiagnostics();
@@ -34,7 +34,7 @@ public class MopeModelicaService implements ModelicaService {
             );
         }
         server.getDiagnosticHandler().addDiagnostics(diagnostics);
-        return CompletableFuture.supplyAsync(()->result.toString());
+        return CompletableFuture.supplyAsync(result::toString);
     }
 
     @Override
