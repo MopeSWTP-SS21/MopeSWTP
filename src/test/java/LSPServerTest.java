@@ -24,8 +24,7 @@ class LSPServerTest{
 
     @BeforeAll
     public void getCurrentUserAndSetRefPath() {
-         userName = System.getProperty("user.name");
-         refPath = "/home/"+userName+"/MopeSWTP/src/test/java/resources/exampleModels";
+         refPath = System.getProperty("user.dir") + "/src/test/java/resources/exampleModels";
     }
 
 
