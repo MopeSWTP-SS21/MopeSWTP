@@ -24,6 +24,7 @@ class LSPServerTest{
 
     @BeforeAll
     public void getCurrentUserAndSetRefPath() {
+         userName = System.getProperty("user.name");
          refPath = System.getProperty("user.dir") + "/src/test/java/resources/exampleModels";
     }
 
@@ -69,6 +70,7 @@ class LSPServerTest{
             }
         }).start();
     }
+
     public void initializeServer() throws InterruptedException {
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
