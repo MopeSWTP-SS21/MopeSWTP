@@ -13,6 +13,7 @@ public class MopeModelicaService implements ModelicaService {
     private MopeLSPServer server;
     @Override
     public CompletableFuture<String> checkModel(String modelName){
+Clear        server.getDiagnosticHandler().clearDiagnostics();
         String result = compiler.checkModel(modelName);
         server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return CompletableFuture.supplyAsync(()->result);
@@ -20,6 +21,7 @@ public class MopeModelicaService implements ModelicaService {
 
     @Override
     public CompletableFuture<String> loadModel(String modelName){
+        server.getDiagnosticHandler().clearDiagnostics();
         ArrayList<ModelicaDiagnostic> diagnostics= new ArrayList();
         Result result = compiler.loadModel(modelName);
         diagnostics.addAll(
@@ -37,6 +39,7 @@ public class MopeModelicaService implements ModelicaService {
 
     @Override
     public CompletableFuture<String> loadFile(String path){
+        server.getDiagnosticHandler().clearDiagnostics();
         String result = compiler.loadFile(path);
         server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return CompletableFuture.supplyAsync(()->result);
