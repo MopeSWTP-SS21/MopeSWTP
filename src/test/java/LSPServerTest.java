@@ -1,5 +1,3 @@
-
-
 import Client.ConsoleClientLauncher;
 
 import Server.MopeLSPServer;
@@ -17,8 +15,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LSPServerTest{
 
+
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPServer.class);
     private final CompletableFuture<Boolean> testsFinished = new CompletableFuture<>();
+
+    private String userName;
+    private String refPath;
+
+    @BeforeAll
+    public void getCurrentUserAndSetRefPath() {
+         userName = System.getProperty("user.name");
+         refPath = "/home/"+userName+"/MopeSWTP/src/test/java/resources/exampleModels";
+    }
+
 
     MopeLSPServerLauncher serverLauncher;
     {
@@ -67,16 +76,54 @@ class LSPServerTest{
         Thread.currentThread().sleep(15000);
     }
 
-
+    // Tests the current OMC Compilerversion and checks the result the server is responding
     @Test
     public void getOMCVersion() throws InterruptedException {
         initializeServer();
         assertEquals("V 1.17.0",clientLauncher.client.compilerVersion());
     }
-
+    // Tests the default modelicapath and checks the result the server is responding
+    @Test
+    public void showModelicaPath() throws IOException, InterruptedException {
+        initializeServer();
+        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/\", error=Optional.empty]", clientLauncher.client.modelicaPath());
+    }
+    // Tests the adding of a new modelicafolder to the modelicapath and checks the result the server is responding
+    @Test
+    public void addFolderToModPathAndShow() throws IOException, InterruptedException {
+        initializeServer();
+        clientLauncher.client.addPath(refPath);
+        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/:"+refPath+"\", error=Optional.empty]",clientLauncher.client.modelicaPath());
+    }
+    // Tests the loading of a modelica file and checks the result the server is responding
+    @Test
+    public void loadFile() throws IOException, InterruptedException {
+        initializeServer();
+        clientLauncher.client.addPath(refPath);
+        assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo"));
+    }
+    //Tests the loading of a model and checks the result the server is responding
+    @Test
+    public void loadModel() throws IOException, InterruptedException {
+        initializeServer();
+        clientLauncher.client.addPath(refPath);
+        clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
+        assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadModel("FunctionNames"));
+    }
+    //Tests the checking of a correct model and checks the result, the server is responding
+    @Test
+    public void checkModel() throws IOException, InterruptedException {
+        initializeServer();
+        clientLauncher.client.addPath(refPath);
+        clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
+        clientLauncher.client.loadModel("FunctionNames");
+        assertEquals("Model FunctionNames checked\n" +
+                "->\"Check of FunctionNames completed successfully.\n" +
+                "Class FunctionNames has 3 equation(s) and 3 variable(s).\n" +
+                "1 of these are trivial equation(s).\"",clientLauncher.client.checkModel(("FunctionNames")));
+    }
     @AfterAll
     public void endTests(){
         logger.info("All tests done... Completing Future");
         testsFinished.complete(true);
-    }
 }
