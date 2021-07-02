@@ -1,29 +1,33 @@
 import Client.ConsoleClientLauncher;
-import Client.MopeLSPClient;
+
 import Server.MopeLSPServer;
 import Server.MopeLSPServerLauncher;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LSPServerTest{
 
-    private  Future<Void> serverListening;
-    private  Future<Void> clientListening;
+
+    private static final Logger logger = LoggerFactory.getLogger(MopeLSPServer.class);
+    private final CompletableFuture<Boolean> testsFinished = new CompletableFuture<>();
+
     private String userName;
     private String refPath;
 
     @BeforeAll
     public void getCurrentUserAndSetRefPath() {
          userName = System.getProperty("user.name");
-        refPath = "/home/"+userName+"/MopeSWTP/src/test/java/resources/exampleModels";
+         refPath = "/home/"+userName+"/MopeSWTP/src/test/java/resources/exampleModels";
     }
+
 
     MopeLSPServerLauncher serverLauncher;
     {
@@ -43,34 +47,38 @@ class LSPServerTest{
         }
     }
     @BeforeAll
-    public void startServer() throws IOException {
+    public void startServer(){
         new Thread(() -> {
             try {
-                serverListening = serverLauncher.LaunchServer();
-                //test.get();
+                serverLauncher.LaunchServer();
+                testsFinished.get();
+                logger.info("Server Thread finishing...");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
     }
     @BeforeAll
-    public void startClient() throws IOException {
+    public void startClient() {
         new Thread(() -> {
             try {
-                clientListening = clientLauncher.LaunchClient();
+                clientLauncher.LaunchClient();
+                testsFinished.get();
+                logger.info("Client Thread finishing...");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
     }
-    public void initializeServer() throws IOException, InterruptedException {
+    public void initializeServer() throws InterruptedException {
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
         Thread.currentThread().sleep(15000);
     }
+
     // Tests the current OMC Compilerversion and checks the result the server is responding
     @Test
-    public void getOMCVersion() throws IOException, InterruptedException {
+    public void getOMCVersion() throws InterruptedException {
         initializeServer();
         assertEquals("V 1.17.0",clientLauncher.client.compilerVersion());
     }
@@ -114,4 +122,8 @@ class LSPServerTest{
                 "Class FunctionNames has 3 equation(s) and 3 variable(s).\n" +
                 "1 of these are trivial equation(s).\"",clientLauncher.client.checkModel(("FunctionNames")));
     }
+    @AfterAll
+    public void endTests(){
+        logger.info("All tests done... Completing Future");
+        testsFinished.complete(true);
 }

@@ -1,9 +1,12 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'thm.mope.lsp'
+version '0.1.0'
+
+
 
 repositories {
     mavenCentral()
@@ -27,6 +30,30 @@ task startConsoleClient(type : JavaExec) {
     main = 'Client.ConsoleClientLauncher'
     standardInput = System.in
 }
+
+shadowJar {
+    //mergeServiceFiles()
+}
+
+task shadowServerJar(type: Jar, dependsOn: shadowJar) {
+    archiveBaseName = project.group
+    version = project.version
+    archiveClassifier.set('Server')
+    manifest {
+        attributes 'Main-Class': 'Server.MopeLSPServerLauncher'
+    }
+    from zipTree(shadowJar.archiveFile)
+}
+task shadowClientJar(type: Jar, dependsOn: shadowJar){
+    archiveBaseName = project.group
+    version = project.version
+    archiveClassifier.set('ConsoleCLient')
+    manifest {
+        attributes 'Main-Class': 'Client.ConsoleClientLauncher'
+    }
+    from zipTree(shadowJar.archiveFile)
+}
+
 
 test {
     useJUnitPlatform()

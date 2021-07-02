@@ -1,5 +1,6 @@
 package Client;
 
+import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -21,7 +22,7 @@ public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
-    private Launcher<LanguageServer> cLauncher;
+    private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port;
@@ -38,23 +39,20 @@ public class ConsoleClientLauncher {
 
     public Future<Void> LaunchClient() throws IOException {
         executor = Executors.newFixedThreadPool(2);
-        cLauncher = new LSPLauncher.Builder<org.eclipse.lsp4j.services.LanguageServer>()
+        cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
                 .setLocalService(client)
-                .setRemoteInterface(org.eclipse.lsp4j.services.LanguageServer.class)
+                .setRemoteInterface(ModelicaLanguageServer.class)
                 .setInput(socket.getInputStream())
                 .setOutput(socket.getOutputStream())
-                .setExecutorService(executor) //Not sure about this?
+                .setExecutorService(executor)
                 .create();
         client.setServer(cLauncher.getRemoteProxy());
         Future<Void> future = cLauncher.startListening();
         logger.info("Client listening");
-        //System.out.println("Client Listening");
         return future;
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-
-        //client.shutdown();
         socket.close();
 
         executor.shutdown();
@@ -84,16 +82,18 @@ public class ConsoleClientLauncher {
     private static void ConsoleMenue(){
         boolean running=true;
 
-        String[] menuItems = new String[] {   "1: Initialize server",
-                                            "2: Get compiler version",
+        String[] menuItems = new String[] {
+                "1: Initialize server",
+                "2: Get compiler version",
                 "3: Load File",
                 "4: Load model",
                 "5: Check Model",
                 "6: Initialize Model",
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
-                "9 : Exit"
-        }                ;
+                "9 : Exit",
+                "10 : Complete"
+        };
 
         while(running)
         {
@@ -139,6 +139,15 @@ public class ConsoleClientLauncher {
                     break;
                 case 8:
                     System.out.println(client.modelicaPath());
+                    break;
+                case 10:
+                    System.out.print("File: ");
+                    String compFile = sc.next();
+                    System.out.print("Line: ");
+                    int line = sc.nextInt();
+                    System.out.print("Column: ");
+                    int col = sc.nextInt();
+                    System.out.println(client.complete(compFile, line, col));
                     break;
                 default:
                     logger.info("wrong entry");

@@ -1,6 +1,7 @@
 package Server;
 
 import Client.MopeLSPClient;
+import Server.Compiler.ICompilerAdapter;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
@@ -13,32 +14,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MopeDocumentService implements TextDocumentService {
+    private ICompilerAdapter compiler;
     private static final Logger logger = LoggerFactory.getLogger(MopeDocumentService.class);
+
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams completionParams) {
-        logger.info("TestDocumentService->completion triggerd...");
-        // Provide completion item.
+        logger.info("DocumentService->completion");
         return CompletableFuture.supplyAsync(() -> {
             List<CompletionItem> completionItems = new ArrayList<>();
             try {
-                // Sample Completion item for sayHello
-                CompletionItem completionItem = new CompletionItem();
-                // Define the text to be inserted in to the file if the completion item is selected.
-                completionItem.setInsertText("sayHello() {\n    print(\"hello\")\n}");
-                // Set the label that shows when the completion drop down appears in the Editor.
-                completionItem.setLabel("sayHello()");
-                // Set the completion kind. This is a snippet.
-                // That means it replace character which trigger the completion and
-                // replace it with what defined in inserted text.
-                completionItem.setKind(CompletionItemKind.Snippet);
-                // This will set the details for the snippet code which will help user to
-                // understand what this completion item is.
-                completionItem.setDetail("sayHello()\n this will say hello to the people");
-
-                // Add the sample completion item to the list.
-                completionItems.add(completionItem);
+                completionItems = CompletionProvider.complete(completionParams, compiler);
             } catch (Exception e) {
-                //TODO: Handle the exception.
+                e.printStackTrace();
             }
 
             // Return the list of completion items.
@@ -74,5 +61,10 @@ public class MopeDocumentService implements TextDocumentService {
         Hover h = new Hover();
         h.setContents(new MarkupContent("h1", "hallo"));
         return CompletableFuture.supplyAsync(() -> { return h; });
+    }
+
+    public MopeDocumentService(ICompilerAdapter comp){
+        super();
+        compiler = comp;
     }
 }

@@ -1,25 +1,25 @@
 package Server.Compiler;
 
 
+import Server.DiagnosticHandler;
 import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 
 import omc.corba.Result;
-import omc.corba.ScriptingHelper;
 import omc.ior.ZMQPortFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import version.Version;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class OMCAdapter implements ICompilerAdapter{
 
     private static final Logger logger = LoggerFactory.getLogger(OMCAdapter.class);
     private final OMCInterface omc;
-
 
     @Override
     public String loadFile(String path) {
@@ -29,9 +29,6 @@ public class OMCAdapter implements ICompilerAdapter{
 
     @Override
     public String checkModel(String modelName) {
-        //TODO
-        //Optional<String> name = ScriptingHelper.getModelName( Paths.get("/home/swtp/modelica/LotkaVolterra/LV_Manu/LV3Species.mo"));
-        //String result2 = omc.checkModel(name.orElse("LV_Manu.LV2Species"));
         String result = omc.checkModel(modelName);
         return "Model " + modelName + " checked\n" + "->" + result;
     }
@@ -49,17 +46,60 @@ public class OMCAdapter implements ICompilerAdapter{
     }
 
     @Override
-    public String loadModel(String name){
+    public Result loadModel(String name){
         Result result = omc.sendExpression("loadModel(" + name + ")");
-        return result.toString();
+        return result;
     }
-
+    @Override
+    public Result existClass(String className){
+        Result result = omc.sendExpression("existClass(" + className + ")");
+        return result;
+    }
 
     @Override
     public String getCompilerVersion() {
         logger.info("Requesting OMC Version");
         Version v = omc.getVersion();
         return v.toString();
+    }
+
+    @Override
+    public List<String> searchLoadedClassNames(String search){
+        logger.info("Searching loaded Classes for " + search);
+        Result result = omc.sendExpression("searchClassNames(\"" + search + "\")"); //Todo \" ?
+        String[] classes = result.result.substring(1, result.result.length() -1 ).split(",");
+        if(classes.length <= 0 || classes[0].length() <= 0  ) return new ArrayList<String>();
+        return Arrays.asList(classes);
+    }
+    @Override
+    public List<String> getAvailableLibraries(){
+        logger.info("Find all available Libraries in ModelicaPath");
+        Result result = omc.sendExpression("getAvailableLibraries()");
+        String[] libs = result.result.split(",");
+        return Arrays.asList(libs);
+    }
+    @Override
+    public List<String> getLoadedClassNames(String classPackage){
+        String info = "Searching for classNames";
+
+        String expression;
+        if(classPackage == null || classPackage.trim().length() == 0){
+            expression = "getClassNames()";
+        } else {
+            expression = "getClassNames(" + classPackage + ")";
+            info += " in " + classPackage;
+        }
+        logger.info(info);
+        Result result = omc.sendExpression(expression);
+        String[] libs = result.result.substring(1, result.result.length() -1 ).split(",");
+        if(libs.length <= 0 || libs[0].length() <= 0  ) return new ArrayList<String>();
+        return Arrays.asList(libs);
+    }
+
+    @Override
+    public String getClassComment(String className){
+        Result result = omc.sendExpression("getClassComment(" + className + ")");
+        return result.result;
     }
 
     @Override
