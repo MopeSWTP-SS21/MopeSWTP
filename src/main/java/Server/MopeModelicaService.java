@@ -13,7 +13,7 @@ public class MopeModelicaService implements ModelicaService {
     private MopeLSPServer server;
     @Override
     public CompletableFuture<String> checkModel(String modelName){
-Clear        server.getDiagnosticHandler().clearDiagnostics();
+        server.getDiagnosticHandler().clearDiagnostics();
         String result = compiler.checkModel(modelName);
         server.getDiagnosticHandler().addDiagnostics(ModelicaDiagnostic.CreateDiagnostics(result));
         return CompletableFuture.supplyAsync(()->result);
