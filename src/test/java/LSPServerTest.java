@@ -25,7 +25,7 @@ class LSPServerTest{
     @BeforeAll
     public void getCurrentUserAndSetRefPath() {
          userName = System.getProperty("user.name");
-         refPath = "/home/"+userName+"/MopeSWTP/src/test/java/resources/exampleModels";
+         refPath = System.getProperty("user.dir") + "/src/test/java/resources/exampleModels";
     }
 
 
@@ -70,6 +70,7 @@ class LSPServerTest{
             }
         }).start();
     }
+
     public void initializeServer() throws InterruptedException {
         Thread.currentThread().sleep(1000);
         clientLauncher.client.initServer();
@@ -126,4 +127,5 @@ class LSPServerTest{
     public void endTests(){
         logger.info("All tests done... Completing Future");
         testsFinished.complete(true);
+    }
 }
