@@ -40,7 +40,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
 
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
-        InitializeResult result = new InitializeResult(new ServerCapabilities());
+        InitializeResult result = new InitializeResult(MopeServerCapabilities.getCapabilities());
 
         logger.info("Server->initialize triggerd");
         compiler.connect();
@@ -96,4 +96,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
             c.publishDiagnostics(params);
         }
     }
+
+
 }
