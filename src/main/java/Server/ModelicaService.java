@@ -24,6 +24,8 @@ public interface ModelicaService {
         throw new UnsupportedOperationException();
     }
     @JsonRequest
+    CompletableFuture<String> getDocumentation(String className);
+    @JsonRequest
     default CompletableFuture<String> getModelicaPath(){
         throw new UnsupportedOperationException();
     }

@@ -101,6 +101,11 @@ public class OMCAdapter implements ICompilerAdapter{
         Result result = omc.sendExpression("getClassComment(" + className + ")");
         return result.result;
     }
+    @Override
+    public String getDocumentation(String className){
+        Result result = omc.sendExpression("getDocumentationAnnotation(" + className + ")");
+        return result.result;
+    }
 
     @Override
     public Boolean connect() {
