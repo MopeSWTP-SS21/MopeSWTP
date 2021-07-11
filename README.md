@@ -87,3 +87,25 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 9. The commands `3`,`4`,`5`,`6` are proposed for loading a file, loading a model, check a model or initialize a model 
 (This is currently difficult to use as long as we have neither delivered the standardlibrary nor some examplemodels)
+
+# Instructions to build the server- and console-jar-files
+
+In order to build a Jar-File you need to follow these steps: 
+
+1. build both tasks
+2. run the jars to verify its function
+
+
+## Step 1
+Build both gradle-tasks by executing this command `./gradlew clean shadowServerJar shadowClientJar`. This will generate 2 jars <br/>
+`thm.mope.lsp-0.1.0-ConsoleCLient.jar` <br/>
+`thm.mope.lsp-0.1.0-Server.jar` <br/>
+which are stored in <br/>
+`~/projectfolder/MopeSWTP/build/libs`
+
+## Step 2
+Open the terminal and navigate to your project-folder and execute this in this order: <br/>
+`java -jar build/libs/thm.mope.lsp-0.1.0-Server.jar` <br/>
+`java -jar build/libs/thm.mope.lsp-0.1.0-ConsoleCLient.jar` <br/>
+
+If it was successful you will be asked to enter as server-address to connect to and the according port. 
