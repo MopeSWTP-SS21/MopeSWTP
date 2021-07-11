@@ -85,6 +85,11 @@ public class MopeLSPServer implements ModelicaLanguageServer
         return CompletableFuture.supplyAsync(() -> null);
     }
 
+    public CompletableFuture<Object> disconnectClient() {
+        logger.info("Client is about to be disconnected");
+        return CompletableFuture.supplyAsync(() -> null);
+    }
+
     private void notifyAllClientsAboutShutdown(){
         for (var c: clients) {
             c.showMessage(new MessageParams(MessageType.Info, "Server is about to shutdown"));

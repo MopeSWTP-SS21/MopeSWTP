@@ -2,6 +2,8 @@ package Client;
 
 import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

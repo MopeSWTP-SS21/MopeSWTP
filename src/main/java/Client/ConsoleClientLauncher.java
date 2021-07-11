@@ -52,6 +52,15 @@ public class ConsoleClientLauncher {
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
+        //client.exitServer();
+        //client.disconnect();
+        socket.close();
+        clientListening.get();
+        executor.shutdown();
+        logger.info("Client Finished");
+    }
+
+    private static void FullShutdown() throws IOException, ExecutionException, InterruptedException {
         shutdown();
         //socket.close();
         clientListening.get();
@@ -79,12 +88,12 @@ public class ConsoleClientLauncher {
         clientListening = launcher.LaunchClient();
 
         ConsoleMenue();
-        StopClient();
+      //  StopClient();
 
 
     }
 
-    private static void ConsoleMenue(){
+    private static void ConsoleMenue() throws IOException, ExecutionException, InterruptedException {
         boolean running=true;
 
         String[] menuItems = new String[] {
@@ -96,8 +105,9 @@ public class ConsoleClientLauncher {
                 "6: Initialize Model",
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
-                "9 : Exit",
-                "10 : Complete"
+                "9 : Exit - Shutdown Server",
+                "10 : Exit - Disconnect",
+                "11 : Complete"
         };
 
         while(running)
@@ -131,6 +141,7 @@ public class ConsoleClientLauncher {
                     break;
                 case 9:
                     running=false;
+                    FullShutdown();
                     break;
                 case 7:
                     System.out.print("path: ");
@@ -146,6 +157,10 @@ public class ConsoleClientLauncher {
                     System.out.println(client.modelicaPath());
                     break;
                 case 10:
+                    StopClient();
+                    running = false;
+                    break;
+                case 11:
                     System.out.print("File: ");
                     String compFile = sc.next();
                     System.out.print("Line: ");
