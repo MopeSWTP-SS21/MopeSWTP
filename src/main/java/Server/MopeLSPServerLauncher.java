@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -84,24 +85,41 @@ public class MopeLSPServerLauncher {
         } catch (IOException | InterruptedException ie) {
 
         }
-       // server.shutdown();
+        //server.shutdown();
     }
+
+    public static void readConfigFile(String path) throws IOException {
+        Properties prop = new Properties();
+        try (FileInputStream fileInputStream = new FileInputStream(path)){
+            prop.load(fileInputStream);
+            port = Integer.parseInt(prop.getProperty("server.port"));
+            logger.info("Read Port " + port + " from " + path);
+        }
+    }
+
+    public static void readConfig() {
+        String home = System.getProperty("user.home");
+        String configPath = home+"/.config/mope/server.conf";
+        try{
+            readConfigFile(configPath);
+        }
+        catch (IOException ie){
+            configPath = home+ "\\mope\\server.conf";
+            try{
+                readConfigFile(configPath);
+            } catch (Exception ex){
+                configPath = "src/main/java/Server/server.config";
+                try {
+                    readConfigFile(configPath);
+                } catch (Exception exc) {}
+            }
+        }
+    }
+
     public static void main(String[] args) {
         try{
-           /* Properties prop = new Properties();
-            String configPath = "~/.config/mope/server.conf";
-            InputStream configStream;
-            try{
-                configStream = new FileInputStream(configPath);
-                prop.load(configStream);
-                port = Integer.parseInt(prop.getProperty("server.port"));
-                logger.info("Read Port " + port + " from " + configPath);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                port =4200;
-            }*/
-            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(4200);
+            readConfig();
+            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(port);
             launcher.LaunchServer();
             new Thread(() -> stopFromConsole(server)).start();
             server.waitForShutDown();

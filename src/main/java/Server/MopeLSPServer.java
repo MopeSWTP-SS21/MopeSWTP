@@ -36,21 +36,40 @@ public class MopeLSPServer implements ModelicaLanguageServer
     public MopeLSPServer(ConfigObject config){
         this.clients = new ArrayList<>();
         this.diagnosticHandler = new DiagnosticHandler(this);
-       /* Properties prop = new Properties();
-        String configPath = "$HOME/.config/mope/server.conf";
-        try {
-            InputStream configStream = new FileInputStream(configPath);
-            prop.load(configStream);
-            path = prop.getProperty("server.path");
-        } catch (Exception e){
-            e.printStackTrace();
-        }*/
-        this.compiler = new OMCAdapter("/usr/bin/omc", "us", "mope_local" );
+        readConfig();
+        this.compiler = new OMCAdapter(path, "us", "mope_local" );
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
         this.modelicaService = new MopeModelicaService(compiler, this);
         this.cfg = config;
         this.shut = new CompletableFuture<>();
+    }
+
+    public static void readConfigFile(String path) throws IOException {
+        Properties prop = new Properties();
+        try (FileInputStream fileInputStream = new FileInputStream(path)) {
+            prop.load(fileInputStream);
+            path = prop.getProperty("server.port");
+        }
+    }
+
+    public static void readConfig() {
+        String home = System.getProperty("user.home");
+        String configPath = home+"/.config/mope/server.conf";
+        try{
+            readConfigFile(configPath);
+        }
+        catch (IOException ie){
+            configPath = home+ "\\mope\\server.conf";
+            try{
+                readConfigFile(configPath);
+            } catch (Exception ex){
+                configPath = "src/main/java/Server/server.config";
+                try {
+                    readConfigFile(configPath);
+                } catch (Exception exc) {}
+            }
+        }
     }
 
     public DiagnosticHandler getDiagnosticHandler(){
