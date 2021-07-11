@@ -23,6 +23,7 @@ public class MopeLSPServerLauncher {
     private static ServerSocket serverSocket;
     private static MopeLSPServer server;
     private static ExecutorService executor;
+    private static Socket socket;
     private static int port = 1234;
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
 
@@ -42,7 +43,7 @@ public class MopeLSPServerLauncher {
         executor = Executors.newCachedThreadPool();
         executor.submit(() -> {
             while (true) {
-                Socket socket = serverSocket.accept();
+                socket = serverSocket.accept();
                 logger.info("Server connected to client socket");
                 System.out.flush();
                 Launcher<IModelicaLanguageClient> sLauncher = new LSPLauncher.Builder<IModelicaLanguageClient>()
@@ -74,10 +75,21 @@ public class MopeLSPServerLauncher {
         return ;
     }
 
+    public static void stopFromConsole(MopeLSPServer server) {
+        logger.info("Press enter for a server shutdown");
+        try {
+            while(server.isRunning() && System.in.available() == 0) {
+                Thread.sleep(1000);
+            }
+        } catch (IOException | InterruptedException ie) {
+
+        }
+       // server.shutdown();
+    }
     public static void main(String[] args) {
         try{
-            Properties prop = new Properties();
-            String configPath = "src/main/java/Server/server.config";
+           /* Properties prop = new Properties();
+            String configPath = "~/.config/mope/server.conf";
             InputStream configStream;
             try{
                 configStream = new FileInputStream(configPath);
@@ -87,14 +99,15 @@ public class MopeLSPServerLauncher {
             }
             catch (Exception e){
                 e.printStackTrace();
-                port =1234;
-            }
-            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(port);
+                port =4200;
+            }*/
+            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(4200);
             launcher.LaunchServer();
-
-            System.in.read();
-            serverSocket.close();
+            new Thread(() -> stopFromConsole(server)).start();
+            server.waitForShutDown();
+            socket.shutdownInput();
             executor.shutdown();
+            serverSocket.close();
             logger.info("Server Finished");
         }catch(Exception e){
 

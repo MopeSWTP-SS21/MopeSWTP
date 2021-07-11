@@ -1,5 +1,6 @@
 package Server.Compiler;
 
+import java.io.IOException;
 import java.util.List;
 import omc.corba.Result;
 
@@ -10,6 +11,8 @@ public interface ICompilerAdapter {
      * loads the File located at the given path into the compiler
      * */
     String loadFile(String path);
+
+    void exit() throws IOException;
 
     String checkModel(String modelName);
 

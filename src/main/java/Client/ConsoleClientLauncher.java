@@ -1,6 +1,7 @@
 package Client;
 
 import Server.ModelicaLanguageServer;
+import Server.MopeLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -12,16 +13,14 @@ import version.Version;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 
 public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
+    public static MopeLSPServer server;
     private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
@@ -53,11 +52,18 @@ public class ConsoleClientLauncher {
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-        socket.close();
-
-        executor.shutdown();
+        shutdown();
+        //socket.close();
         clientListening.get();
+        executor.shutdown();
         logger.info("Client Finished");
+    }
+
+    public static void shutdown() throws ExecutionException, InterruptedException {
+        //CompletableFuture<Object> result = server.shutdown();
+        //result.get();
+        client.shutdownServer();
+        client.exitServer();
     }
 
     public static void main(String[] args) throws Exception {
@@ -73,9 +79,8 @@ public class ConsoleClientLauncher {
         clientListening = launcher.LaunchClient();
 
         ConsoleMenue();
-
-
         StopClient();
+
 
     }
 
