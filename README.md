@@ -53,7 +53,7 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 1. Execute `./gradlew startMopeServer` in one of the shells. After the build is completed, the server should run on port 4200.
 
-2. Execute `./gradlew startConsoleClient` in the other shell. 
+2. Execute `./gradlew startConsoleClient --console plain` in the other shell. Please note the option `--console plain` at the end. This is useful, hence without this the output could be messed up due to different gradle or shell versions.
 
 3. After the build is completed, you are asked for the serverip & serverport. 
 
