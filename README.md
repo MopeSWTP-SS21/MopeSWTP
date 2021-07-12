@@ -41,7 +41,7 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 3. Inside your terminal, navigate to the folder where you want to clone the repository. Then execute 
 
-   `git@github.com:MopeSWTP-SS21/MopeSWTP.git`
+   `git clone git@github.com:MopeSWTP-SS21/MopeSWTP.git`
    
 4. Navigate to the newly cloned folder MopeSWTP  to get finally started using the Server and ConsoleClient.
 
