@@ -64,7 +64,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
             try{
                 readConfigFile(configPath);
             } catch (Exception ex){
-                configPath = "src/main/java/Server/server.config";
+                configPath = "src/main/java/Server/server.conf";
                 try {
                     readConfigFile(configPath);
                 } catch (Exception exc) {}
