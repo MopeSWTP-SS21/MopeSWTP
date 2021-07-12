@@ -103,7 +103,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             CompletableFuture<String> x = server.getModelicaService().getDocumentation(className);
             return x.get();
         }catch(Exception e){
-            logger.error("Error CheckModel",e);
+            logger.error("Error loading Documentation",e);
             e.printStackTrace();
         }
         return null;
