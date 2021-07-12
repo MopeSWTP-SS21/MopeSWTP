@@ -92,7 +92,8 @@ public class ConsoleClientLauncher {
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
                 "9 : Exit",
-                "10 : Complete"
+                "10 : Complete",
+                "11 : Get Documentation"
         };
 
         while(running)
@@ -148,6 +149,11 @@ public class ConsoleClientLauncher {
                     System.out.print("Column: ");
                     int col = sc.nextInt();
                     System.out.println(client.complete(compFile, line, col));
+                    break;
+                case 11:
+                    System.out.print("className: ");
+                    String docName = sc.next();
+                    System.out.println(client.getDocumentation(docName));
                     break;
                 default:
                     logger.info("wrong entry");
