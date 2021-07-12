@@ -41,7 +41,7 @@ class LSPServerTest{
     ConsoleClientLauncher clientLauncher;
     {
         try {
-            clientLauncher = new ConsoleClientLauncher("localhost",4200);
+            clientLauncher = new ConsoleClientLauncher("127.0.0.1",4200);
         } catch (IOException e) {
             e.printStackTrace();
         }
