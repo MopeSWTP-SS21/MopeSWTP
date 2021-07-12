@@ -108,7 +108,7 @@ public class MopeLSPServerLauncher {
             try{
                 readConfigFile(configPath);
             } catch (Exception ex){
-                configPath = "src/main/java/Server/server.conf";
+                configPath = "src/main/java/Server/server.config";
                 try {
                     readConfigFile(configPath);
                 } catch (Exception exc) {}
