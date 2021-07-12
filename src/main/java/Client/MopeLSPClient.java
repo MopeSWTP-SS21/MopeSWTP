@@ -98,6 +98,17 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         return hoverGet.toString();
     }
 
+    public String getDocumentation(String className){
+        try{
+            CompletableFuture<String> x = server.getModelicaService().getDocumentation(className);
+            return x.get();
+        }catch(Exception e){
+            logger.error("Error CheckModel",e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void didOpenFile(String path){
         TextDocumentItem item = new TextDocumentItem();
         item.setText("Hallo, ...");
@@ -175,8 +186,6 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         WorkspaceFolder f = new WorkspaceFolder();
         f.setName("ExampleModels");
         f.setUri("/home/swtp/modelica/exampleModels");
-        //List<WorkspaceFolder> result = new ArrayList<>();
-        //result.add(f);
         logger.info("WorkspaceFoldersResult created");
         return result;
     }
