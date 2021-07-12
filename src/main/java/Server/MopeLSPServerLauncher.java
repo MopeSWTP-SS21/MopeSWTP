@@ -25,11 +25,11 @@ public class MopeLSPServerLauncher {
     private static MopeLSPServer server;
     private static ExecutorService executor;
     private static Socket socket;
-    private static int port = 1234;
+    private static int port = 4200;
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
 
     public MopeLSPServerLauncher(int port) throws IOException {
-        ConfigObject config = new ConfigObject("1234");
+        ConfigObject config = new ConfigObject("4200");
         this.port = port;
         server = new MopeLSPServer(config);
         serverSocket = new ServerSocket(port);
