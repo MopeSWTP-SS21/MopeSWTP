@@ -45,15 +45,15 @@ public class MopeLSPServer implements ModelicaLanguageServer
         this.shut = new CompletableFuture<>();
     }
 
-    public static void readConfigFile(String path) throws IOException {
+    public void readConfigFile(String path) throws IOException {
         Properties prop = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             prop.load(fileInputStream);
-            path = prop.getProperty("server.port");
+            this.path = prop.getProperty("server.path");
         }
     }
 
-    public static void readConfig() {
+    public void readConfig() {
         String home = System.getProperty("user.home");
         String configPath = home+"/.config/mope/server.conf";
         try{
