@@ -22,11 +22,6 @@ class LSPServerTest{
     private String userName;
     private String refPath;
 
-    @BeforeAll
-    public void getCurrentUserAndSetRefPath() {
-         userName = System.getProperty("user.name");
-         refPath = System.getProperty("user.dir") + "/src/test/java/resources/exampleModels";
-    }
 
 
     MopeLSPServerLauncher serverLauncher;
@@ -47,7 +42,18 @@ class LSPServerTest{
         }
     }
     @BeforeAll
-    public void startServer(){
+    public void setupTestEnvironment(){
+        readSystemProperties();
+        startServer();
+        startClient();
+        initializeServer();
+    }
+
+    private void readSystemProperties() {
+        userName = System.getProperty("user.name");
+        refPath = System.getProperty("user.dir") + "/src/test/java/resources/exampleModels";
+    }
+    private void startServer(){
         new Thread(() -> {
             try {
                 serverLauncher.LaunchServer();
@@ -58,8 +64,8 @@ class LSPServerTest{
             }
         }).start();
     }
-    @BeforeAll
-    public void startClient() {
+
+    private void startClient() {
         new Thread(() -> {
             try {
                 clientLauncher.LaunchClient();
@@ -71,60 +77,65 @@ class LSPServerTest{
         }).start();
     }
 
-    public void initializeServer() throws InterruptedException {
-        Thread.currentThread().sleep(1000);
-        clientLauncher.client.initServer();
-        Thread.currentThread().sleep(15000);
+    private void initializeServer() {
+        try {
+            //TODO i am sure there is a better way to wait for everything to be set up
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ConsoleClientLauncher.client.initServer();
     }
 
     // Tests the current OMC Compilerversion and checks the result the server is responding
     @Test
-    public void getOMCVersion() throws InterruptedException {
-        initializeServer();
-        assertEquals("V 1.17.0",clientLauncher.client.compilerVersion());
+    public void getOMCVersion() {
+        assertEquals("V 1.17.0", ConsoleClientLauncher.client.compilerVersion());
     }
     // Tests the default modelicapath and checks the result the server is responding
     @Test
-    public void showModelicaPath() throws IOException, InterruptedException {
-        initializeServer();
-        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/\", error=Optional.empty]", clientLauncher.client.modelicaPath());
+    public void showModelicaPath() {
+
+        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/\", error=Optional.empty]", ConsoleClientLauncher.client.modelicaPath());
     }
     // Tests the adding of a new modelicafolder to the modelicapath and checks the result the server is responding
     @Test
-    public void addFolderToModPathAndShow() throws IOException, InterruptedException {
-        initializeServer();
-        clientLauncher.client.addPath(refPath);
-        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/:"+refPath+"\", error=Optional.empty]",clientLauncher.client.modelicaPath());
+    public void addFolderToModPathAndShow() {
+        //TODO: I don't want to initialize the Server, i just need a "clean" ModelicaPath...
+        ConsoleClientLauncher.client.initServer();
+        ConsoleClientLauncher.client.addPath(refPath);
+        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/:"+refPath+"\", error=Optional.empty]", ConsoleClientLauncher.client.modelicaPath());
     }
     // Tests the loading of a modelica file and checks the result the server is responding
     @Test
-    public void loadFile() throws IOException, InterruptedException {
-        initializeServer();
-        clientLauncher.client.addPath(refPath);
-        assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo"));
+    public void loadFile()  {
+
+        ConsoleClientLauncher.client.addPath(refPath);
+        assertEquals("Result [result=true, error=Optional.empty]", ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo"));
     }
     //Tests the loading of a model and checks the result the server is responding
     @Test
-    public void loadModel() throws IOException, InterruptedException {
-        initializeServer();
-        clientLauncher.client.addPath(refPath);
-        clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
-        assertEquals("Result [result=true, error=Optional.empty]",clientLauncher.client.loadModel("FunctionNames"));
+    public void loadModel(){
+
+        ConsoleClientLauncher.client.addPath(refPath);
+        ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
+        assertEquals("Result [result=true, error=Optional.empty]", ConsoleClientLauncher.client.loadModel("FunctionNames"));
     }
     //Tests the checking of a correct model and checks the result, the server is responding
     @Test
-    public void checkModel() throws IOException, InterruptedException {
-        initializeServer();
-        clientLauncher.client.addPath(refPath);
-        clientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
-        clientLauncher.client.loadModel("FunctionNames");
+    public void checkModel() {
+
+        ConsoleClientLauncher.client.addPath(refPath);
+        ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
+        ConsoleClientLauncher.client.loadModel("FunctionNames");
         assertEquals("Model FunctionNames checked\n" +
                 "->\"Check of FunctionNames completed successfully.\n" +
                 "Class FunctionNames has 3 equation(s) and 3 variable(s).\n" +
-                "1 of these are trivial equation(s).\"",clientLauncher.client.checkModel(("FunctionNames")));
+                "1 of these are trivial equation(s).\"", ConsoleClientLauncher.client.checkModel(("FunctionNames")));
     }
     @AfterAll
     public void endTests(){
+        //todo Shutdown server and client properly
         logger.info("All tests done... Completing Future");
         testsFinished.complete(true);
     }
