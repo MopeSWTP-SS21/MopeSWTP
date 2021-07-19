@@ -196,10 +196,11 @@ class LSPServerTest{
         );
     }
     @Test void sendExpression9(){
+        //TODO: I don't want to initialize the Server, i just need a "clean" ModelicaPath...
+        ConsoleClientLauncher.client.initServer();
         assertEquals(
                 "[/home/swtp/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/swtp/.openmodelica/libraries/index.json could not be parsed.\n" +
-                        "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.\n" +
-                        "",
+                        "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.",
                 ConsoleClientLauncher.client.sendExpression("loadModel(FooBar)")
         );
     }
