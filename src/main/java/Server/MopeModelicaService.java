@@ -39,8 +39,9 @@ public class MopeModelicaService implements ModelicaService {
 
     @Override
     public CompletableFuture<String> executeCommand(String command){
-        String result = "TODO";
-        return CompletableFuture.completedFuture(result);
+        Result result = compiler.executeCommand(command);
+        if(result.error.isPresent()) return CompletableFuture.completedFuture(result.error.get());
+        return CompletableFuture.completedFuture(result.result);
     }
     @Override
     public CompletableFuture<String> loadFile(String path){

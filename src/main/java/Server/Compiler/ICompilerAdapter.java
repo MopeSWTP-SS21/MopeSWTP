@@ -47,7 +47,7 @@ public interface ICompilerAdapter {
 
     String getDocumentation(String className);
 
-    String executeCommand(String command);
+    Result executeCommand(String command);
 
     Boolean connect();
 }

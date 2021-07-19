@@ -1,7 +1,6 @@
 package Server.Compiler;
 
 
-import Server.DiagnosticHandler;
 import omc.ZeroMQClient;
 import omc.corba.OMCInterface;
 
@@ -107,8 +106,10 @@ public class OMCAdapter implements ICompilerAdapter{
         return result.result;
     }
     @Override
-    public String executeCommand(String command){
-        return "TODO";
+    public Result executeCommand(String command){
+        //todo sanitize input
+        Result result = omc.sendExpression(command);
+        return result;
     }
 
     @Override

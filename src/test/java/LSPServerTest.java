@@ -106,6 +106,8 @@ class LSPServerTest{
         ConsoleClientLauncher.client.addPath(refPath);
         assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/:"+refPath+"\", error=Optional.empty]", ConsoleClientLauncher.client.modelicaPath());
     }
+
+
     // Tests the loading of a modelica file and checks the result the server is responding
     @Test
     public void loadFile()  {
@@ -138,10 +140,72 @@ class LSPServerTest{
      * This test sends an executeCommand command to the server to request the OMC version
      */
     @Test
-    public void executeCommand(){
-        assertEquals("TODO", ConsoleClientLauncher.client.executeCommand("getVersion()") );
+    public void executeCommand1(){
+        assertEquals("true", ConsoleClientLauncher.client.executeCommand("loadModel(Modelica, {\"3.2.3\"})") );
 
     }
+    @Test
+    public void executeCommand2(){
+        assertEquals("true", ConsoleClientLauncher.client.executeCommand("setCommandLineOptions(\"-d=newInst,nfAPI\")") );
+
+    }
+    @Test
+    public void executeCommand3(){
+        assertEquals("true", ConsoleClientLauncher.client.executeCommand("setCommandLineOptions(\"--unitChecking\")") );
+
+    }
+    @Test
+    public void executeCommand4(){
+        assertEquals("(0.0,1.0,1e-06,500,0.002)", ConsoleClientLauncher.client.executeCommand("getSimulationOptions(Modelica.Electrical.Analog.Examples.Rectifier)") );
+
+    }
+    @Test
+    public void executeCommand5(){
+        assertEquals(
+                "record SimulationResult\n" +
+                        "    resultFile = \"/tmp/OpenModelica/Modelica.Electrical.Analog.Examples.Rectifier_res.mat\",\n" +
+                        "    simulationOptions = \"startTime = 0.0, stopTime = 0.1, numberOfIntervals = 10000, tolerance = 1e-06, method = 'dassl', fileNamePrefix = 'Modelica.Electrical.Analog.Examples.Rectifier', options = '', outputFormat = 'mat', variableFilter = '.*', cflags = '', simflags = ''\",\n" +
+                        "    messages = \"LOG_SUCCESS       | info    | The initialization finished successfully without homotopy method.\n" +
+                        "LOG_SUCCESS       | info    | The simulation finished successfully.\n" +
+                        "\",\n" +
+                        "    timeFrontend = 1.364086431,\n" +
+                        "    timeBackend = 0.487607568,\n" +
+                        "    timeSimCode = 0.05728809099999999,\n" +
+                        "    timeTemplates = 0.181370335,\n" +
+                        "    timeCompile = 9.320577482999999,\n" +
+                        "    timeSimulation = 0.966985235,\n" +
+                        "    timeTotal = 12.396849296\n" +
+                        "end SimulationResult;\n",
+                ConsoleClientLauncher.client.executeCommand("simulate(Modelica.Electrical.Analog.Examples.Rectifier)")
+        );
+    }
+    @Test
+    public void executeCommand6(){
+        assertEquals("\"/home\"", ConsoleClientLauncher.client.executeCommand("cd(\"/home\")") );
+
+    }
+    @Test
+    public void executeCommand7(){
+        assertEquals("\"/home\"", ConsoleClientLauncher.client.executeCommand("cd()") );
+    }
+    @Test
+    public void executeCommand8(){
+        assertEquals(
+                "[<interactive>:1:1-1:18:writable] Error: Class unknownAPIMethod not found in scope <global scope> (looking for a function or record).\n",
+                ConsoleClientLauncher.client.executeCommand("unknownAPIMethod()")
+        );
+    }
+    @Test void executeCommand9(){
+        assertEquals(
+                "[/home/swtp/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/swtp/.openmodelica/libraries/index.json could not be parsed.\n" +
+                        "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.\n" +
+                        "",
+                ConsoleClientLauncher.client.executeCommand("loadModel(FooBar)")
+        );
+    }
+
+
+
     @AfterAll
     public void endTests(){
         //todo Shutdown server and client properly
