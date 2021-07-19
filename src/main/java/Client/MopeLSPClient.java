@@ -179,6 +179,16 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         return null;
     }
 
+    public Object executeCommand(String command) {
+        CompletableFuture<String> result = server.getModelicaService().executeCommand(command);
+        try {
+            return result.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error during executeCommand", e);
+        }
+        return null;
+    }
+
     @Override
     public CompletableFuture<List<WorkspaceFolder>> workspaceFolders(){
         CompletableFuture<List<WorkspaceFolder>> result = new CompletableFuture<>();

@@ -93,7 +93,8 @@ public class ConsoleClientLauncher {
                 "8: Show ModelicaPath",
                 "9 : Exit",
                 "10 : Complete",
-                "11 : Get Documentation"
+                "11 : Get Documentation",
+                "12 : send Expression"
         };
 
         while(running)
@@ -154,6 +155,11 @@ public class ConsoleClientLauncher {
                     System.out.print("className: ");
                     String docName = sc.next();
                     System.out.println(client.getDocumentation(docName));
+                    break;
+                case 12:
+                    System.out.print("expression: ");
+                    String modelicaCommand = sc.next();
+                    System.out.println(client.executeCommand(modelicaCommand));
                     break;
                 default:
                     logger.info("wrong entry");

@@ -16,6 +16,7 @@ public interface ModelicaService {
         throw new UnsupportedOperationException();
     }
 
+    @JsonRequest
     CompletableFuture<String> executeCommand(String command);
 
     @JsonRequest

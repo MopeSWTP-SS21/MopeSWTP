@@ -1,6 +1,5 @@
 package Server;
 
-import Server.Compiler.ICompilerAdapter;
 import org.eclipse.lsp4j.*;
 import org.eclipse.lsp4j.services.WorkspaceService;
 
@@ -9,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class MopeWorkspaceService implements WorkspaceService {
-    private ModelicaService modelicaService;
+    private final ModelicaService modelicaService;
     @Override
     public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams workspaceSymbolParams) {
         return null;

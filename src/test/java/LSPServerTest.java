@@ -133,6 +133,15 @@ class LSPServerTest{
                 "Class FunctionNames has 3 equation(s) and 3 variable(s).\n" +
                 "1 of these are trivial equation(s).\"", ConsoleClientLauncher.client.checkModel(("FunctionNames")));
     }
+
+    /**
+     * This test sends an executeCommand command to the server to request the OMC version
+     */
+    @Test
+    public void executeCommand(){
+        assertEquals("TODO", ConsoleClientLauncher.client.executeCommand("getVersion()") );
+
+    }
     @AfterAll
     public void endTests(){
         //todo Shutdown server and client properly
