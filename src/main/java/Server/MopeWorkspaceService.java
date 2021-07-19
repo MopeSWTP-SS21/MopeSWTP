@@ -29,40 +29,41 @@ public class MopeWorkspaceService implements WorkspaceService {
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params){
         String command = params.getCommand();
         List<Object> args = params.getArguments();
+        CompletableFuture<Object> finalResult = new CompletableFuture<>();
 
-        String result = "Cannot execute Command " + command + "!";
-        try{
-
+        CompletableFuture<String> result = new CompletableFuture<>();
+            String argument = "";
+            if(!args.isEmpty()) argument = args.get(0).toString().replaceAll("\"", "");
             switch(command){
+                case "ExecuteCommand":
+                    result = modelicaService.executeCommand(argument);
+                    break;
                 case "LoadFile":
-                    result = modelicaService.loadFile(args.get(0).toString().replaceAll("\"", "")).get() ;
+                    result = modelicaService.loadFile(argument);
                     break;
                 case "CheckModel":
-                    result = modelicaService.checkModel(args.get(0).toString().replaceAll("\"", "")).get();
+                    result = modelicaService.checkModel(argument);
                     break;
                 case "AddPath":
-                    result = modelicaService.addModelicaPath(args.get(0).toString().replaceAll("\"", "")).get();
+                    result = modelicaService.addModelicaPath(argument);
                     break;
                 case "GetPath":
-                    result = modelicaService.getModelicaPath().get();
+                    result = modelicaService.getModelicaPath();
                     break;
                 case "LoadModel":
-                    result = modelicaService.loadModel(args.get(0).toString().replaceAll("\"", "")).get();
+                    result = modelicaService.loadModel(argument);
                     break;
                 case "Version":
-                    result = modelicaService.getCompilerVersion().get();
-                    break;
-                case "known":
-                    result = "This command is known... ";
+                    result = modelicaService.getCompilerVersion();
                     break;
             }
-        } catch(InterruptedException | ExecutionException e){
+
+        try {
+            finalResult.complete(result.get());
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
-
-        String finalResult = result;
-        return CompletableFuture.supplyAsync(() -> finalResult);
+        return CompletableFuture.completedFuture(finalResult);
     }
     public MopeWorkspaceService(ModelicaService service){
         super();

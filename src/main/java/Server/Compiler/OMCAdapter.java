@@ -68,7 +68,7 @@ public class OMCAdapter implements ICompilerAdapter{
         logger.info("Searching loaded Classes for " + search);
         Result result = omc.sendExpression("searchClassNames(\"" + search + "\")"); //Todo \" ?
         String[] classes = result.result.substring(1, result.result.length() -1 ).split(",");
-        if(classes.length <= 0 || classes[0].length() <= 0  ) return new ArrayList<String>();
+        if(classes.length <= 0 || classes[0].length() <= 0  ) return new ArrayList<>();
         return Arrays.asList(classes);
     }
     @Override
@@ -92,7 +92,7 @@ public class OMCAdapter implements ICompilerAdapter{
         logger.info(info);
         Result result = omc.sendExpression(expression);
         String[] libs = result.result.substring(1, result.result.length() -1 ).split(",");
-        if(libs.length <= 0 || libs[0].length() <= 0  ) return new ArrayList<String>();
+        if(libs.length <= 0 || libs[0].length() <= 0  ) return new ArrayList<>();
         return Arrays.asList(libs);
     }
 
@@ -105,6 +105,10 @@ public class OMCAdapter implements ICompilerAdapter{
     public String getDocumentation(String className){
         Result result = omc.sendExpression("getDocumentationAnnotation(" + className + ")");
         return result.result;
+    }
+    @Override
+    public String executeCommand(String command){
+        return "TODO";
     }
 
     @Override

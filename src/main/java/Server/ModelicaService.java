@@ -15,6 +15,9 @@ public interface ModelicaService {
     default CompletableFuture<String> loadModel(String modelName){
         throw new UnsupportedOperationException();
     }
+
+    CompletableFuture<String> executeCommand(String command);
+
     @JsonRequest
     default CompletableFuture<String> loadFile(String path){
         throw new UnsupportedOperationException();
