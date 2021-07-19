@@ -17,7 +17,7 @@ public interface ModelicaService {
     }
 
     @JsonRequest
-    CompletableFuture<String> executeCommand(String command);
+    CompletableFuture<String> sendExpression(String command);
 
     @JsonRequest
     default CompletableFuture<String> loadFile(String path){

@@ -35,7 +35,7 @@ public class MopeWorkspaceService implements WorkspaceService {
             if(!args.isEmpty()) argument = args.get(0).toString().replaceAll("\"", "");
             switch(command){
                 case "ExecuteCommand":
-                    result = modelicaService.executeCommand(argument);
+                    result = modelicaService.sendExpression(argument);
                     break;
                 case "LoadFile":
                     result = modelicaService.loadFile(argument);

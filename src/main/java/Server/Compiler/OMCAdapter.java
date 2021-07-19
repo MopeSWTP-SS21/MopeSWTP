@@ -106,7 +106,7 @@ public class OMCAdapter implements ICompilerAdapter{
         return result.result;
     }
     @Override
-    public Result executeCommand(String command){
+    public Result sendExpression(String command){
         //todo sanitize input
         Result result = omc.sendExpression(command);
         return result;

@@ -179,12 +179,12 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         return null;
     }
 
-    public Object executeCommand(String command) {
-        CompletableFuture<String> result = server.getModelicaService().executeCommand(command);
+    public Object sendExpression(String command) {
+        CompletableFuture<String> result = server.getModelicaService().sendExpression(command);
         try {
             return result.get();
         } catch (InterruptedException | ExecutionException e) {
-            logger.error("Error during executeCommand", e);
+            logger.error("Error during sendExpression", e);
         }
         return null;
     }

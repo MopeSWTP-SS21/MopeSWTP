@@ -24,7 +24,7 @@ public class ConsoleMenu {
             "9 : Exit",
             "10 : Complete",
             "11 : Get Documentation",
-            "12 : send Expression"
+            "12 : Send Expression"
     };
     private void switchCommand(){
         int command= sc.nextInt();
@@ -125,7 +125,7 @@ public class ConsoleMenu {
     private void sendExpression(){
         System.out.print("expression: ");
         System.out.println(
-                client.executeCommand(readUserInput())
+                client.sendExpression(readUserInput())
         );
     }
 

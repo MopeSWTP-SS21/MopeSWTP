@@ -137,30 +137,30 @@ class LSPServerTest{
     }
 
     /**
-     * This test sends an executeCommand command to the server to request the OMC version
+     * This test sends a sendExpression command to the server to request the OMC version
      */
     @Test
-    public void executeCommand1(){
-        assertEquals("true", ConsoleClientLauncher.client.executeCommand("loadModel(Modelica, {\"3.2.3\"})") );
+    public void sendExpression1(){
+        assertEquals("true", ConsoleClientLauncher.client.sendExpression("loadModel(Modelica, {\"3.2.3\"})") );
 
     }
     @Test
-    public void executeCommand2(){
-        assertEquals("true", ConsoleClientLauncher.client.executeCommand("setCommandLineOptions(\"-d=newInst,nfAPI\")") );
+    public void sendExpression2(){
+        assertEquals("true", ConsoleClientLauncher.client.sendExpression("setCommandLineOptions(\"-d=newInst,nfAPI\")") );
 
     }
     @Test
-    public void executeCommand3(){
-        assertEquals("true", ConsoleClientLauncher.client.executeCommand("setCommandLineOptions(\"--unitChecking\")") );
+    public void sendExpression3(){
+        assertEquals("true", ConsoleClientLauncher.client.sendExpression("setCommandLineOptions(\"--unitChecking\")") );
 
     }
     @Test
-    public void executeCommand4(){
-        assertEquals("(0.0,1.0,1e-06,500,0.002)", ConsoleClientLauncher.client.executeCommand("getSimulationOptions(Modelica.Electrical.Analog.Examples.Rectifier)") );
+    public void sendExpression4(){
+        assertEquals("(0.0,1.0,1e-06,500,0.002)", ConsoleClientLauncher.client.sendExpression("getSimulationOptions(Modelica.Electrical.Analog.Examples.Rectifier)") );
 
     }
     @Test
-    public void executeCommand5(){
+    public void sendExpression5(){
         assertEquals(
                 "record SimulationResult\n" +
                         "    resultFile = \"/tmp/OpenModelica/Modelica.Electrical.Analog.Examples.Rectifier_res.mat\",\n" +
@@ -176,31 +176,31 @@ class LSPServerTest{
                         "    timeSimulation = 0.966985235,\n" +
                         "    timeTotal = 12.396849296\n" +
                         "end SimulationResult;\n",
-                ConsoleClientLauncher.client.executeCommand("simulate(Modelica.Electrical.Analog.Examples.Rectifier)")
+                ConsoleClientLauncher.client.sendExpression("simulate(Modelica.Electrical.Analog.Examples.Rectifier)")
         );
     }
     @Test
-    public void executeCommand6(){
-        assertEquals("\"/home\"", ConsoleClientLauncher.client.executeCommand("cd(\"/home\")") );
+    public void sendExpression6(){
+        assertEquals("\"/home\"", ConsoleClientLauncher.client.sendExpression("cd(\"/home\")") );
 
     }
     @Test
-    public void executeCommand7(){
-        assertEquals("\"/home\"", ConsoleClientLauncher.client.executeCommand("cd()") );
+    public void sendExpression7(){
+        assertEquals("\"/home\"", ConsoleClientLauncher.client.sendExpression("cd()") );
     }
     @Test
-    public void executeCommand8(){
+    public void sendExpression8(){
         assertEquals(
                 "[<interactive>:1:1-1:18:writable] Error: Class unknownAPIMethod not found in scope <global scope> (looking for a function or record).\n",
-                ConsoleClientLauncher.client.executeCommand("unknownAPIMethod()")
+                ConsoleClientLauncher.client.sendExpression("unknownAPIMethod()")
         );
     }
-    @Test void executeCommand9(){
+    @Test void sendExpression9(){
         assertEquals(
                 "[/home/swtp/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/swtp/.openmodelica/libraries/index.json could not be parsed.\n" +
                         "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.\n" +
                         "",
-                ConsoleClientLauncher.client.executeCommand("loadModel(FooBar)")
+                ConsoleClientLauncher.client.sendExpression("loadModel(FooBar)")
         );
     }
 
