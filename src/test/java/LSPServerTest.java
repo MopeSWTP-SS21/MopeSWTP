@@ -138,71 +138,58 @@ class LSPServerTest{
                 "1 of these are trivial equation(s).\"", ConsoleClientLauncher.client.checkModel(("FunctionNames")));
     }
 
-    /**
-     * This test sends a sendExpression command to the server to request the OMC version
-     */
     @Test
-    public void sendExpression1(){
-        assertEquals("true", ConsoleClientLauncher.client.sendExpression("loadModel(Modelica, {\"3.2.3\"})") );
-
-    }
-    @Test
-    public void sendExpression2(){
+    public void sendExpression02(){
         assertEquals("true", ConsoleClientLauncher.client.sendExpression("setCommandLineOptions(\"-d=newInst,nfAPI\")") );
 
     }
     @Test
-    public void sendExpression3(){
+    public void sendExpression03(){
         assertEquals("true", ConsoleClientLauncher.client.sendExpression("setCommandLineOptions(\"--unitChecking\")") );
 
     }
     @Test
-    public void sendExpression4(){
-        assertEquals("(0.0,1.0,1e-06,500,0.002)", ConsoleClientLauncher.client.sendExpression("getSimulationOptions(Modelica.Electrical.Analog.Examples.Rectifier)") );
+    public void sendExpression04(){
+        assertEquals("(0.0,0.1,1e-06,10000,1e-05)", ConsoleClientLauncher.client.sendExpression("getSimulationOptions(Modelica.Electrical.Analog.Examples.Rectifier)") );
 
     }
+
+    //TODO Why wont this work? "record SimulationResult[\\n.]+end SimulationResult;"
     @Test
-    public void sendExpression5(){
-        assertEquals(
-                "record SimulationResult\n" +
-                        "    resultFile = \"/tmp/OpenModelica/Modelica.Electrical.Analog.Examples.Rectifier_res.mat\",\n" +
-                        "    simulationOptions = \"startTime = 0.0, stopTime = 0.1, numberOfIntervals = 10000, tolerance = 1e-06, method = 'dassl', fileNamePrefix = 'Modelica.Electrical.Analog.Examples.Rectifier', options = '', outputFormat = 'mat', variableFilter = '.*', cflags = '', simflags = ''\",\n" +
-                        "    messages = \"LOG_SUCCESS       | info    | The initialization finished successfully without homotopy method.\n" +
-                        "LOG_SUCCESS       | info    | The simulation finished successfully.\n" +
-                        "\",\n" +
-                        "    timeFrontend = 1.364086431,\n" +
-                        "    timeBackend = 0.487607568,\n" +
-                        "    timeSimCode = 0.05728809099999999,\n" +
-                        "    timeTemplates = 0.181370335,\n" +
-                        "    timeCompile = 9.320577482999999,\n" +
-                        "    timeSimulation = 0.966985235,\n" +
-                        "    timeTotal = 12.396849296\n" +
-                        "end SimulationResult;\n",
-                ConsoleClientLauncher.client.sendExpression("simulate(Modelica.Electrical.Analog.Examples.Rectifier)")
-        );
+    public void sendExpression05(){
+        Assertions.assertTrue(ConsoleClientLauncher.client.sendExpression("simulate(Modelica.Electrical.Analog.Examples.Rectifier)").toString().matches(
+                "record SimulationResult\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\nend SimulationResult;"
+        ));
     }
     @Test
-    public void sendExpression6(){
+    public void sendExpression06(){
         assertEquals("\"/home\"", ConsoleClientLauncher.client.sendExpression("cd(\"/home\")") );
 
     }
     @Test
-    public void sendExpression7(){
+    public void sendExpression07(){
         assertEquals("\"/home\"", ConsoleClientLauncher.client.sendExpression("cd()") );
     }
     @Test
-    public void sendExpression8(){
+    public void sendExpression08(){
         assertEquals(
                 "[<interactive>:1:1-1:18:writable] Error: Class unknownAPIMethod not found in scope <global scope> (looking for a function or record).\n",
                 ConsoleClientLauncher.client.sendExpression("unknownAPIMethod()")
         );
     }
-    @Test void sendExpression9(){
+    @Test void sendExpression09(){
         assertEquals(
                 "[/home/swtp/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/swtp/.openmodelica/libraries/index.json could not be parsed.\n" +
                         "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.",
                 ConsoleClientLauncher.client.sendExpression("loadModel(FooBar)")
         );
+    }
+    /**
+     * This test sends a sendExpression command to the server to load ModelicaStandardLibrary Version 3.2.3
+     */
+    @Test
+    public void sendExpression10(){
+        assertEquals("true", ConsoleClientLauncher.client.sendExpression("loadModel(Modelica, {\"3.2.3\"})") );
     }
 
 
