@@ -179,8 +179,8 @@ class LSPServerTest{
     }
     @Test void sendExpression09(){
         assertEquals(
-                "[/home/swtp/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/swtp/.openmodelica/libraries/index.json could not be parsed.\n" +
-                        "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.",
+                "[/home/"+userName+"/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/"+userName+"/.openmodelica/libraries/index.json could not be parsed.\n" +
+                        "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/.",
                 ConsoleClientLauncher.client.sendExpression("loadModel(FooBar)")
         );
     }
