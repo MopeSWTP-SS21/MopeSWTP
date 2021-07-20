@@ -21,6 +21,7 @@ class LSPServerTest{
 
     private String userName;
     private String refPath;
+    private String modelicaPath;
 
 
 
@@ -47,6 +48,7 @@ class LSPServerTest{
         startServer();
         startClient();
         initializeServer();
+        storeOriginalModelicaPath();
     }
 
     private void readSystemProperties() {
@@ -87,6 +89,13 @@ class LSPServerTest{
         ConsoleClientLauncher.client.initServer();
     }
 
+    private void storeOriginalModelicaPath(){
+        modelicaPath = "/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/";
+    }
+    @BeforeEach
+    public void resetModelicaPath(){
+        ConsoleClientLauncher.client.sendExpression("setModelicaPath(\"" + modelicaPath + "\")");
+    }
     // Tests the current OMC Compilerversion and checks the result the server is responding
     @Test
     public void getOMCVersion() {
@@ -95,14 +104,11 @@ class LSPServerTest{
     // Tests the default modelicapath and checks the result the server is responding
     @Test
     public void showModelicaPath() {
-
-        assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/\", error=Optional.empty]", ConsoleClientLauncher.client.modelicaPath());
+        assertEquals("Result [result=\""+modelicaPath+"\", error=Optional.empty]", ConsoleClientLauncher.client.modelicaPath());
     }
     // Tests the adding of a new modelicafolder to the modelicapath and checks the result the server is responding
     @Test
     public void addFolderToModPathAndShow() {
-        //TODO: I don't want to initialize the Server, i just need a "clean" ModelicaPath...
-        ConsoleClientLauncher.client.initServer();
         ConsoleClientLauncher.client.addPath(refPath);
         assertEquals("Result [result=\"/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/:"+refPath+"\", error=Optional.empty]", ConsoleClientLauncher.client.modelicaPath());
     }
@@ -111,16 +117,13 @@ class LSPServerTest{
     // Tests the loading of a modelica file and checks the result the server is responding
     @Test
     public void loadFile()  {
-
         ConsoleClientLauncher.client.addPath(refPath);
         assertEquals("Result [result=true, error=Optional.empty]", ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo"));
     }
     //Tests the loading of a model and checks the result the server is responding
     @Test
     public void loadModel(){
-
         ConsoleClientLauncher.client.addPath(refPath);
-        ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
         assertEquals("Result [result=true, error=Optional.empty]", ConsoleClientLauncher.client.loadModel("FunctionNames"));
     }
     //Tests the checking of a correct model and checks the result, the server is responding
@@ -128,7 +131,6 @@ class LSPServerTest{
     public void checkModel() {
 
         ConsoleClientLauncher.client.addPath(refPath);
-        ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo");
         ConsoleClientLauncher.client.loadModel("FunctionNames");
         assertEquals("Model FunctionNames checked\n" +
                 "->\"Check of FunctionNames completed successfully.\n" +
@@ -196,8 +198,6 @@ class LSPServerTest{
         );
     }
     @Test void sendExpression9(){
-        //TODO: I don't want to initialize the Server, i just need a "clean" ModelicaPath...
-        ConsoleClientLauncher.client.initServer();
         assertEquals(
                 "[/home/swtp/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/swtp/.openmodelica/libraries/index.json could not be parsed.\n" +
                         "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/swtp/.openmodelica/libraries/.",
