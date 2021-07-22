@@ -52,8 +52,6 @@ public class ConsoleClientLauncher {
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-        //client.exitServer();
-        //client.disconnect();
         socket.close();
         clientListening.get();
         executor.shutdown();
