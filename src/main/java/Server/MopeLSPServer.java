@@ -30,7 +30,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private static ICompilerAdapter compiler;
     private ConfigObject cfg;
     private CompletableFuture<Object> isRunning;
-    private ServerSocket socket;
     private String path;
 
     public MopeLSPServer(ConfigObject config){
