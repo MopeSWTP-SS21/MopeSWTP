@@ -1,7 +1,6 @@
 package Client;
 
 import Server.ModelicaLanguageServer;
-import Server.MopeLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -20,7 +19,6 @@ public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
-    public static MopeLSPServer server;
     private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
