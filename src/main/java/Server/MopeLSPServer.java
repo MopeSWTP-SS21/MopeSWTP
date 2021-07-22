@@ -55,7 +55,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
-        logger.info("Server->initialize triggerd");
+        logger.info("Server->initialize triggered");
         compiler.connect();
 
         return CompletableFuture.supplyAsync(()->result);
