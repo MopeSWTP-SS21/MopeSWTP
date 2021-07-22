@@ -86,7 +86,6 @@ public class MopeLSPServerLauncher {
         } catch (IOException | InterruptedException ie) {
 
         }
-        //server.shutdown();
     }
 
     public static void readConfigFile(String path) throws IOException {
