@@ -71,8 +71,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //shut.complete(null);
         return CompletableFuture.supplyAsync(() -> null);
     }
 
