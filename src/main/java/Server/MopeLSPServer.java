@@ -29,7 +29,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private DiagnosticHandler diagnosticHandler;
     private static ICompilerAdapter compiler;
     private ConfigObject cfg;
-    private CompletableFuture<Object> shut;
+    private CompletableFuture<Object> isRunning;
     private ServerSocket socket;
     private String path;
 
