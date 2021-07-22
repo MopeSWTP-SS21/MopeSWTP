@@ -96,9 +96,10 @@ public class ConsoleClientLauncher {
                 "6: Initialize Model",
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
-                "9 : Exit - Shutdown Server",
-                "10 : Exit - Disconnect",
-                "11 : Complete"
+                "9 : Complete",
+                "99 : Exit - Disconnect",
+                "98 : Exit - Shutdown Server"
+                
         };
 
         while(running)
@@ -130,7 +131,7 @@ public class ConsoleClientLauncher {
                 case 6:
                     System.out.println("not implemented");
                     break;
-                case 9:
+                case 99:
                     running=false;
                     FullShutdown();
                     break;
@@ -147,11 +148,11 @@ public class ConsoleClientLauncher {
                 case 8:
                     System.out.println(client.modelicaPath());
                     break;
-                case 10:
+                case 98:
                     StopClient();
                     running = false;
                     break;
-                case 11:
+                case 9:
                     System.out.print("File: ");
                     String compFile = sc.next();
                     System.out.print("Line: ");
