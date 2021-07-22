@@ -60,15 +60,12 @@ public class ConsoleClientLauncher {
 
     private static void FullShutdown() throws IOException, ExecutionException, InterruptedException {
         shutdown();
-        //socket.close();
         clientListening.get();
         executor.shutdown();
         logger.info("Client Finished");
     }
 
     public static void shutdown() throws ExecutionException, InterruptedException {
-        //CompletableFuture<Object> result = server.shutdown();
-        //result.get();
         client.shutdownServer();
         client.exitServer();
     }
@@ -86,8 +83,6 @@ public class ConsoleClientLauncher {
         clientListening = launcher.LaunchClient();
 
         ConsoleMenue();
-      //  StopClient();
-
 
     }
 
