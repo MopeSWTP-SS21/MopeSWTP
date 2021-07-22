@@ -93,6 +93,7 @@ public class MopeLSPServerLauncher {
         try (FileInputStream fileInputStream = new FileInputStream(path)){
             prop.load(fileInputStream);
             port = Integer.parseInt(prop.getProperty("server.port"));
+            omcpath = prop.getProperty("server.path");
             logger.info("Read Port " + port + " from " + path);
         }
     }
