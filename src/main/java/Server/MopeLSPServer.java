@@ -49,7 +49,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
     }
 
     public void waitForShutDown() throws ExecutionException, InterruptedException {
-        this.shut.get();
+        this.isRunning.get();
     }
 
     @Override
@@ -85,14 +85,14 @@ public class MopeLSPServer implements ModelicaLanguageServer
         }
     }
     public boolean isRunning() {
-        return !shut.isDone();
+        return !isRunning.isDone();
     }
 
 
     @Override
     public void exit() {
         logger.info("server->exit");
-        shut.complete(null);
+        isRunning.complete(null);
     }
 
     @Override
