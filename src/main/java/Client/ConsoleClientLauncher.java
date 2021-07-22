@@ -69,8 +69,6 @@ public class ConsoleClientLauncher {
     }
 
     public static void main(String[] args) throws Exception {
-
-
         System.out.println("Serverip:");
         host= sc.next();
         System.out.println("Serverport:");
@@ -97,8 +95,8 @@ public class ConsoleClientLauncher {
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
                 "9 : Complete",
-                "99 : Exit - Disconnect",
-                "98 : Exit - Shutdown Server"
+                "98 : Exit - Disconnect",
+                "99 : Exit - Shutdown Server"
                 
         };
 
