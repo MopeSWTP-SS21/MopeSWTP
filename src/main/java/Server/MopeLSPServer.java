@@ -34,7 +34,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
     public MopeLSPServer(ConfigObject config){
         this.clients = new ArrayList<>();
         this.diagnosticHandler = new DiagnosticHandler(this);
-        readConfig();
         this.compiler = new OMCAdapter(MopeLSPServerLauncher.omcpath, "us", "mope_local" );
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
