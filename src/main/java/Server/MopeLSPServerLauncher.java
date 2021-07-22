@@ -26,6 +26,7 @@ public class MopeLSPServerLauncher {
     private static ExecutorService executor;
     private static Socket socket;
     private static int port = 4200;
+    public static String omcpath;
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
 
     public MopeLSPServerLauncher(int port) throws IOException {
