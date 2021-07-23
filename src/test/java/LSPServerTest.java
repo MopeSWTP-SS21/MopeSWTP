@@ -1,19 +1,21 @@
 import Client.ConsoleClientLauncher;
 
-import Server.MopeLSPServer;
-import Server.MopeLSPServerLauncher;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LSPServerTest extends ServerIntegrationTest{
+    private Logger _logger = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    protected Logger getLogger() {
+        return _logger;
+    }
 
     // Tests the current OMC Compilerversion and checks the result the server is responding
     @Test
@@ -57,4 +59,7 @@ class LSPServerTest extends ServerIntegrationTest{
                 "1 of these are trivial equation(s).\"", ConsoleClientLauncher.client.checkModel(("FunctionNames")));
     }
 
+    public LSPServerTest(){
+        this.logger = LoggerFactory.getLogger(this.getClass());
+    }
 }

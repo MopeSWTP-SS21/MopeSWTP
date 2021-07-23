@@ -10,15 +10,17 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerIntegrationTest {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final CompletableFuture<Boolean> testsFinished = new CompletableFuture<>();
+public abstract class ServerIntegrationTest {
 
+    //TODO Why does this result in NullPointerException?
+    // private Logger logger = getLogger();
+    protected Logger logger =  LoggerFactory.getLogger(this.getClass());
+    private final CompletableFuture<Boolean> testsFinished = new CompletableFuture<>();
     protected String userName;
     protected String refPath;
     protected String modelicaPath;
 
-
+    abstract Logger getLogger();
 
     MopeLSPServerLauncher serverLauncher;
     {
