@@ -86,10 +86,8 @@ public class SendExpressionIntegrationTest extends ServerIntegrationTest {
      */
     @Test
     public void retrieveErrorForExecutingUnknownAPIMethod(){
-        assertEquals(
-                "[<interactive>:1:1-1:18:writable] Error: Class unknownAPIMethod not found in scope <global scope> (looking for a function or record).\n",
-                ConsoleClientLauncher.client.sendExpression("unknownAPIMethod()")
-        );
+        String result = ConsoleClientLauncher.client.sendExpression("unknownAPIMethod()").toString();
+        Assertions.assertTrue(result.contains("Error: Class unknownAPIMethod not found in scope "));
     }
 
     /**
