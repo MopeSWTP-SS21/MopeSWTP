@@ -41,9 +41,9 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 3. Inside your terminal, navigate to the folder where you want to clone the repository. Then execute 
 
-   `git clone git@github.com:MopeSWTP-SS21/LspConsole.git`
+   `git clone git@github.com:MopeSWTP-SS21/MopeSWTP.git`
    
-4. Navigate to the newly cloned folder LspConsole to get finally started using the server and consoleclient.
+4. Navigate to the newly cloned folder MopeSWTP  to get finally started using the Server and ConsoleClient.
 
 
 #### | TIP: It is recommended to start two instances of the shell, one for the server task and one for the client task. |
@@ -51,9 +51,9 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 ### Getting started & usage of the client:
 
-1. Execute `./gradlew startMopeServer` in one of the shells. After the build is completed, the server should run on port 4200.
+1. Execute `./gradlew startMopeServer --console plain` in one of the shells. After the build is completed, the server should run on port 4200.
 
-2. Execute `./gradlew startConsoleClient` in the other shell. 
+2. Execute `./gradlew startConsoleClient --console plain` in the other shell. Please note the option `--console plain` at the end. This is useful, hence without this the output could be messed up due to different gradle or shell versions.
 
 3. After the build is completed, you are asked for the serverip & serverport. 
 
@@ -87,3 +87,25 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 9. The commands `3`,`4`,`5`,`6` are proposed for loading a file, loading a model, check a model or initialize a model 
 (This is currently difficult to use as long as we have neither delivered the standardlibrary nor some examplemodels)
+
+# Instructions to build the server- and console-jar-files
+
+In order to build a Jar-File you need to follow these steps: 
+
+1. build both tasks
+2. run the jars to verify its function
+
+
+## Step 1
+Build both gradle-tasks by executing this command `./gradlew clean shadowServerJar shadowClientJar`. This will generate 2 jars <br/>
+`thm.mope.lsp-0.1.0-ConsoleCLient.jar` <br/>
+`thm.mope.lsp-0.1.0-Server.jar` <br/>
+which are stored in <br/>
+`~/projectfolder/MopeSWTP/build/libs`
+
+## Step 2
+Open the terminal and navigate to your project-folder and execute this in this order: <br/>
+`java -jar build/libs/thm.mope.lsp-0.1.0-Server.jar` <br/>
+`java -jar build/libs/thm.mope.lsp-0.1.0-ConsoleCLient.jar` <br/>
+
+If it was successful you will be asked to enter as server-address to connect to and the according port. 

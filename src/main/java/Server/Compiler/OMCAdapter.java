@@ -26,7 +26,10 @@ public class OMCAdapter implements ICompilerAdapter{
         Result result = omc.sendExpression("loadFile(\"" + path + "\")");
         return result.toString();
     }
-
+    @Override
+    public void exit() throws IOException {
+        omc.disconnect();
+    }
     @Override
     public String checkModel(String modelName) {
         String result = omc.checkModel(modelName);

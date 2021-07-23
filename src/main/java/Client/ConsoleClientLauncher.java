@@ -12,10 +12,7 @@ import version.Version;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 
 public class ConsoleClientLauncher {
@@ -54,15 +51,24 @@ public class ConsoleClientLauncher {
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
         socket.close();
-
-        executor.shutdown();
         clientListening.get();
+        executor.shutdown();
         logger.info("Client Finished");
     }
 
+    private static void FullShutdown() throws IOException, ExecutionException, InterruptedException {
+        shutdown();
+        clientListening.get();
+        executor.shutdown();
+        logger.info("Client Finished");
+    }
+
+    public static void shutdown() throws ExecutionException, InterruptedException {
+        client.shutdownServer();
+        client.exitServer();
+    }
+
     public static void main(String[] args) throws Exception {
-
-
         System.out.println("Serverip:");
         host= sc.next();
         System.out.println("Serverport:");
@@ -74,12 +80,9 @@ public class ConsoleClientLauncher {
 
         ConsoleMenue();
 
-
-        StopClient();
-
     }
 
-    private static void ConsoleMenue(){
+    private static void ConsoleMenue() throws IOException, ExecutionException, InterruptedException {
         boolean running=true;
 
         String[] menuItems = new String[] {
@@ -91,9 +94,11 @@ public class ConsoleClientLauncher {
                 "6: Initialize Model",
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
-                "9 : Exit",
-                "10 : Complete",
-                "11 : Get Documentation"
+                "9 : Complete",
+                "10 : Get Documentation",
+                "98 : Exit - Disconnect",
+                "99 : Exit - Shutdown Server"
+
         };
 
         while(running)
@@ -125,8 +130,9 @@ public class ConsoleClientLauncher {
                 case 6:
                     System.out.println("not implemented");
                     break;
-                case 9:
+                case 99:
                     running=false;
+                    FullShutdown();
                     break;
                 case 7:
                     System.out.print("path: ");
@@ -141,7 +147,11 @@ public class ConsoleClientLauncher {
                 case 8:
                     System.out.println(client.modelicaPath());
                     break;
-                case 10:
+                case 98:
+                    StopClient();
+                    running = false;
+                    break;
+                case 9:
                     System.out.print("File: ");
                     String compFile = sc.next();
                     System.out.print("Line: ");
@@ -150,7 +160,7 @@ public class ConsoleClientLauncher {
                     int col = sc.nextInt();
                     System.out.println(client.complete(compFile, line, col));
                     break;
-                case 11:
+                case 10:
                     System.out.print("className: ");
                     String docName = sc.next();
                     System.out.println(client.getDocumentation(docName));

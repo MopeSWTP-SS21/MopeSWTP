@@ -2,6 +2,8 @@ package Client;
 
 import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +18,14 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
 
+    public void shutdownServer() throws ExecutionException, InterruptedException {
+        CompletableFuture<Object> result = server.shutdown();
+        result.get();
+
+    }
+    public void exitServer() {
+        server.exit();
+    }
 
     @Override
     public void telemetryEvent(Object object) {

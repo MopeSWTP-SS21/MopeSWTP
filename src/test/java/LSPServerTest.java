@@ -32,7 +32,7 @@ class LSPServerTest{
     MopeLSPServerLauncher serverLauncher;
     {
         try {
-            serverLauncher = new MopeLSPServerLauncher(1234);
+            serverLauncher = new MopeLSPServerLauncher();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ class LSPServerTest{
     ConsoleClientLauncher clientLauncher;
     {
         try {
-            clientLauncher = new ConsoleClientLauncher("localhost",1234);
+            clientLauncher = new ConsoleClientLauncher("127.0.0.1",4200);
         } catch (IOException e) {
             e.printStackTrace();
         }
