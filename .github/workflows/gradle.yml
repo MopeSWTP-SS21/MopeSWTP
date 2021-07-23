@@ -39,3 +39,9 @@ jobs:
       run: chmod +x gradlew
     - name: Test with Gradle
       run: ./gradlew test -i
+    - name: Upload project to SonarQube
+      run: >
+        ./gradlew sonarqube
+        -Dsonar.projectKey=MopeSWTP-SS21
+        -Dsonar.host.url=https://scm.thm.de/sonar
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
