@@ -1,7 +1,6 @@
 package Client;
 
 import Server.ModelicaLanguageServer;
-import Server.MopeLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -20,7 +19,6 @@ public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
-    public static MopeLSPServer server;
     private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
@@ -52,8 +50,6 @@ public class ConsoleClientLauncher {
     }
 
     private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-        //client.exitServer();
-        //client.disconnect();
         socket.close();
         clientListening.get();
         executor.shutdown();
@@ -62,22 +58,17 @@ public class ConsoleClientLauncher {
 
     private static void FullShutdown() throws IOException, ExecutionException, InterruptedException {
         shutdown();
-        //socket.close();
         clientListening.get();
         executor.shutdown();
         logger.info("Client Finished");
     }
 
     public static void shutdown() throws ExecutionException, InterruptedException {
-        //CompletableFuture<Object> result = server.shutdown();
-        //result.get();
         client.shutdownServer();
         client.exitServer();
     }
 
     public static void main(String[] args) throws Exception {
-
-
         System.out.println("Serverip:");
         host= sc.next();
         System.out.println("Serverport:");
@@ -88,8 +79,6 @@ public class ConsoleClientLauncher {
         clientListening = launcher.LaunchClient();
 
         ConsoleMenue();
-      //  StopClient();
-
 
     }
 
@@ -105,9 +94,10 @@ public class ConsoleClientLauncher {
                 "6: Initialize Model",
                 "7: Add Folder to ModelicaPath",
                 "8: Show ModelicaPath",
-                "9 : Exit - Shutdown Server",
-                "10 : Exit - Disconnect",
-                "11 : Complete"
+                "9 : Complete",
+                "98 : Exit - Disconnect",
+                "99 : Exit - Shutdown Server"
+                
         };
 
         while(running)
@@ -139,7 +129,7 @@ public class ConsoleClientLauncher {
                 case 6:
                     System.out.println("not implemented");
                     break;
-                case 9:
+                case 99:
                     running=false;
                     FullShutdown();
                     break;
@@ -156,11 +146,11 @@ public class ConsoleClientLauncher {
                 case 8:
                     System.out.println(client.modelicaPath());
                     break;
-                case 10:
+                case 98:
                     StopClient();
                     running = false;
                     break;
-                case 11:
+                case 9:
                     System.out.print("File: ");
                     String compFile = sc.next();
                     System.out.print("Line: ");
