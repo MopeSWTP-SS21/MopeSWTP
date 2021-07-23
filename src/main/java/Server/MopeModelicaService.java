@@ -46,6 +46,12 @@ public class MopeModelicaService implements ModelicaService {
     }
 
     @Override
+    public CompletableFuture<String> getDocumentation(String className){
+        String result = compiler.getDocumentation(className);
+        return CompletableFuture.supplyAsync(() -> result);
+    }
+
+    @Override
     public CompletableFuture<String> getModelicaPath(){
         String result = compiler.getModelicaPath();
         return CompletableFuture.supplyAsync(()->result);

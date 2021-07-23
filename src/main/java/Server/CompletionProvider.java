@@ -8,19 +8,26 @@ import org.eclipse.lsp4j.CompletionParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class CompletionProvider {
 
     /**
      * These Characters mark the beginning of a possible symbol
      */
-    private static char[] limiter = {' ', ';', '\n'};
+    private static final char[] limiter = {'\t',' ', ';', '\n'};
     private static final Logger logger = LoggerFactory.getLogger(CompletionProvider.class);
 
     public static List<CompletionItem> complete(CompletionParams params, ICompilerAdapter compiler) throws FileNotFoundException {
@@ -73,16 +80,21 @@ public class CompletionProvider {
     /**
      * Looks up the File located in the given Path and determines
      * the part that should be completed
-     * @param path path to file
+     * @param URI URI to file
      * @param line line where completion should happen
      * @param col column where completion should happen
      * @return the uncompleted symbol
      * @throws FileNotFoundException
      */
-    private static String findCompletableSymbol(String path, int line, int col) throws FileNotFoundException {
+    private static String findCompletableSymbol(String URI, int line, int col) throws FileNotFoundException {
         col--; //TODO: Not sure how Client count Columns. Gedit Texteditor starts with 1...
 
-        String selectedLine = readLine(path, line);
+        String selectedLine = "";
+        try {
+            selectedLine = readLine(URI, line);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
         String symbol = "";
         StringBuilder builder = new StringBuilder("");
         char current;
@@ -98,14 +110,14 @@ public class CompletionProvider {
         return symbol;
     }
 
-    private static String readLine(String path, int line) throws FileNotFoundException {
-        String selectedLine = "";
-        Scanner s = new Scanner(new File(path));
-        while(line > 1){
-            s.nextLine();
-            line--;
+    private static String readLine(String filename, int line) throws IOException, URISyntaxException {
+        URI uri = new URI(filename);
+        Path path = Paths.get(uri.getPath());
+
+        String selectedLine;
+        try(Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8)) {
+            selectedLine = lines.skip(line).findFirst().orElse("");
         }
-        selectedLine = s.nextLine();
         logger.info("Searching through line \"" + line + " : " + selectedLine +"\"");
         return selectedLine;
     }
@@ -153,8 +165,6 @@ public class CompletionProvider {
      */
     private static CompletionItem generateModelCompletionItem(String modelName, ICompilerAdapter compiler){
          CompletionItem item = new CompletionItem();
-
-         //TODO not yet working like intended:(
          String[] levels = modelName.split("." , 0);
          String label;
          if(levels.length > 0) label = levels[levels.length - 1];

@@ -35,9 +35,9 @@ public class MopeLSPServer implements ModelicaLanguageServer
         this.clients = new ArrayList<>();
         this.diagnosticHandler = new DiagnosticHandler(this);
         this.compiler = new OMCAdapter(config.path, "us", "mope_local" );
-        this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
         this.modelicaService = new MopeModelicaService(compiler, this);
+        this.workspaceService = new MopeWorkspaceService(this.modelicaService);
         this.cfg = config;
         this.isRunning = new CompletableFuture<>();
     }
@@ -53,7 +53,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
 
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
-        InitializeResult result = new InitializeResult(new ServerCapabilities());
+        InitializeResult result = new InitializeResult(MopeServerCapabilities.getCapabilities());
 
         logger.info("Server->initialize triggered");
         compiler.connect();
@@ -131,4 +131,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
             c.publishDiagnostics(params);
         }
     }
+
+
 }
