@@ -71,7 +71,10 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 6: Initialize Model
 7: Add Folder to ModelicaPath
 8: Show ModelicaPath
-9: Exit
+9: Complete
+10: Get Documentation  
+98: Exit - Disconnect
+99: Exit - Shutdown Server
 ```
 
 5. `1: Initialize server`
@@ -86,4 +89,10 @@ This Readme currently provides a guideline to set up the MopeConsoleClient:
 8. Typing `7` lets you add a folder to the modelica path. Obviously, this folder should contain at least one model.
 
 9. The commands `3`,`4`,`5`,`6` are proposed for loading a file, loading a model, check a model or initialize a model 
-(This is currently difficult to use as long as we have neither delivered the standardlibrary nor some examplemodels)
+
+10. Typing `9` allows you to use the completion feature. It will ask you for a file and you have to specify which line and column.
+
+11. Typing `10` will return a html-documentation to a provided modelica-class name.
+
+12. The commands `98` and `99` are used to disconnect the client. Additionally command `99` will shutdown the server.
+

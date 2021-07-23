@@ -2,6 +2,8 @@ package Client;
 
 import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -11,18 +13,33 @@ import org.slf4j.LoggerFactory;
 
 
 public class MopeLSPClient implements IModelicaLanguageClient {
-
+    //TODO use proper ReturnTypes
     private ModelicaLanguageServer server;
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
+
+    public void shutdownServer() throws ExecutionException, InterruptedException {
+        CompletableFuture<Object> result = server.shutdown();
+        result.get();
+
+    }
+    public void exitServer() {
+        server.exit();
+    }
+
     @Override
     public void telemetryEvent(Object object) {
-        logger.info("Client->telemtryEvent");
+        logger.info("Client->telemetryEvent");
     }
 
     @Override
     public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
-        logger.info("Client->publishDiagnostics");
+        StringBuilder log = new StringBuilder("DiagnosticLocation: " + diagnostics.getUri() + "\nDiagnostics: \n");
+        for(var d : diagnostics.getDiagnostics()){
+            log.append(d.toString()).append("\n");
+        }
+        logger.info(log.toString());
+
     }
 
     @Override
@@ -60,10 +77,25 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         return null;
     }
 
-    public String getCompletion(String comop) throws ExecutionException, InterruptedException {
+    public String complete(String file, int line, int col) {
+        TextDocumentIdentifier doc = new TextDocumentIdentifier();
+        doc.setUri(file);
         CompletionParams params = new CompletionParams();
-        CompletableFuture<?> completion = server.getTextDocumentService().completion(params);
-        var compGet = completion.get() ;
+        params.setTextDocument(doc);
+        CompletionContext c = new CompletionContext();
+        c.setTriggerCharacter(".");
+        params.setContext(c);
+        Position p = new Position();
+        p.setCharacter(col);
+        p.setLine(line);
+        params.setPosition(p);
+        var completion = server.getTextDocumentService().completion(params);
+        Object compGet = null;
+        try {
+            compGet = completion.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         return compGet.toString();
     }
 
@@ -74,6 +106,17 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         CompletableFuture<?> hover = server.getTextDocumentService().hover(params);
         var hoverGet = hover.get();
         return hoverGet.toString();
+    }
+
+    public String getDocumentation(String className){
+        try{
+            CompletableFuture<String> x = server.getModelicaService().getDocumentation(className);
+            return x.get();
+        }catch(Exception e){
+            logger.error("Error loading Documentation",e);
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void didOpenFile(String path){
@@ -146,6 +189,16 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         return null;
     }
 
+    public Object sendExpression(String command) {
+        CompletableFuture<String> result = server.getModelicaService().sendExpression(command);
+        try {
+            return result.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error during sendExpression", e);
+        }
+        return null;
+    }
+
     @Override
     public CompletableFuture<List<WorkspaceFolder>> workspaceFolders(){
         CompletableFuture<List<WorkspaceFolder>> result = new CompletableFuture<>();
@@ -153,9 +206,9 @@ public class MopeLSPClient implements IModelicaLanguageClient {
         WorkspaceFolder f = new WorkspaceFolder();
         f.setName("ExampleModels");
         f.setUri("/home/swtp/modelica/exampleModels");
-        //List<WorkspaceFolder> result = new ArrayList<>();
-        //result.add(f);
         logger.info("WorkspaceFoldersResult created");
         return result;
     }
+
+
 }
