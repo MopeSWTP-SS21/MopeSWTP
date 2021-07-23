@@ -22,16 +22,17 @@ public abstract class ServerIntegrationTest {
     abstract Logger getLogger();
 
     static MopeLSPServerLauncher serverLauncher;
-    static {
+     {
         try {
             serverLauncher = new MopeLSPServerLauncher();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    //Don't make ClassInitializer static like IntelliJ suggests!
+    //This will result in some SocketExceptions when trying to launch new Server and Client Instance for second TestClass...
     static ConsoleClientLauncher clientLauncher;
-    static {
+    {
         try {
             clientLauncher = new ConsoleClientLauncher("localhost",4200);
         } catch (IOException e) {
