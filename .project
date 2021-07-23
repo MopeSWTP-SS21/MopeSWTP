@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>LspConsole</name>
-	<comment>Project LSPConsole created by Buildship.</comment>
+	<name>Mope-LSP</name>
+	<comment>This project contains the source code for the Mope-LSP-Server and a console application to interact with the Server via LSP.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

@@ -24,6 +24,7 @@ public class ConsoleClientLauncher {
     private static String host;
     private static int port;
     private static Scanner sc = new Scanner(System.in);
+    private static ConsoleMenu menu;
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     private static Future<Void> clientListening;
 
@@ -32,6 +33,7 @@ public class ConsoleClientLauncher {
         this.port = port;
         client = new MopeLSPClient();
         socket = new Socket(host, port);
+        menu = new ConsoleMenu(client);
     }
 
     public Future<Void> LaunchClient() throws IOException {
@@ -78,98 +80,7 @@ public class ConsoleClientLauncher {
 
         clientListening = launcher.LaunchClient();
 
-        ConsoleMenue();
-
+        menu.run();
+        StopClient();
     }
-
-    private static void ConsoleMenue() throws IOException, ExecutionException, InterruptedException {
-        boolean running=true;
-
-        String[] menuItems = new String[] {
-                "1: Initialize server",
-                "2: Get compiler version",
-                "3: Load File",
-                "4: Load model",
-                "5: Check Model",
-                "6: Initialize Model",
-                "7: Add Folder to ModelicaPath",
-                "8: Show ModelicaPath",
-                "9 : Complete",
-                "10 : Get Documentation",
-                "98 : Exit - Disconnect",
-                "99 : Exit - Shutdown Server"
-
-        };
-
-        while(running)
-        {
-
-            for (String item: menuItems ) {
-                System.out.println(item);
-            }
-            System.out.print(">");
-
-            int command= sc.nextInt();
-            switch(command){
-                case 1:
-                    client.initServer();
-                    break;
-                case 2:
-                    System.out.println(client.compilerVersion());
-                    break;
-                case 3:
-                    System.out.print("path: ");
-                    String filePath = sc.next();
-                    System.out.println(client.loadFile(filePath));
-                    break;
-                case 5:
-                    System.out.print("modelName: ");
-                    String name = sc.next();
-                    System.out.println(client.checkModel(name));
-                    break;
-                case 6:
-                    System.out.println("not implemented");
-                    break;
-                case 99:
-                    running=false;
-                    FullShutdown();
-                    break;
-                case 7:
-                    System.out.print("path: ");
-                    String path = sc.next();
-                    System.out.println(client.addPath(path));
-                    break;
-                case 4:
-                    System.out.print("modelName: ");
-                    String loadName = sc.next();
-                    System.out.println(client.loadModel(loadName));
-                    break;
-                case 8:
-                    System.out.println(client.modelicaPath());
-                    break;
-                case 98:
-                    StopClient();
-                    running = false;
-                    break;
-                case 9:
-                    System.out.print("File: ");
-                    String compFile = sc.next();
-                    System.out.print("Line: ");
-                    int line = sc.nextInt();
-                    System.out.print("Column: ");
-                    int col = sc.nextInt();
-                    System.out.println(client.complete(compFile, line, col));
-                    break;
-                case 10:
-                    System.out.print("className: ");
-                    String docName = sc.next();
-                    System.out.println(client.getDocumentation(docName));
-                    break;
-                default:
-                    logger.info("wrong entry");
-                    break;
-            }
-        }
-    }
-
 }
