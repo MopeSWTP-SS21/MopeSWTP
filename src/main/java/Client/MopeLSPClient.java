@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class MopeLSPClient implements IModelicaLanguageClient {
-
+    //TODO use proper ReturnTypes
     private ModelicaLanguageServer server;
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 

@@ -1,5 +1,4 @@
 import Client.ConsoleClientLauncher;
-import Server.MopeLSPServer;
 import Server.MopeLSPServerLauncher;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,33 +13,33 @@ public abstract class ServerIntegrationTest {
 
     //TODO Why does this result in NullPointerException?
     // private Logger logger = getLogger();
-    protected Logger logger =  LoggerFactory.getLogger(this.getClass());
-    private final CompletableFuture<Boolean> testsFinished = new CompletableFuture<>();
-    protected String userName;
-    protected String refPath;
-    protected String modelicaPath;
+    protected static Logger logger =  LoggerFactory.getLogger(ServerIntegrationTest.class);
+    private static final CompletableFuture<Boolean> testsFinished = new CompletableFuture<>();
+    protected static String userName;
+    protected static String refPath;
+    protected static String modelicaPath;
 
     abstract Logger getLogger();
 
-    MopeLSPServerLauncher serverLauncher;
+    static MopeLSPServerLauncher serverLauncher;
     {
         try {
-            serverLauncher = new MopeLSPServerLauncher(1234);
+            serverLauncher = new MopeLSPServerLauncher();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    ConsoleClientLauncher clientLauncher;
+    static ConsoleClientLauncher clientLauncher;
     {
         try {
-            clientLauncher = new ConsoleClientLauncher("localhost",1234);
+            clientLauncher = new ConsoleClientLauncher("localhost",4200);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     @BeforeAll
-    public void setupTestEnvironment(){
+    static void setupTestEnvironment(){
         readSystemProperties();
         startServer();
         startClient();
@@ -48,11 +47,11 @@ public abstract class ServerIntegrationTest {
         storeOriginalModelicaPath();
     }
 
-    private void readSystemProperties() {
+    private static void readSystemProperties() {
         userName = System.getProperty("user.name");
         refPath = System.getProperty("user.dir") + "/src/test/java/resources/exampleModels";
     }
-    private void startServer(){
+    private static void startServer(){
         new Thread(() -> {
             try {
                 serverLauncher.LaunchServer();
@@ -64,7 +63,7 @@ public abstract class ServerIntegrationTest {
         }).start();
     }
 
-    private void startClient() {
+    private static void startClient() {
         new Thread(() -> {
             try {
                 clientLauncher.LaunchClient();
@@ -76,17 +75,18 @@ public abstract class ServerIntegrationTest {
         }).start();
     }
 
-    private void initializeServer() {
+    private static void initializeServer() {
         try {
             //TODO i am sure there is a better way to wait for everything to be set up
-            Thread.sleep(3000);
+            // everything <= 1000 results in NullPointerException
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         ConsoleClientLauncher.client.initServer();
     }
 
-    private void storeOriginalModelicaPath(){
+    private static void storeOriginalModelicaPath(){
         modelicaPath = "/usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/";
     }
     @BeforeEach

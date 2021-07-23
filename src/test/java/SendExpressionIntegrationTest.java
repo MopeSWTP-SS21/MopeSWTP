@@ -22,11 +22,11 @@ public class SendExpressionIntegrationTest extends ServerIntegrationTest {
     }
 
     /**
-     * this Test tries to set the CommandLineOption "--unitChecking"
+     * this Test tries to set the CommandLineOption "-d=newInst,nfAPI"
      * passes if returns true
      */
     @Test
-    public void setCommandLineOptions_d_newInst_nfAPI(){
+    public void setCommandLineOptionsNewFrontend(){
         assertEquals("true", ConsoleClientLauncher.client.sendExpression("setCommandLineOptions(\"-d=newInst,nfAPI\")") );
 
     }

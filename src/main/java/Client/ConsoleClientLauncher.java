@@ -7,10 +7,10 @@ import org.eclipse.lsp4j.services.LanguageServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import version.Version;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
@@ -51,23 +51,32 @@ public class ConsoleClientLauncher {
         return future;
     }
 
-    private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-        socket.close();
+    private static void stopClient() throws IOException, ExecutionException, InterruptedException {
+        try{
+            socket.close();
+        } catch (SocketException e){
+            /*
+            TODO Ignore following Exception:
+            org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer fireStreamClosed
+            INFO: Socket closed
+            java.net.SocketException: Socket closed
+            TODO This exception is thrown/printed during socket.close(), no matter if serverShutdown was called before or not...
+             */
+        }
         clientListening.get();
         executor.shutdown();
         logger.info("Client Finished");
     }
 
-    private static void FullShutdown() throws IOException, ExecutionException, InterruptedException {
-        shutdown();
-        clientListening.get();
-        executor.shutdown();
-        logger.info("Client Finished");
-    }
 
-    public static void shutdown() throws ExecutionException, InterruptedException {
-        client.shutdownServer();
-        client.exitServer();
+
+    public static void shutdownServer() {
+        try{
+            client.shutdownServer();
+            client.exitServer();
+        }catch(ExecutionException | InterruptedException e){
+            logger.error("Some Problems occurred during server shutdown", e);
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -79,8 +88,8 @@ public class ConsoleClientLauncher {
         ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
         clientListening = launcher.LaunchClient();
-
-        menu.run();
-        StopClient();
+        var shutdownServer= menu.run();
+        if(shutdownServer) shutdownServer();
+        stopClient();
     }
 }
