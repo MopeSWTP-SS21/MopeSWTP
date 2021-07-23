@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 /**
@@ -95,11 +96,8 @@ public class SendExpressionIntegrationTest extends ServerIntegrationTest {
      * Passes if an Error is Returned
      */
     @Test void retrieveErrorForLoadingNonExistentModel(){
-        assertEquals(
-                "[/home/"+userName+"/.openmodelica/libraries/index.json:0:0-0:0:readonly] Error: The package index /home/"+userName+"/.openmodelica/libraries/index.json could not be parsed.\n" +
-                        "Error: Failed to load package FooBar (default) using MODELICAPATH /usr/bin/../lib/omlibrary:/home/"+userName+"/.openmodelica/libraries/.",
-                ConsoleClientLauncher.client.sendExpression("loadModel(FooBar)")
-        );
+        String result = ConsoleClientLauncher.client.sendExpression("loadModel(FooBar)").toString();
+        assertTrue(result.contains("Error: Failed to load package FooBar (default) using MODELICAPATH"));
     }
     /**
      * This test sends a sendExpression command to the server to load ModelicaStandardLibrary Version 3.2.3
