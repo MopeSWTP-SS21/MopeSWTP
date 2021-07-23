@@ -22,7 +22,7 @@ public abstract class ServerIntegrationTest {
     abstract Logger getLogger();
 
     static MopeLSPServerLauncher serverLauncher;
-    {
+    static {
         try {
             serverLauncher = new MopeLSPServerLauncher();
         } catch (IOException e) {
@@ -31,7 +31,7 @@ public abstract class ServerIntegrationTest {
     }
 
     static ConsoleClientLauncher clientLauncher;
-    {
+    static {
         try {
             clientLauncher = new ConsoleClientLauncher("localhost",4200);
         } catch (IOException e) {
@@ -66,7 +66,7 @@ public abstract class ServerIntegrationTest {
     private static void startClient() {
         new Thread(() -> {
             try {
-                clientLauncher.LaunchClient();
+                ConsoleClientLauncher.clientListening = clientLauncher.LaunchClient();
                 testsFinished.get();
                 logger.info("Client Thread finishing...");
             } catch (Exception e) {
@@ -94,10 +94,17 @@ public abstract class ServerIntegrationTest {
         ConsoleClientLauncher.client.sendExpression("setModelicaPath(\"" + modelicaPath + "\")");
     }
 
+    /**
+     * After all tests have been executed, the Server and The Client are shut down.
+     * To finish the Threads they were running in the testFinished completableFuture gets completed
+     */
     @AfterAll
-    public void endTests(){
-        //todo Shutdown server and client properly
+    static void endTests(){
+        logger.info("All tests done... shuting down Server and Client");
+        ConsoleClientLauncher.shutdownServer();
+        ConsoleClientLauncher.stopClient();
         logger.info("All tests done... Completing Future");
         testsFinished.complete(true);
+
     }
 }

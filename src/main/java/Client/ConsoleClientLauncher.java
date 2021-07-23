@@ -3,7 +3,7 @@ package Client;
 import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
-import org.eclipse.lsp4j.services.LanguageServer;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +23,14 @@ public class ConsoleClientLauncher {
     private static ExecutorService executor;
     private static String host;
     private static int port;
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
     private static ConsoleMenu menu;
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
-    private static Future<Void> clientListening;
+    public static Future<Void> clientListening;
 
     public ConsoleClientLauncher(String host, int port) throws IOException {
-        this.host = host;
-        this.port = port;
+        ConsoleClientLauncher.host = host;
+        ConsoleClientLauncher.port = port;
         client = new MopeLSPClient();
         socket = new Socket(host, port);
         menu = new ConsoleMenu(client);
@@ -51,7 +51,7 @@ public class ConsoleClientLauncher {
         return future;
     }
 
-    private static void stopClient() throws IOException, ExecutionException, InterruptedException {
+    public static void stopClient() {
         try{
             socket.close();
         } catch (SocketException e){
@@ -62,8 +62,14 @@ public class ConsoleClientLauncher {
             java.net.SocketException: Socket closed
             TODO This exception is thrown/printed during socket.close(), no matter if serverShutdown was called before or not...
              */
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        clientListening.get();
+        try {
+            clientListening.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         executor.shutdown();
         logger.info("Client Finished");
     }
