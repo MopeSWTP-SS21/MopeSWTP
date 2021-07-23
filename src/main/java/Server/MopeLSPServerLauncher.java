@@ -25,21 +25,21 @@ public class MopeLSPServerLauncher {
     private static MopeLSPServer server;
     private static ExecutorService executor;
     private static Socket socket;
-    private static int port = 4200;
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
+    private static ConfigObject configObject;
 
-    public MopeLSPServerLauncher(int port) throws IOException {
-        ConfigObject config = new ConfigObject("4200");
-        this.port = port;
-        server = new MopeLSPServer(config);
-        serverSocket = new ServerSocket(port);
+    public MopeLSPServerLauncher() throws IOException {
+        configObject = new ConfigObject();
+        readConfig();
+        server = new MopeLSPServer(configObject);
+        serverSocket = new ServerSocket(configObject.port);
     }
 
     public void LaunchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
-        logger.info("Server socket listening on port " + port );
+        logger.info("Server socket listening on port " + configObject.port );
         System.out.flush();
         executor = Executors.newCachedThreadPool();
         executor.submit(() -> {
@@ -85,15 +85,15 @@ public class MopeLSPServerLauncher {
         } catch (IOException | InterruptedException ie) {
 
         }
-        //server.shutdown();
     }
 
     public static void readConfigFile(String path) throws IOException {
         Properties prop = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream(path)){
             prop.load(fileInputStream);
-            port = Integer.parseInt(prop.getProperty("server.port"));
-            logger.info("Read Port " + port + " from " + path);
+            configObject.port = Integer.parseInt(prop.getProperty("server.port"));
+            configObject.path = prop.getProperty("server.path");
+            logger.info("Read Port " + configObject.port + " from " + path);
         }
     }
 
@@ -118,8 +118,7 @@ public class MopeLSPServerLauncher {
 
     public static void main(String[] args) {
         try{
-            readConfig();
-            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher(port);
+            MopeLSPServerLauncher launcher = new MopeLSPServerLauncher();
             launcher.LaunchServer();
             new Thread(() -> stopFromConsole(server)).start();
             server.waitForShutDown();

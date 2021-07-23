@@ -29,62 +29,33 @@ public class MopeLSPServer implements ModelicaLanguageServer
     private DiagnosticHandler diagnosticHandler;
     private static ICompilerAdapter compiler;
     private ConfigObject cfg;
-    private CompletableFuture<Object> shut;
-    private ServerSocket socket;
-    private String path;
+    private CompletableFuture<Object> isRunning;
 
     public MopeLSPServer(ConfigObject config){
         this.clients = new ArrayList<>();
         this.diagnosticHandler = new DiagnosticHandler(this);
-        readConfig();
-        this.compiler = new OMCAdapter(path, "us", "mope_local" );
+        this.compiler = new OMCAdapter(config.path, "us", "mope_local" );
         this.workspaceService = new MopeWorkspaceService(compiler);
         this.documentService = new MopeDocumentService(compiler);
         this.modelicaService = new MopeModelicaService(compiler, this);
         this.cfg = config;
-        this.shut = new CompletableFuture<>();
+        this.isRunning = new CompletableFuture<>();
     }
 
-    public void readConfigFile(String path) throws IOException {
-        Properties prop = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream(path)) {
-            prop.load(fileInputStream);
-            this.path = prop.getProperty("server.path");
-        }
-    }
-
-    public void readConfig() {
-        String home = System.getProperty("user.home");
-        String configPath = home+"/.config/mope/server.conf";
-        try{
-            readConfigFile(configPath);
-        }
-        catch (IOException ie){
-            configPath = home+ "\\mope\\server.conf";
-            try{
-                readConfigFile(configPath);
-            } catch (Exception ex){
-                configPath = "src/main/java/Server/server.config";
-                try {
-                    readConfigFile(configPath);
-                } catch (Exception exc) {}
-            }
-        }
-    }
 
     public DiagnosticHandler getDiagnosticHandler(){
         return this.diagnosticHandler;
     }
 
     public void waitForShutDown() throws ExecutionException, InterruptedException {
-        this.shut.get();
+        this.isRunning.get();
     }
 
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
         InitializeResult result = new InitializeResult(new ServerCapabilities());
 
-        logger.info("Server->initialize triggerd");
+        logger.info("Server->initialize triggered");
         compiler.connect();
 
         return CompletableFuture.supplyAsync(()->result);
@@ -99,8 +70,6 @@ public class MopeLSPServer implements ModelicaLanguageServer
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //shut.complete(null);
         return CompletableFuture.supplyAsync(() -> null);
     }
 
@@ -115,14 +84,14 @@ public class MopeLSPServer implements ModelicaLanguageServer
         }
     }
     public boolean isRunning() {
-        return !shut.isDone();
+        return !isRunning.isDone();
     }
 
 
     @Override
     public void exit() {
         logger.info("server->exit");
-        shut.complete(null);
+        isRunning.complete(null);
     }
 
     @Override

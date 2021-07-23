@@ -32,7 +32,7 @@ class LSPServerTest{
     MopeLSPServerLauncher serverLauncher;
     {
         try {
-            serverLauncher = new MopeLSPServerLauncher(4200);
+            serverLauncher = new MopeLSPServerLauncher();
         } catch (IOException e) {
             e.printStackTrace();
         }
