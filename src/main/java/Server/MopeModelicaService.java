@@ -38,6 +38,12 @@ public class MopeModelicaService implements ModelicaService {
     }
 
     @Override
+    public CompletableFuture<String> sendExpression(String command){
+        Result result = compiler.sendExpression(command);
+        if(result.error.isPresent()) return CompletableFuture.completedFuture(result.error.get());
+        return CompletableFuture.completedFuture(result.result);
+    }
+    @Override
     public CompletableFuture<String> loadFile(String path){
         server.getDiagnosticHandler().clearDiagnostics();
         String result = compiler.loadFile(path);

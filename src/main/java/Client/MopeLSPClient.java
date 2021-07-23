@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class MopeLSPClient implements IModelicaLanguageClient {
-
+    //TODO use proper ReturnTypes
     private ModelicaLanguageServer server;
     private static final Logger logger = LoggerFactory.getLogger(MopeLSPClient.class);
 
@@ -185,6 +185,16 @@ public class MopeLSPClient implements IModelicaLanguageClient {
             return x.get();
         }catch(Exception e){
             System.out.println("Error Get Path");
+        }
+        return null;
+    }
+
+    public Object sendExpression(String command) {
+        CompletableFuture<String> result = server.getModelicaService().sendExpression(command);
+        try {
+            return result.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error during sendExpression", e);
         }
         return null;
     }
