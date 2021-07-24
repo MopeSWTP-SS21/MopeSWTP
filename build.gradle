@@ -20,6 +20,14 @@ dependencies {
     implementation 'de.thm.mni.mote:omc-java-api:0.3.5'
     implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
 }
+task getVersion {
+    doFirst{
+        println version
+    }
+}
+
+
+
 task startMopeServer(type : JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'Server.MopeLSPServerLauncher'
