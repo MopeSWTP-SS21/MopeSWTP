@@ -11,6 +11,7 @@ public class ConsoleMenu {
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     private final Scanner sc = new Scanner(System.in);
     private boolean running;
+    private boolean fullShutdown = false;
 
     private final String[] menuItems = new String[] {
             "1: Initialize server",
@@ -21,10 +22,11 @@ public class ConsoleMenu {
             "6: Instantiate Model",
             "7: Add Folder to ModelicaPath",
             "8: Show ModelicaPath",
-            "9 : Exit",
-            "10 : Complete",
-            "11 : Get Documentation",
-            "12 : Send Expression"
+            "9 : Complete",
+            "10 : Get Documentation",
+            "11 : Send Expression",
+            "98 : Exit - Disconnect",
+            "99 : Exit - Shutdown Server"
     };
     private void switchCommand(){
         int command= sc.nextInt();
@@ -47,28 +49,38 @@ public class ConsoleMenu {
             case 6:
                 instantiateModel();
                 break;
-            case 9:
-                running=false;
-                break;
             case 7:
                 addFolder();
                 break;
             case 8:
                 showPath();
                 break;
-            case 10:
+            case 9:
                 complete();
                 break;
-            case 11:
+            case 10:
                 getDocumentation();
                 break;
-            case 12:
+            case 11:
                 sendExpression();
+                break;
+            case 98:
+                stopClient();
+                break;
+            case 99:
+                fullShutdown();
                 break;
             default:
                 logger.info("wrong entry");
                 break;
         }
+    }
+    private void stopClient(){
+        this.running=false;
+    }
+    private void fullShutdown(){
+        this.running=false;
+        this.fullShutdown = true;
     }
 
     private void initializeServer(){
@@ -145,13 +157,14 @@ public class ConsoleMenu {
         System.out.print(">");
     }
 
-    public void run(){
+    public boolean run(){
         running = true;
         while(running)
         {
             printMenu();
             switchCommand();
         }
+        return fullShutdown;
     }
 
     public ConsoleMenu(MopeLSPClient client){

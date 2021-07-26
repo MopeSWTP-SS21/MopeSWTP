@@ -3,14 +3,14 @@ package Client;
 import Server.ModelicaLanguageServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
-import org.eclipse.lsp4j.services.LanguageServer;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import version.Version;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
@@ -23,14 +23,14 @@ public class ConsoleClientLauncher {
     private static ExecutorService executor;
     private static String host;
     private static int port;
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
     private static ConsoleMenu menu;
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
-    private static Future<Void> clientListening;
+    public static Future<Void> clientListening;
 
     public ConsoleClientLauncher(String host, int port) throws IOException {
-        this.host = host;
-        this.port = port;
+        ConsoleClientLauncher.host = host;
+        ConsoleClientLauncher.port = port;
         client = new MopeLSPClient();
         socket = new Socket(host, port);
         menu = new ConsoleMenu(client);
@@ -51,23 +51,38 @@ public class ConsoleClientLauncher {
         return future;
     }
 
-    private static void StopClient() throws IOException, ExecutionException, InterruptedException {
-        socket.close();
-        clientListening.get();
+    public static void stopClient() {
+        try{
+            socket.close();
+        } catch (SocketException e){
+            /*
+            TODO Ignore following Exception:
+            org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer fireStreamClosed
+            INFO: Socket closed
+            java.net.SocketException: Socket closed
+            TODO This exception is thrown/printed during socket.close(), no matter if serverShutdown was called before or not...
+             */
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            clientListening.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         executor.shutdown();
         logger.info("Client Finished");
     }
 
-    private static void FullShutdown() throws IOException, ExecutionException, InterruptedException {
-        shutdown();
-        clientListening.get();
-        executor.shutdown();
-        logger.info("Client Finished");
-    }
 
-    public static void shutdown() throws ExecutionException, InterruptedException {
-        client.shutdownServer();
-        client.exitServer();
+
+    public static void shutdownServer() {
+        try{
+            client.shutdownServer();
+            client.exitServer();
+        }catch(ExecutionException | InterruptedException e){
+            logger.error("Some Problems occurred during server shutdown", e);
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -79,8 +94,8 @@ public class ConsoleClientLauncher {
         ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
         clientListening = launcher.LaunchClient();
-
-        menu.run();
-        StopClient();
+        var shutdownServer= menu.run();
+        if(shutdownServer) shutdownServer();
+        stopClient();
     }
 }
