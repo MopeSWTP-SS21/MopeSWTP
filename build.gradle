@@ -62,7 +62,7 @@ test {
 
 sonarqube {
     properties {
-        property "sonar.projectKey" "MopeSWTP-SS21"
-        property "sonar.host.url" "https://scm.thm.de/sonar"
+        property "sonar.projectKey", "MopeSWTP-SS21"
+        property "sonar.host.url", "https://scm.thm.de/sonar"
     }
 }
