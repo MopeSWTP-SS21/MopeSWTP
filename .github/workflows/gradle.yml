@@ -39,3 +39,5 @@ jobs:
       run: chmod +x gradlew
     - name: Test with Gradle
       run: ./gradlew test -i
+    - name: Upload project to SonarQube
+      run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}
