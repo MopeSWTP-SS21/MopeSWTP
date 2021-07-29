@@ -55,7 +55,7 @@ public abstract class ServerIntegrationTest {
     private static void startServer(){
         new Thread(() -> {
             try {
-                serverLauncher.LaunchServer();
+                serverLauncher.launchServer();
                 testsFinished.get();
                 logger.info("Server Thread finishing...");
             } catch (Exception e) {
@@ -67,7 +67,7 @@ public abstract class ServerIntegrationTest {
     private static void startClient() {
         new Thread(() -> {
             try {
-                ConsoleClientLauncher.clientListening = clientLauncher.LaunchClient();
+                ConsoleClientLauncher.clientListening = clientLauncher.launchClient();
                 testsFinished.get();
                 logger.info("Client Thread finishing...");
             } catch (Exception e) {

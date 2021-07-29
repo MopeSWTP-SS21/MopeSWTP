@@ -39,7 +39,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
         this.modelicaService = new MopeModelicaService(compiler, this);
         this.workspaceService = new MopeWorkspaceService(this.modelicaService);
         this.cfg = config;
-        this.isRunning = new CompletableFuture<>();
+        this.isRunning = new CompletableFuture<Object>();
     }
 
 
@@ -54,11 +54,11 @@ public class MopeLSPServer implements ModelicaLanguageServer
     @Override
     public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
         InitializeResult result = new InitializeResult(MopeServerCapabilities.getCapabilities());
-
+        CompletableFuture<InitializeResult> res = new CompletableFuture<>();
         logger.info("Server->initialize triggered");
         compiler.connect();
-
-        return CompletableFuture.supplyAsync(()->result);
+        res.complete(result);
+        return res;
     }
 
     @Override
@@ -70,13 +70,10 @@ public class MopeLSPServer implements ModelicaLanguageServer
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return CompletableFuture.supplyAsync(() -> null);
+        isRunning.complete(null);
+        return isRunning;
     }
 
-    public CompletableFuture<Object> disconnectClient() {
-        logger.info("Client is about to be disconnected");
-        return CompletableFuture.supplyAsync(() -> null);
-    }
 
     private void notifyAllClientsAboutShutdown(){
         for (var c: clients) {

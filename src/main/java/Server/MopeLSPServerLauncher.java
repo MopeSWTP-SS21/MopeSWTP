@@ -11,12 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.Log4jLoggerAdapter;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.*;
 
@@ -35,7 +35,7 @@ public class MopeLSPServerLauncher {
         serverSocket = new ServerSocket(configObject.port);
     }
 
-    public void LaunchServer() {
+    public void launchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
@@ -89,11 +89,12 @@ public class MopeLSPServerLauncher {
 
     public static void readConfigFile(String path) throws IOException {
         Properties prop = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream(path)){
-            prop.load(fileInputStream);
+        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(path), StandardCharsets.UTF_8)){
+            prop.load(bufferedReader);
             configObject.port = Integer.parseInt(prop.getProperty("server.port"));
             configObject.path = prop.getProperty("server.path");
             logger.info("Read Port " + configObject.port + " from " + path);
+            bufferedReader.close();
         }
     }
 
@@ -119,7 +120,7 @@ public class MopeLSPServerLauncher {
     public static void main(String[] args) {
         try{
             MopeLSPServerLauncher launcher = new MopeLSPServerLauncher();
-            launcher.LaunchServer();
+            launcher.launchServer();
             new Thread(() -> stopFromConsole(server)).start();
             server.waitForShutDown();
             socket.shutdownInput();

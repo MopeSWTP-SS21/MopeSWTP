@@ -36,7 +36,7 @@ public class ConsoleClientLauncher {
         menu = new ConsoleMenu(client);
     }
 
-    public Future<Void> LaunchClient() throws IOException {
+    public Future<Void> launchClient() throws IOException {
         executor = Executors.newFixedThreadPool(2);
         cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
                 .setLocalService(client)
@@ -93,7 +93,7 @@ public class ConsoleClientLauncher {
 
         ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
-        clientListening = launcher.LaunchClient();
+        clientListening = launcher.launchClient();
         var shutdownServer= menu.run();
         if(shutdownServer) shutdownServer();
         stopClient();
