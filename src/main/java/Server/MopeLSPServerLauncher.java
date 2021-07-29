@@ -16,6 +16,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.*;
@@ -87,9 +88,9 @@ public class MopeLSPServerLauncher {
         }
     }
 
-    public static void readConfigFile(String path) throws IOException {
+    public static void readConfigFile(Path path) throws IOException {
         Properties prop = new Properties();
-        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(path), StandardCharsets.UTF_8)){
+        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(path.toString()), StandardCharsets.UTF_8)){
             prop.load(bufferedReader);
             configObject.port = Integer.parseInt(prop.getProperty("server.port"));
             configObject.path = prop.getProperty("server.path");
@@ -100,16 +101,16 @@ public class MopeLSPServerLauncher {
 
     public static void readConfig() {
         String home = System.getProperty("user.home");
-        String configPath = home+"/.config/mope/server.conf";
+        Path configPath = Path.of(home,"/.config/mope/server.conf");
         try{
             readConfigFile(configPath);
         }
         catch (IOException ie){
-            configPath = home+ "\\mope\\server.conf";
+            configPath = Path.of(home,"\\mope\\server.conf");
             try{
                 readConfigFile(configPath);
             } catch (Exception ex){
-                configPath = "src/main/java/Server/server.config";
+                configPath = Path.of("src/main/java/Server/server.config");
                 try {
                     readConfigFile(configPath);
                 } catch (Exception exc) {}
