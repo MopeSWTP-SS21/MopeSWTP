@@ -51,7 +51,7 @@ public class ConsoleClientLauncher {
         return future;
     }
 
-    public static void stopClient() {
+    public static void stopClient() throws ExecutionException{
         try{
             socket.close();
         } catch (SocketException e){
@@ -67,8 +67,8 @@ public class ConsoleClientLauncher {
         }
         try {
             clientListening.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
         }
         executor.shutdown();
         logger.info("Client Finished");
@@ -76,12 +76,12 @@ public class ConsoleClientLauncher {
 
 
 
-    public static void shutdownServer() {
+    public static void shutdownServer() throws ExecutionException {
         try{
             client.shutdownServer();
             client.exitServer();
-        }catch(ExecutionException | InterruptedException e){
-            logger.error("Some Problems occurred during server shutdown", e);
+        }catch(InterruptedException ie){
+            logger.error("Some Problems occurred during server shutdown", ie);
         }
     }
 

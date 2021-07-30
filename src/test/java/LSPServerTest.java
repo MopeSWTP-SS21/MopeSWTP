@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +39,7 @@ class LSPServerTest extends ServerIntegrationTest{
 
     // Tests the loading of a modelica file and checks the result the server is responding
     @Test
-    public void loadFile()  {
+    public void loadFile() throws ExecutionException {
         ConsoleClientLauncher.client.addPath(refPath);
         assertEquals("Result [result=true, error=Optional.empty]", ConsoleClientLauncher.client.loadFile(refPath+"/"+"FunctionNames.mo"));
     }

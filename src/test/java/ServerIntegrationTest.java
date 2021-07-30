@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public abstract class ServerIntegrationTest {
 
@@ -31,7 +32,7 @@ public abstract class ServerIntegrationTest {
     }
     //Don't make ClassInitializer static like IntelliJ suggests!
     //This will result in some SocketExceptions when trying to launch new Server and Client Instance for second TestClass...
-    static ConsoleClientLauncher clientLauncher;
+    public ConsoleClientLauncher clientLauncher;
     {
         try {
             clientLauncher = new ConsoleClientLauncher("localhost",4200);
@@ -40,7 +41,7 @@ public abstract class ServerIntegrationTest {
         }
     }
     @BeforeAll
-    static void setupTestEnvironment(){
+    public void setupTestEnvironment(){
         readSystemProperties();
         startServer();
         startClient();
@@ -64,7 +65,7 @@ public abstract class ServerIntegrationTest {
         }).start();
     }
 
-    private static void startClient() {
+    private void startClient() {
         new Thread(() -> {
             try {
                 ConsoleClientLauncher.clientListening = clientLauncher.launchClient();
@@ -100,7 +101,7 @@ public abstract class ServerIntegrationTest {
      * To finish the Threads they were running in the testFinished completableFuture gets completed
      */
     @AfterAll
-    static void endTests(){
+    static void endTests() throws ExecutionException {
         logger.info("All tests done... shuting down Server and Client");
         ConsoleClientLauncher.shutdownServer();
         ConsoleClientLauncher.stopClient();
