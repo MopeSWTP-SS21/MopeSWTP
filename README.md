@@ -1,5 +1,10 @@
 # LspConsole
 
+[![Maintainability Rating](https://scm.thm.de/sonar/api/project_badges/measure?project=MopeSWTP-SS21&metric=sqale_rating)](https://scm.thm.de/sonar/dashboard?id=MopeSWTP-SS21)
+[![Reliability Rating](https://scm.thm.de/sonar/api/project_badges/measure?project=MopeSWTP-SS21&metric=reliability_rating)](https://scm.thm.de/sonar/dashboard?id=MopeSWTP-SS21)
+[![Security Rating](https://scm.thm.de/sonar/api/project_badges/measure?project=MopeSWTP-SS21&metric=security_rating)](https://scm.thm.de/sonar/dashboard?id=MopeSWTP-SS21)
+[![Quality Gate Status](https://scm.thm.de/sonar/api/project_badges/measure?project=MopeSWTP-SS21&metric=alert_status)](https://scm.thm.de/sonar/dashboard?id=MopeSWTP-SS21)
+
 This Readme currently provides a guideline to set up the MopeConsoleClient:
 
 • Guide currently is only for linux systems due to a omc path issue on windows
