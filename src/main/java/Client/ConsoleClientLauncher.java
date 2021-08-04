@@ -28,6 +28,8 @@ public class ConsoleClientLauncher {
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     public static Future<Void> clientListening;
 
+
+
     public ConsoleClientLauncher(String host, int port) throws IOException {
         ConsoleClientLauncher.host = host;
         ConsoleClientLauncher.port = port;
@@ -36,6 +38,12 @@ public class ConsoleClientLauncher {
         menu = new ConsoleMenu(client);
     }
 
+    /**
+     * <p>Launches the client by starting a socket.</p>
+     * @author Manuel S. Wächtershäuser
+     * @return a future result but it has no value
+     * @throws IOException which is thrown in case of an failed or interrupted I/O operation
+     */
     public Future<Void> launchClient() throws IOException {
         executor = Executors.newFixedThreadPool(2);
         cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
@@ -51,7 +59,13 @@ public class ConsoleClientLauncher {
         return future;
     }
 
-    public static void stopClient() throws ExecutionException{
+    /**
+     * <p>This method stops the client by closing the socket</p>
+     * <p>In case it was successful it informs the user that the client has finished </p>
+     * @author Manuel S. Wächtershäuser
+     * @throws ExecutionException, in case of retrieving a result of a task which aborted by throwing an exception
+     */
+     public static void stopClient() throws ExecutionException{
         try{
             socket.close();
         } catch (SocketException e){
@@ -69,18 +83,25 @@ public class ConsoleClientLauncher {
             clientListening.get();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
+            Thread.currentThread().interrupt();
+            System.exit(1);
         }
         executor.shutdown();
         logger.info("Client Finished");
     }
 
 
-
+    /**
+     * This method requests the server to shutdown and the server consequently does.
+     * @author Ilmar Bosnak
+     * @throws ExecutionException, in case of retrieving a result of a task which aborted by throwing an exception
+     */
     public static void shutdownServer() throws ExecutionException {
         try{
             client.shutdownServer();
             client.exitServer();
         }catch(InterruptedException ie){
+            Thread.currentThread().interrupt();
             logger.error("Some Problems occurred during server shutdown", ie);
         }
     }

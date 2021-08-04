@@ -39,7 +39,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
         this.modelicaService = new MopeModelicaService(compiler, this);
         this.workspaceService = new MopeWorkspaceService(this.modelicaService);
         this.cfg = config;
-        this.isRunning = new CompletableFuture<Object>();
+        this.isRunning = new CompletableFuture<>();
     }
 
 

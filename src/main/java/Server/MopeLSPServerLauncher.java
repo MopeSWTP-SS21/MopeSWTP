@@ -94,7 +94,7 @@ public class MopeLSPServerLauncher {
             prop.load(bufferedReader);
             configObject.port = Integer.parseInt(prop.getProperty("server.port"));
             configObject.path = prop.getProperty("server.path");
-            logger.info("Read Port " + configObject.port + " from " + path);
+            logger.debug("Read Port " + configObject.port + " from " + configObject.path);
             bufferedReader.close();
         }
     }
