@@ -1,0 +1,154 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>&lt;diagram program="umletino" version="14.4.0-SNAPSHOT"&gt;&lt;zoom_level&gt;10&lt;/zoom_level&gt;&lt;element&gt;&lt;id&gt;Relation&lt;/id&gt;&lt;coordinates&gt;&lt;x&gt;710&lt;/x&gt;&lt;y&gt;860&lt;/y&gt;&lt;w&gt;410&lt;/w&gt;&lt;h&gt;150&lt;/h&gt;&lt;/coordinates&gt;&lt;panel_attributes&gt;lt=&amp;lt;&amp;lt;&amp;lt;-
+
+Uses Compileradapter to talk to OMC&lt;/panel_attributes&gt;&lt;additional_attributes&gt;10;120;390;120;390;10&lt;/additional_attributes&gt;&lt;/element&gt;&lt;/diagram&gt;&lt;diagram program="umletino" version="14.4.0-SNAPSHOT"&gt;&lt;zoom_level&gt;10&lt;/zoom_level&gt;&lt;element&gt;&lt;id&gt;Relation&lt;/id&gt;&lt;coordinates&gt;&lt;x&gt;490&lt;/x&gt;&lt;y&gt;465&lt;/y&gt;&lt;w&gt;110&lt;/w&gt;&lt;h&gt;90&lt;/h&gt;&lt;/coordinates&gt;&lt;panel_attributes&gt;lt=&amp;lt;&amp;lt;-
+RPC-Segment&lt;/panel_attributes&gt;&lt;additional_attributes&gt;10;70;10;10&lt;/additional_attributes&gt;&lt;/element&gt;&lt;/diagram&gt;&lt;diagram program="umletino" version="14.4.0-SNAPSHOT"&gt;&lt;zoom_level&gt;10&lt;/zoom_level&gt;&lt;element&gt;&lt;id&gt;Relation&lt;/id&gt;&lt;coordinates&gt;&lt;x&gt;490&lt;/x&gt;&lt;y&gt;465&lt;/y&gt;&lt;w&gt;110&lt;/w&gt;&lt;h&gt;90&lt;/h&gt;&lt;/coordinates&gt;&lt;panel_attributes&gt;lt=&amp;lt;&amp;lt;-
+RPC-Segment&lt;/panel_attributes&gt;&lt;additional_attributes&gt;10;70;10;10&lt;/additional_attributes&gt;&lt;/element&gt;&lt;/diagram&gt;&lt;diagram program="umletino" version="14.4.0-SNAPSHOT"&gt;&lt;zoom_level&gt;10&lt;/zoom_level&gt;&lt;element&gt;&lt;id&gt;UMLClass&lt;/id&gt;&lt;coordinates&gt;&lt;x&gt;880&lt;/x&gt;&lt;y&gt;500&lt;/y&gt;&lt;w&gt;210&lt;/w&gt;&lt;h&gt;190&lt;/h&gt;&lt;/coordinates&gt;&lt;panel_attributes&gt;DiagnosticHandler
+--
+&lt;/panel_attributes&gt;&lt;additional_attributes&gt;&lt;/additional_attributes&gt;&lt;/element&gt;&lt;/diagram&gt;Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>480</x><y>160</y><w>290</w><h>60</h></coordinates><panel_attributes>/ModelicaLanguageServer/
+--
+*Methods*
+getModelicaService(): ModelicaService</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>530</y><w>210</w><h>100</h></coordinates><panel_attributes>/WorkspaceService/
+--
+*Methods*
+- executeCommand(params)
+-didChangeWatchedFiles(params)
+...</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>400</x><y>530</y><w>210</w><h>110</h></coordinates><panel_attributes>/TextDocumentService/
+--
+*Methods*
+- completion(params)
+- didOpen(params)
+- didChange(params)
+...
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>900</x><y>530</y><w>210</w><h>150</h></coordinates><panel_attributes>/ModelicaService/
+--
+*Methods*
+- getModelicaPath()
+- sendExpression(String command)
+- checkModel(String modelName)
+...
+--
+Responsibilities
+-Handles all the Modelica specific
+ Operations </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>400</x><y>800</y><w>210</w><h>70</h></coordinates><panel_attributes>MopeDocumentService
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>900</x><y>800</y><w>210</w><h>70</h></coordinates><panel_attributes>MopeModelicaService
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>800</y><w>210</w><h>70</h></coordinates><panel_attributes>MopeWorkspaceService
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>230</x><y>0</y><w>400</w><h>120</h></coordinates><panel_attributes>/LSP4J::LanguageServer/
+--
+*Methods*
+- getTextDocumentService(): TextDocumentService
+- getWorkspaceService(): WorkspaceService
+- initialize(params: InitializeParams): CompletableFuture&lt;InitializeResult&gt;
+- shutdown...
+- ...</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>670</x><y>0</y><w>280</w><h>120</h></coordinates><panel_attributes>/LSP4J::LanguageClientAware/
+--
+*Methods*
+- connect(LanguageClient client)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>1120</y><w>220</w><h>110</h></coordinates><panel_attributes>OMCAdapter
+--
+*Attributes*
+- omc:  omc-java-api::OMCInterface
+--
+Talks to the OpenModelicaCompiler
+ via the omc-java-api
+Starts and exits the OMC-Process via the omc-java-api</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>960</y><w>320</w><h>120</h></coordinates><panel_attributes>/ICompilerAdapter/
+--
+*Methods*
+- checkModel(modelName: String): String
+- getModelicaPath(): String
+- loadModel(modelName: String): omc-java-api::Result
+- ...</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1150</x><y>310</y><w>310</w><h>190</h></coordinates><panel_attributes>DiagnosticHandler
+--
+- server: MopeLSPServer
+- diagnostics: HashMap&lt;String, List&lt;LSP4J::Diagnostic&gt;
+--
+- addDiagnostics(List&lt;ModelicaDiagnostic&gt;)
+- publishDiagnostics()
+- clearDiagnostics()
+--
+- Maintains a List of Diagnostics for each File
+- Creates a LSP4J::PublishDiagnosticParams
+- triggers
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>670</y><w>230</w><h>190</h></coordinates><panel_attributes>CompletionProvider
+--
+- reads a file
+- identifies what to complete
+- identifies possible completions
+- creates List&lt;LSP4J::ComplitionItem&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>180</y><w>210</w><h>60</h></coordinates><panel_attributes>ConfigObject 
+--
+- port: String
+- path: String
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>460</y><w>210</w><h>100</h></coordinates><panel_attributes>MopeServerCapabilities
+--
+Provides LSP-ServerCapabilities 
+to exchange with the client</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1210</x><y>790</y><w>210</w><h>100</h></coordinates><panel_attributes>ModelicaDiagnostic
+--
+String uri
+--
+Provides static Methods to create 
+ModelicaDiagnostics from Strings
+returend by the OMC
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>290</y><w>210</w><h>130</h></coordinates><panel_attributes>MopeLSPServerLauncher
+--
+- serverSocket: ServerSocket
+- server: MopeLSPServer
+- executor: ExecutorService
+- port: int
+--
+- launchServer()
+- main(args: String[])</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>10</x><y>190</y><w>140</w><h>50</h></coordinates><panel_attributes>ConfigFile
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>730</x><y>81</y><w>90</w><h>100</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>500</x><y>101</y><w>90</w><h>80</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>730</x><y>201</y><w>90</w><h>110</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>310</y><w>370</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+launches</panel_attributes><additional_attributes>350;10;120;10;120;80;10;80</additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>280</y><w>370</w><h>200</h></coordinates><panel_attributes>
+MopeLSPServer
+
+--
+- workspaceService: MopeWorkspaceService
+- documentService: MopeTextDocumentService
+- modelicaService: MopeModelicaService
+- clients: List&lt;LanguageClient&gt;
+- compiler: ICompilerAdapter
+- cfg: ConfigObject 
+--
+*Methods*
+publishDiagnosticsToAllClients(params: PublishDiagnosticParams)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>631</y><w>90</w><h>190</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;169</additional_attributes></element><element><id>Relation</id><coordinates><x>820</x><y>621</y><w>90</w><h>200</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>1080</x><y>661</y><w>90</w><h>170</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>Relation</id><coordinates><x>50</x><y>231</y><w>60</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+reads</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>210</x><y>231</y><w>70</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+creates</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>451</y><w>240</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+
+Used during Initialize-RPC</panel_attributes><additional_attributes>10;20;220;20</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>810</y><w>240</w><h>50</h></coordinates><panel_attributes>lt=&lt;-&gt;
+LSP4J::CompletionParams
+List&lt;LSP4J::CompletionItem&gt;</panel_attributes><additional_attributes>10;20;220;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>1671</y><w>1110</w><h>230</h></coordinates><panel_attributes>EOF</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>790</x><y>440</y><w>380</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+triggers publishDiagnostics...</panel_attributes><additional_attributes>10;20;360;20</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>1061</y><w>90</w><h>90</h></coordinates><panel_attributes>lt=&lt;.
+implements</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>110</x><y>852</y><w>320</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+
+Uses ICompilerAdapter to generate 
+values for CompletionItems</panel_attributes><additional_attributes>300;130;10;130;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>860</y><w>410</w><h>150</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+
+Uses Compileradapter to talk to OMC</panel_attributes><additional_attributes>10;120;390;120;390;10</additional_attributes></element><element><id>Relation</id><coordinates><x>640</x><y>860</y><w>390</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+
+Forward executeCommand RPC to correct ModelicaServiceMethods</panel_attributes><additional_attributes>360;10;360;60;20;60;20;10</additional_attributes></element><element><id>Relation</id><coordinates><x>490</x><y>465</y><w>110</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+RPC-Segment</panel_attributes><additional_attributes>10;70;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>690</x><y>465</y><w>110</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+RPC-Segment</panel_attributes><additional_attributes>10;70;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>790</x><y>465</y><w>220</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+RPC-Segment</panel_attributes><additional_attributes>120;70;120;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1380</x><y>540</y><w>160</w><h>190</h></coordinates><panel_attributes>LSP4J::Diagnostic
+--
+- range 
+- severity
+- message
+...
+--
+Diagnostics are used to tell 
+the Client about Errors and 
+Wranings (and more)  in the
+Code or the Project... </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1384</x><y>415</y><w>110</w><h>150</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>90;130;90;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1404</x><y>715</y><w>150</w><h>120</h></coordinates><panel_attributes>lt=&lt;..
+extends</panel_attributes><additional_attributes>90;10;90;90;10;95</additional_attributes></element><element><id>Relation</id><coordinates><x>1100</x><y>495</y><w>250</w><h>360</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+Adds Diagnostics to Handler</panel_attributes><additional_attributes>80;10;80;340;10;340</additional_attributes></element><element><id>Relation</id><coordinates><x>1120</x><y>825</y><w>270</w><h>140</h></coordinates><panel_attributes>Uses to generate
+lt=&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>250;60;250;110;10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>713</x><y>877</y><w>700</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-
+
+Uses Compileradapter to talk to OMC</panel_attributes><additional_attributes>10;190;680;190;680;10</additional_attributes></element></diagram>
