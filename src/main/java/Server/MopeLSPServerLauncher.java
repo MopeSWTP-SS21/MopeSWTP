@@ -35,6 +35,9 @@ public class MopeLSPServerLauncher {
         server = new MopeLSPServer(configObject);
         serverSocket = new ServerSocket(configObject.port);
     }
+    public static void setExecutorPool() {
+        executor = Executors.newCachedThreadPool();
+    }
 
     public void launchServer() {
 
@@ -42,7 +45,7 @@ public class MopeLSPServerLauncher {
 
         logger.info("Server socket listening on port " + configObject.port );
         System.out.flush();
-        executor = Executors.newCachedThreadPool();
+        //executor = Executors.newCachedThreadPool();
         executor.submit(() -> {
             while (true) {
                 socket = serverSocket.accept();
@@ -120,6 +123,7 @@ public class MopeLSPServerLauncher {
 
     public static void main(String[] args) {
         try{
+            setExecutorPool();
             MopeLSPServerLauncher launcher = new MopeLSPServerLauncher();
             launcher.launchServer();
             new Thread(() -> stopFromConsole(server)).start();

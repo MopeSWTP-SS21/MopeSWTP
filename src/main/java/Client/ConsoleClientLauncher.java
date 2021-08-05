@@ -34,9 +34,11 @@ public class ConsoleClientLauncher {
         socket = new Socket(host, port);
         menu = new ConsoleMenu(client);
     }
-
-    public static Future<Void> launchClient() throws IOException {
+    public static void setExecutorPool() {
         executor = Executors.newFixedThreadPool(2);
+    }
+
+    public Future<Void> launchClient() throws IOException {
         Launcher<ModelicaLanguageServer> cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
                 .setLocalService(client)
                 .setRemoteInterface(ModelicaLanguageServer.class)
@@ -90,9 +92,10 @@ public class ConsoleClientLauncher {
         System.out.println("Serverport:");
         port = sc.nextInt();
 
-        //ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
+        setExecutorPool();
+        ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
-        clientListening = launchClient();
+        clientListening = launcher.launchClient();
         var shutdownServer= menu.run();
         if(shutdownServer) shutdownServer();
         stopClient();
