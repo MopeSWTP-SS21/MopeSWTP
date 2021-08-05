@@ -19,7 +19,6 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     /**
      * <p>Here in this method the client sends a request to the server asking him to shutdown.</p>
-     * @author Ilmar Bosnak
      * @throws ExecutionException,  in case of retrieving a result of a task which aborted by throwing an exception
      * @throws InterruptedException, in case any thread has interrupted the current thread.
      */
@@ -73,7 +72,6 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     /**
      * This method behaves like a typical setter-method.
-     * @author Manuel S. Wächteshäuser
      * @param server has to be an ModelicaLanguageServer-object which will be used for the launcher
      */
     public void setServer(ModelicaLanguageServer server){
@@ -98,9 +96,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>This method is used as the code-completion feature.</p>
-     * @author Manuel S. Wächtershäuser
-     * @param file has to be a valid Modelica model
+     * <p>This method is used to request a list of possible code-completions from the server.</p>
+     * @param file file containing the keyword which is going to be completed
      * @param line a digit, identifying the line where the keyword is going to be completed
      * @param col a digit, identifying the column where the keyword is going to be completed
      * @return a string, which is the full keyword of Modelica language
@@ -144,7 +141,6 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     /**
      * <p>This method returns a HTML-formatted Documentation of a given Class.</p>
-     * @author Manuel S. Wächtershäuser
      * @param className has to be a valid classname
      * @return the html-formatted documentation by given classname
      */
@@ -262,9 +258,9 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     *
-     * @param command
-     * @return
+     * <p>This method allows to send expressions without starting the OMShell</p>
+     * @param command is an OMShell command to be executed
+     * @return an output formatted as a string
      */
     public Object sendExpression(String command) {
         CompletableFuture<String> result = server.getModelicaService().sendExpression(command);

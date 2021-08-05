@@ -14,34 +14,41 @@ import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
-
+/**
+ * @author Manuel S. Wächtershäuser, Ilmar Bosnak, Conrad Lange
+ */
 public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
     private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
-    private static String host;
-    private static int port;
+    public String host;
+    public int port;
     private static final Scanner sc = new Scanner(System.in);
     private static ConsoleMenu menu;
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     public static Future<Void> clientListening;
 
 
-
+    /**
+     * The constructor creates a client-instance, opens a socketand prints the client menu
+     * @param host is the ip-address of the server to connect to
+     * @param port on this port the server is running
+     * @throws IOException which is thrown in case of an failed or interrupted I/O operation
+     */
     public ConsoleClientLauncher(String host, int port) throws IOException {
-        ConsoleClientLauncher.host = host;
-        ConsoleClientLauncher.port = port;
+        this.host = host;
+        this.port = port;
         client = new MopeLSPClient();
         socket = new Socket(host, port);
         menu = new ConsoleMenu(client);
     }
 
     /**
-     * <p>Launches the client by starting a socket.</p>
-     * @author Manuel S. Wächtershäuser
-     * @return a future result but it has no value
+     * <p>Launches the client and connects him to the socket.</p>
+     * <p>Additionally the client starts listening which means he is able to receive RPC (notifications/requests/responses)</p>
+     * @return a future result but it has no value, which will be completed after clients disconnects from server
      * @throws IOException which is thrown in case of an failed or interrupted I/O operation
      */
     public Future<Void> launchClient() throws IOException {
@@ -62,7 +69,6 @@ public class ConsoleClientLauncher {
     /**
      * <p>This method stops the client by closing the socket</p>
      * <p>In case it was successful it informs the user that the client has finished </p>
-     * @author Manuel S. Wächtershäuser
      * @throws ExecutionException, in case of retrieving a result of a task which aborted by throwing an exception
      */
      public static void stopClient() throws ExecutionException{
@@ -77,12 +83,11 @@ public class ConsoleClientLauncher {
             TODO This exception is thrown/printed during socket.close(), no matter if serverShutdown was called before or not...
              */
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("error by handling I/O");
         }
         try {
             clientListening.get();
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
             Thread.currentThread().interrupt();
             System.exit(1);
         }
@@ -92,9 +97,9 @@ public class ConsoleClientLauncher {
 
 
     /**
-     * This method requests the server to shutdown and the server consequently does.
-     * @author Ilmar Bosnak
+     * This method requests the server to shutdown.
      * @throws ExecutionException, in case of retrieving a result of a task which aborted by throwing an exception
+     * @throws InterruptedException
      */
     public static void shutdownServer() throws ExecutionException {
         try{
@@ -106,11 +111,16 @@ public class ConsoleClientLauncher {
         }
     }
 
+    /**
+     * The main method asks for a server ip and for the port and afterwards it starts the client with all its feautures.
+     * @param args
+     * @throws Exception in case of undesired behaviour
+     */
     public static void main(String[] args) throws Exception {
         System.out.println("Serverip:");
-        host= sc.next();
+        String host= sc.next();
         System.out.println("Serverport:");
-        port = sc.nextInt();
+        int port = sc.nextInt();
 
         ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
