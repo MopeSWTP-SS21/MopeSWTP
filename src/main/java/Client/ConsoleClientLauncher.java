@@ -27,6 +27,12 @@ public class ConsoleClientLauncher {
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     public static Future<Void> clientListening;
 
+    static {
+        socket = null;
+        client = null;
+        menu = null;
+    }
+
     public ConsoleClientLauncher(String host, int port) throws IOException {
         ConsoleClientLauncher.host = host;
         ConsoleClientLauncher.port = port;

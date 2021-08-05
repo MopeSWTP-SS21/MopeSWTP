@@ -29,6 +29,12 @@ public class MopeLSPServerLauncher {
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
     private static ConfigObject configObject;
 
+    static {
+        serverSocket = null;
+        server = null;
+        configObject = null;
+    }
+
     public MopeLSPServerLauncher() throws IOException {
         configObject = new ConfigObject();
         readConfig();

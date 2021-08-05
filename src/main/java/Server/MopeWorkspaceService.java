@@ -8,6 +8,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class MopeWorkspaceService implements WorkspaceService {
+
+    public String error = "invalid command";
     private final ModelicaService modelicaService;
     @Override
     public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams workspaceSymbolParams) {
@@ -16,12 +18,12 @@ public class MopeWorkspaceService implements WorkspaceService {
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams didChangeConfigurationParams) {
-
+        // not yet implemented
     }
 
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams didChangeWatchedFilesParams) {
-
+        //not yet implemented
     }
 
     @Override
@@ -54,6 +56,9 @@ public class MopeWorkspaceService implements WorkspaceService {
                     break;
                 case "Version":
                     result = modelicaService.getCompilerVersion();
+                    break;
+                default:
+                    result = CompletableFuture.completedFuture(error);
                     break;
             }
 
