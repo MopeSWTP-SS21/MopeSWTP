@@ -41,17 +41,17 @@ public class MopeDocumentService implements TextDocumentService {
 
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
-
+        // not yet implemented
     }
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
-
+        // not yet implemented
     }
 
     @Override
     public void didSave(DidSaveTextDocumentParams params) {
-
+        // not yet implemented
     }
 
     @Override
