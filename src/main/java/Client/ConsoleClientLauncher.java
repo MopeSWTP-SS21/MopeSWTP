@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.concurrent.*;
 
 /**
+ * <p>A class that launches the MopeLSPClient</p>
  * @author Manuel S. Wächtershäuser, Ilmar Bosnak, Conrad Lange
  */
 public class ConsoleClientLauncher {

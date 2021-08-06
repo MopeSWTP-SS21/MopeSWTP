@@ -11,7 +11,10 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * Is the actual Client, which connects to the server
+ * @author Manuel S. Wächtershäuser, Conrad Lange, Ilmar Bosnak
+ */
 public class MopeLSPClient implements IModelicaLanguageClient {
     //TODO use proper ReturnTypes
     private ModelicaLanguageServer server;

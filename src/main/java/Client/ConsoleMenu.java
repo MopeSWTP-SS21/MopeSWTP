@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
+/**
+ * <p>A class that covers the user console menu</p>
+ * @author Manuel S. Wächtershäuser, Conrad Lange, Ilmar Bosnak
+ */
 public class ConsoleMenu {
 
     public MopeLSPClient client;
