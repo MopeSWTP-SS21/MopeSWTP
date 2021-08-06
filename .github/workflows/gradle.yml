@@ -51,3 +51,5 @@ jobs:
       run: echo ${{ steps.version.outputs.version }}
     - name: Print Date
       run: echo ${{ steps.date.outputs.date }}
+    - name: tag commit
+      run: git tag ${{ steps.version.outputs.version }}; git tag ${{ steps.date.outputs.date }}
