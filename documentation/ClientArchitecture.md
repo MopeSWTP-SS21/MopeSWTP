@@ -7,7 +7,7 @@
 
 ## ConsoleClientLauncher
 The ConsoleClientLauncher is responsible for starting the MopeLSPClient.
-It connects a socket to the given port and host address, launches a instance of MopeLSPClient and connects it In- and Out-putStreams to the socket.
+It connects a socket to the given port and host address, launches an instance of MopeLSPClient and connects it In- and Out-putStreams to the socket.
 Afterwards it presents the User a ConsoleMenu and keeps running until the User exited that Menu.
 ## ConsoleMenu
 The ConsoleMenu is responsible for:
