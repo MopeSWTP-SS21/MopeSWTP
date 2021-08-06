@@ -49,3 +49,5 @@ jobs:
       run: echo "::set-output name=version::$(./gradlew getVersion -q)"
     - name: Print Version
       run: echo ${{ steps.version.outputs.version }}
+    - name: Print Date
+      run: echo ${{ steps.date.outputs.date }}
