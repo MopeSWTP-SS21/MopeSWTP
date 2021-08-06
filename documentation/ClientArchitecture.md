@@ -22,8 +22,17 @@ MopeLSPClient is an implementation of the LSP4J::LanguageClient. It implements R
 
 For more Information about client side RPC's you can have a look into the official LSP-Specification.
 
-Additionally the MopeLSPClient contains _WrapperMethods_ to call RPC's on  the server side.
+Additionally, the MopeLSPClient contains _WrapperMethods_ to call RPC's on  the server side.
 
+#### DesignPatterns
+
+We should seperate the _WrapperMethods_ inside the Client from the actual Client.
+I think a [Facade](https://en.wikipedia.org/wiki/Facade_pattern) would be good Pattern to apply here.
+The Facade should have access to the MopeLSPClient and contain all the Methods used to send requests and notifications to the Server.
+
+Afterwards the ConsoleMenu only calls facade-methods.
+Maybe the Facade could also include some Events that are fired when the Server send a notification (eg. ShowMessage).
+These Events could be subscribed by the ConsoleMenu. This would allow us to proper handle print this Message in the Menu and would improve separation of concerns.
 
 ## _UML_
 ![MopeLSPClientUML](uml/png/Client.png)
