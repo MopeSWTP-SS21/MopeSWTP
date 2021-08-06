@@ -39,5 +39,13 @@ jobs:
       run: chmod +x gradlew
     #- name: Test with Gradle
     #  run: ./gradlew test -i
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
     - name: Build with Gradle
       run: ./gradlew build -x test
+    - name: Get Version
+      id: version
+      run: echo "::set-output name=version::$(./gradlew getVersion -q)"
+    - name: Print Version
+      run: echo ${{ steps.version.outputs.version }}
