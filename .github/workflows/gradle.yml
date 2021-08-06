@@ -54,6 +54,7 @@ jobs:
     - name: Create a VersionTag
       uses: simpleactions/create-tag@v1.0.0
       with: 
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         tag: v${{ steps.version.outputs.version }}
         message: "testRelease v${{ steps.version.outputs.version }}"
 
