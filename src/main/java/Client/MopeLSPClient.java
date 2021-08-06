@@ -125,10 +125,10 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * is not used yet?! will it be used for the presentation?
-     * @return
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * <p>Is called out of the console and calls the RPC hover</p>
+     * @return the server response as a string
+     * @throws ExecutionException in case of retrieving a result of a task which aborted by throwing an exception
+     * @throws InterruptedException in case of a thread is interrupted
      */
     public String hover() throws ExecutionException, InterruptedException {
         HoverParams params = new HoverParams();
@@ -156,8 +156,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * is not used yet?! will it be used for the presentation?
-     * @param path
+     * <p>is called out of the console and calls the RPC didopen</p>
+     * @param path of the file that was opened
      */
     public void didOpenFile(String path){
         TextDocumentItem item = new TextDocumentItem();

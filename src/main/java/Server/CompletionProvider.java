@@ -30,6 +30,13 @@ public class CompletionProvider {
     private static final char[] limiter = {'\t',' ', ';', '\n'};
     private static final Logger logger = LoggerFactory.getLogger(CompletionProvider.class);
 
+    /**
+     * <p>This method provides a possible list of code-completions</p>
+     * @param params
+     * @param compiler
+     * @return a list of possible code completions
+     * @throws FileNotFoundException in case a file with the a specified pathname does not exist
+     */
     public static List<CompletionItem> complete(CompletionParams params, ICompilerAdapter compiler) throws FileNotFoundException {
         List<CompletionItem> list = new ArrayList<CompletionItem>();
         String path = params.getTextDocument().getUri();
@@ -84,10 +91,10 @@ public class CompletionProvider {
      * @param line line where completion should happen
      * @param col column where completion should happen
      * @return the uncompleted symbol
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException in case a file is not found
      */
     private static String findCompletableSymbol(String URI, int line, int col) throws FileNotFoundException {
-        col--; //TODO: Not sure how Client count Columns. Gedit Texteditor starts with 1...
+        col--;
 
         String selectedLine = "";
         try {

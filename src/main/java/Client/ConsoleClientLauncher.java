@@ -99,7 +99,7 @@ public class ConsoleClientLauncher {
     /**
      * This method requests the server to shutdown.
      * @throws ExecutionException, in case of retrieving a result of a task which aborted by throwing an exception
-     * @throws InterruptedException
+     * @throws InterruptedException in case of a thread gets interrupted
      */
     public static void shutdownServer() throws ExecutionException {
         try{

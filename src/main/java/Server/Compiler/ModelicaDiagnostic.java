@@ -35,6 +35,11 @@ public class ModelicaDiagnostic extends Diagnostic {
         return new ModelicaDiagnostic(str, DiagnosticSeverity.Error);
     }
 
+    /**
+     * Creates a List of diagnostic data
+     * @param str
+     * @return a list of diagnostic data
+     */
     public static List<ModelicaDiagnostic>CreateDiagnostics(String str){
         ArrayList<ModelicaDiagnostic> diagnostics = new ArrayList<>();
         Matcher hasErrorMatcher = hasError.matcher(str);
@@ -72,11 +77,14 @@ public class ModelicaDiagnostic extends Diagnostic {
     }
 
     private void addDefaultLocation(){
-        //TODO maybe add Workspace Location
         uri = "path/to/project";
         return;
     }
 
+    /**
+     * getter-method
+     * @return uri formatted as a string
+     */
     public String getUri(){
         return uri;
     }

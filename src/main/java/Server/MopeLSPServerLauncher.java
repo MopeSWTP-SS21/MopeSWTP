@@ -29,6 +29,10 @@ public class MopeLSPServerLauncher {
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
     private static ConfigObject configObject;
 
+    /**
+     * <p>starts a new server and server-socket</p>
+     * @throws IOException in case of an I/O error
+     */
     public MopeLSPServerLauncher() throws IOException {
         configObject = new ConfigObject();
         readConfig();
@@ -36,6 +40,11 @@ public class MopeLSPServerLauncher {
         serverSocket = new ServerSocket(configObject.port);
     }
 
+    /**
+     * <p>launches the server and accepts the connection of the client</p>
+     * @throws ExecutionException in case of attempting to retrieve the result of a task that aborted by throwing an exception
+     * @throws InterruptedException in case of a thread gets interrupted
+     */
     public void launchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
@@ -64,6 +73,7 @@ public class MopeLSPServerLauncher {
                         listening.get();
                         server.remove(consumer);
                     } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                         e.printStackTrace();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -77,6 +87,10 @@ public class MopeLSPServerLauncher {
         return ;
     }
 
+    /**
+     * <p>Stops the server by userinput </p>
+     * @param server the server to stop
+     */
     public static void stopFromConsole(MopeLSPServer server) {
         logger.info("Press enter for a server shutdown");
         try {
@@ -84,7 +98,7 @@ public class MopeLSPServerLauncher {
                 Thread.sleep(1000);
             }
         } catch (IOException | InterruptedException ie) {
-
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -99,6 +113,9 @@ public class MopeLSPServerLauncher {
         }
     }
 
+    /**
+     * <p>Trying to read a configfile from the standard config directory according to the OS is using</p>
+     */
     public static void readConfig() {
         String home = System.getProperty("user.home");
         Path configPath = Path.of(home,"/.config/mope/server.conf");

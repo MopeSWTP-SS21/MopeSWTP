@@ -11,6 +11,7 @@ public class MopeModelicaService implements ModelicaService {
 
     private final ICompilerAdapter compiler;
     private final MopeLSPServer server;
+
     @Override
     public CompletableFuture<String> checkModel(String modelName){
         server.getDiagnosticHandler().clearDiagnostics();
