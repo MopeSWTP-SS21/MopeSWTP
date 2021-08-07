@@ -53,6 +53,7 @@ jobs:
           ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-Server.jar
           ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-ConsoleClient.jar
         token: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
+        target_commitish: ${{github.sha}} #Get latest commit on this branch
         draft: false
         prerelease: true
         tag_name: v${{ steps.version.outputs.version }}
