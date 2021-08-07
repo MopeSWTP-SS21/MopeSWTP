@@ -18,9 +18,7 @@ on:
     
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -28,17 +26,22 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-        
-    #- name: Install OpenModelica
-    #  uses: THM-MoTE/setup-openmodelica@v1
-    #  with:
-    #    version: 1.17.0
-    #- name: Install Modelica standard library
-    #  run: sudo apt-get install omlib-modelica-3.0
+    - name: Install OpenModelica
+      uses: THM-MoTE/setup-openmodelica@v1
+      with:
+        version: 1.17.0
+    - name: Install Modelica standard library
+      run: sudo apt-get install omlib-modelica-3.0
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    #- name: Test with Gradle
-    #  run: ./gradlew test -i
+    - name: Build with Gradle
+      run: ./gradlew build -i
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     - name: Build Jars with Gradle
       run: ./gradlew shadowClientJar shadowServerJar -x test
     - name: Add version from build.gradle to output
@@ -61,6 +64,6 @@ jobs:
         fail_on_unmatched_files: true
         body: |
           Changes in this Release
-          - testing softprops/action-gh-release@v1
+          - separating build and release
 
 

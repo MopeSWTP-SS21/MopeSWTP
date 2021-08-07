@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'thm.mope.lsp'
-version '0.0.9-test2'
+version '0.0.9-test3'
 
 
 
