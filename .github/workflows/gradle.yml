@@ -54,7 +54,20 @@ jobs:
     - name: Create a VersionTag
       uses: simpleactions/create-tag@v1.0.0
       with: 
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
         tag: v${{ steps.version.outputs.version }}
         message: "testRelease v${{ steps.version.outputs.version }}"
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - TEST
+        draft: false
+        prerelease: false
 
