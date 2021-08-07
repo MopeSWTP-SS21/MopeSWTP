@@ -39,35 +39,24 @@ jobs:
       run: chmod +x gradlew
     #- name: Test with Gradle
     #  run: ./gradlew test -i
-    - name: Get current date
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
     - name: Build with Gradle
       run: ./gradlew build -x test
-    - name: Get Version
+    - name: Add version from build.gradle to output
       id: version
       run: echo "::set-output name=version::$(./gradlew getVersion -q)"
     - name: Print Version
       run: echo ${{ steps.version.outputs.version }}
-    - name: Print Date
-      run: echo ${{ steps.date.outputs.date }}
-    - name: Create a VersionTag
-      uses: simpleactions/create-tag@v1.0.0
-      with: 
-        github_token: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
-        tag: v${{ steps.version.outputs.version }}
-        message: "testRelease v${{ steps.version.outputs.version }}"
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: v${{ steps.version.outputs.version }}
+        release_name: Release v${{ steps.version.outputs.version }}
         body: |
           Changes in this Release
           - TEST
         draft: false
-        prerelease: false
+        prerelease: true
 
