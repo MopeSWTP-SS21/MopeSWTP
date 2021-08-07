@@ -51,7 +51,7 @@ jobs:
       with:
         files: |
           ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-Server.jar
-          ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-Client.jar
+          ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-ConsoleClient.jar
         token: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
         draft: false
         prerelease: true

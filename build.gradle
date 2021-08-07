@@ -55,7 +55,7 @@ task shadowServerJar(type: Jar, dependsOn: shadowJar) {
 task shadowClientJar(type: Jar, dependsOn: shadowJar){
     archiveBaseName = project.group
     version = project.version
-    archiveClassifier.set('ConsoleCLient')
+    archiveClassifier.set('ConsoleClient')
     manifest {
         attributes 'Main-Class': 'Client.ConsoleClientLauncher'
     }
