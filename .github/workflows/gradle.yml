@@ -39,8 +39,8 @@ jobs:
       run: chmod +x gradlew
     #- name: Test with Gradle
     #  run: ./gradlew test -i
-    - name: Build serverJar with Gradle
-      run: ./gradlew shadowServerJar -x test
+    - name: Build Jars with Gradle
+      run: ./gradlew shadowClientJar shadowServerJar -x test
     - name: Add version from build.gradle to output
       id: version
       run: echo "::set-output name=version::$(./gradlew getVersion -q)"
@@ -49,12 +49,14 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-Server.jar
+        files: |
+          ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-Server.jar
+          ./build/libs/thm.mope.lsp-${{ steps.version.outputs.version }}-Client.jar
         token: ${{ secrets.GITHUB_TOKEN }} #Provided by GithubActions
         draft: false
         prerelease: true
         tag_name: v${{ steps.version.outputs.version }}
-        release_name: Release v${{ steps.version.outputs.version }}
+        name: Release v${{ steps.version.outputs.version }}
         fail_on_unmatched_files: true
         body: |
           Changes in this Release
