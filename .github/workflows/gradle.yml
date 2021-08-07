@@ -39,8 +39,8 @@ jobs:
       run: chmod +x gradlew
     #- name: Test with Gradle
     #  run: ./gradlew test -i
-    - name: Build with Gradle
-      run: ./gradlew build -x test
+    - name: Build serverJar with Gradle
+      run: ./gradlew shadowServerJar -x test
     - name: Add version from build.gradle to output
       id: version
       run: echo "::set-output name=version::$(./gradlew getVersion -q)"
