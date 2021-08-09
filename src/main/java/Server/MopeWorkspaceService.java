@@ -28,9 +28,7 @@ public class MopeWorkspaceService implements WorkspaceService {
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params){
         String command = params.getCommand();
         List<Object> args = params.getArguments();
-        CompletableFuture<Object> finalResult = new CompletableFuture<>();
-
-        CompletableFuture<String> result = new CompletableFuture<>();
+        CompletableFuture<String> result = CompletableFuture.completedFuture(null);
             String argument = "";
             if(!args.isEmpty()) argument = args.get(0).toString().replaceAll("\"", "");
             switch(command){
@@ -56,13 +54,8 @@ public class MopeWorkspaceService implements WorkspaceService {
                     result = modelicaService.getCompilerVersion();
                     break;
             }
-
-        try {
-            finalResult.complete(result.get());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return CompletableFuture.completedFuture(finalResult);
+        // transform the result from CompletableFuture<String> to CompletableFuture<Object>
+        return result.thenApply(x -> x);
     }
     public MopeWorkspaceService(ModelicaService service){
         super();
