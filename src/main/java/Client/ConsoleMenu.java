@@ -146,8 +146,7 @@ public class ConsoleMenu {
     }
 
     /**
-     * This method reads the user input that is intended to be send to the lspServer
-     * TODO sanitize user Input
+     * This method reads a line of user input from the console that is intended to be send to the lspServer
      * @return the input string
      */
     private String readUserInput(){
@@ -163,7 +162,7 @@ public class ConsoleMenu {
 
     /**
      * <p>This method is responsible for asking the user in a loop what he wants to do once he is connected to the server.</p>
-     * @return  true, signalising the server to shutdown
+     * @return  true, if the server should be shut down too; false, if only a disconnect was requested without a server shutdown
      */
     public boolean run(){
         running = true;

@@ -74,7 +74,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * This method behaves like a typical setter-method.
+     * <p>Sets the server instance used by the launcher.</p>
      * @param server has to be an ModelicaLanguageServer-object which will be used for the launcher
      */
     public void setServer(ModelicaLanguageServer server){
@@ -84,7 +84,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     /**
      * <p>The client uses this method to initialize the server </p>
-     * <p>This happens by sending an initial request and it only happens once.</p>
+     * <p>This happens by sending an initial request and it must be called once.</p>
      * @return Why does it return a String though?
      */
     public String initServer() {
