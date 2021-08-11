@@ -101,7 +101,7 @@ public abstract class ServerIntegrationTest {
      * To finish the Threads they were running in the testFinished completableFuture gets completed
      */
     @AfterAll
-    public void endTests() throws ExecutionException {
+    public void endTests() throws ExecutionException, InterruptedException {
         logger.info("All tests done... shuting down Server and Client");
         ConsoleClientLauncher.shutdownServer();
         ConsoleClientLauncher.stopClient();

@@ -22,8 +22,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     /**
      * <p>Here in this method the client sends a request to the server asking him to shutdown.</p>
-     * @throws ExecutionException,  in case of retrieving a result of a task which aborted by throwing an exception
-     * @throws InterruptedException, in case any thread has interrupted the current thread.
+     * @throws ExecutionException,  if this future completed exceptionally
+     * @throws InterruptedException, if the current thread was interrupted while waiting
      */
     public void shutdownServer() throws ExecutionException, InterruptedException {
         CompletableFuture<Object> result = server.shutdown();
