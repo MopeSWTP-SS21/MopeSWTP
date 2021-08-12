@@ -94,7 +94,7 @@ public class CompletionProvider {
      * @throws FileNotFoundException in case a file is not found
      */
     private static String findCompletableSymbol(String URI, int line, int col) throws FileNotFoundException {
-        col--;
+        col--; //TODO: Not sure how Client count Columns. Gedit Texteditor starts with 1
 
         String selectedLine = "";
         try {

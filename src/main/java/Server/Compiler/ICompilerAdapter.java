@@ -8,28 +8,26 @@ public interface ICompilerAdapter {
 
 
     /**
-     * <p>This method loads a model by adding its path to the Modelica-library.</p>
-     * @param path is the absolute path of the Modelica-file
-     * @return a string notifying whether is was successful or not
+     * <p>This method loads a model or many models in a file by adding its path to the Modelica-library.</p>
+     * @see Client.MopeLSPClient
      */
     String loadFile(String path);
 
     /**
      * Terminates the omc process
-     * @throws IOException which is thrown in case of an failed or interrupted I/O operation
+     * @see Client.MopeLSPClient
      */
     void exit() throws IOException;
 
     /**
      * This model performs basic checks on a model and returns the number of variables and equations in it.
-     * @param modelName has to be a name of a model.mo file
-     * @return a string formatted output with a number of variables and equations in the model-file
+     * @see Client.MopeLSPClient
      */
     String checkModel(String modelName);
 
     /**
      * <p>This method adds a folder path (where the modelica-file is located) to the Modelica library.</p>
-     * @param path that has to be an absolute path to the modelica file
+     * @param path that has to be an absolute path to a folder containing Modelica files
      * @return a string notifying whether is was successful or not
      */
     String addFolderToModelicaPath(String path);
@@ -48,7 +46,7 @@ public interface ICompilerAdapter {
     Result loadModel(String name);
 
     /**
-     * <p>check if the class given by the classname exists</p>
+     * <p>check if the class given by the classname has been loaded</p>
      * @param className one is looking is for
      * @return an output containing the result string and an optional error-message.
      */

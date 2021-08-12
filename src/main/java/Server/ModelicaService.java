@@ -10,7 +10,7 @@ public interface ModelicaService {
     @JsonRequest
     /**
      * This method performs basic checks on a model and returns the number of variables and equations in it.
-     * @param modelName has to be a name of a model.mo file
+     * @param modelName has to be a name of a fully qualified Modelica class that has been loaded before
      * @return a string formatted output with a number of variables and equations in the model-file
      */
     default CompletableFuture<String> checkModel(String modelName){
@@ -28,7 +28,7 @@ public interface ModelicaService {
 
     @JsonRequest
     /**
-     * <p>This method allows to send expressions without starting the OMShell</p>
+     * <p>This method allows sending arbitrary OM-API commands to the OMC</p>
      * @param command is an OMShell command to be executed
      * @return an output formatted as a string
      */

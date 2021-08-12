@@ -18,7 +18,7 @@ public class DiagnosticHandler {
         Diagnostics = new HashMap<>();
     }
     /**
-     * <p>Anytime the diagnostics are added, this method propagates diagnostic data to all clients</p>
+     * <p>This method should be called when Diagnostics are added, it propagates diagnostic data to all clients</p>
      */
     public void publishDiagnostics(){
         for(String location : Diagnostics.keySet()){
@@ -30,7 +30,7 @@ public class DiagnosticHandler {
     }
 
     /**
-     * <p>Adds diagnostic data to the according list and publishes all diagnostics</p>
+     * <p>Adds diagnostic data to the list containing diagnostics data and publishes the list</p>
      * @param diagnostics
      */
     public void addDiagnostics(List<ModelicaDiagnostic> diagnostics){

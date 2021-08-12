@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * <p>An interface that provides LanguageClient methods</p>
- *
+ * @author Manuel Wächtershäuser, Conrad Lange, Ilmar Bosnak
  */
 public interface IModelicaLanguageClient extends LanguageClient {
 

@@ -18,10 +18,6 @@ public class MopeDocumentService implements TextDocumentService {
     private static final Logger logger = LoggerFactory.getLogger(MopeDocumentService.class);
 
     @Override
-    /**
-     * <p>Provides a list of possible code-completions</p>
-     * @return
-     */
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams completionParams) {
         logger.info("DocumentService->completion");
         return CompletableFuture.supplyAsync(() -> {
@@ -31,6 +27,8 @@ public class MopeDocumentService implements TextDocumentService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            // Return the list of completion items.
             return Either.forLeft(completionItems);
         });
     }

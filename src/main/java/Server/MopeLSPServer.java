@@ -80,7 +80,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
     }
 
     /**
-     * <p>notifies all clients about incoming shutdown</p>
+     * <p>Notifies all clients about incoming shutdown using the window/showMessage LSP Command</p>
      */
     private void notifyAllClientsAboutShutdown(){
         for (var c: clients) {
@@ -125,7 +125,7 @@ public class MopeLSPServer implements ModelicaLanguageServer
     }
 
     /**
-     * <p>removes the connected client and informs about it</p>
+     * <p>removes the connected client</p>
      * @param client
      */
     public void remove(LanguageClient client){

@@ -128,7 +128,10 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>Is called out of the console and calls the RPC hover</p>
+     * <p>A method which is used for the hover-over-code feature</p>
+     * <p>The hover request is send from the client to the server to request hover information at a given text document position
+     * The LSP command used here is textDocument/hover </p>
+     * @see <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover">LSP Specification</a>
      * @return the server response as a string
      * @throws ExecutionException in case of retrieving a result of a task which aborted by throwing an exception
      * @throws InterruptedException in case of a thread is interrupted
@@ -159,7 +162,10 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>is called out of the console and calls the RPC didopen</p>
+     * <p>This method is used to signal the server that newly text documents were opened.</p>
+     * <p>The document open notification is from the client to the server to signal newly opened text documents.
+     * Before a client can change a text document it must claim ownership of its content using the textDocument/didOpen notification.</p>
+     * @see <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_didOpen>LSP Specification</a>
      * @param path of the file that was opened
      */
     public void didOpenFile(String path){
@@ -171,15 +177,17 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * This model performs basic checks on a model and returns the number of variables and equations in it.
+     * This method performs basic checks on a model and returns the number of variables and equations in it.
+     * The method checkModel calls the method get() defined in CompletableFuture class and handles the exception by
+     * priting the stack trace to the console
      * @param modelName has to be a name of a model.mo file
-     * @return a string formatted output with a number of variables and equations in the model-file
+     * @return a string formatted output with a number of variables and equations in the model-file.
      */
     public Object checkModel(String modelName)  {
         try{
             CompletableFuture<String> x = server.getModelicaService().checkModel(modelName);
             return x.get();
-        }catch(Exception e){
+        }catch(InterruptedException | ExecutionException e){
             logger.error("Error CheckModel",e);
             e.printStackTrace();
         }
@@ -187,9 +195,10 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>This method loads a model by adding its path to the Modelica-library.</p>
+     * <p>This method loads a model or many models in a file by adding its path to the Modelica-library.</p>
+     * <p>It uses the OpenModelica Scripting API method loadFile() and merge it with the loaded AST</p>
      * @param path is the absolute path of the Modelica-file
-     * @return waits if necessary for a future to complete, and then returns its result in a string format
+     * @return returns the result of the request whether it was successful or not in a string format by OMC
      */
     public Object loadFile(String path){
         try{
@@ -204,7 +213,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     /**
      * <p>This method adds a folder path (where the modelica-file is located) to the Modelica library.</p>
      * @param path that has to be an absolute path to the modelica file
-     * @return waits if necessary for a future to complete, and then returns its result in a string format
+     * @return returns its result in a string format
      */
     public Object addPath(String path){
         try{
@@ -217,9 +226,9 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>Loads a model from the Modelica library</p>
-     * @param name is a Modelica file name
-     * @return waits if necessary for a future to complete, and then returns its result in a string format
+     * <p>Loads a model the can be found in the modelica path</p>
+     * @param name is a (fully qualified) Modelica class name
+     * @return returns its result in a string format
      */
     public Object loadModel(String name){
         try{
@@ -233,7 +242,7 @@ public class MopeLSPClient implements IModelicaLanguageClient {
 
     /**
      * <p>Provides an output with current Modelica Compiler Version</p>
-     * @return waits if necessary for a future to complete, and then returns its result in a string format
+     * @return returns its result in a string format
      */
     public Object compilerVersion()  {
         try{
@@ -247,8 +256,8 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>This method prints the Modelica library to the console.</p>
-     * @return waits if necessary for a future to complete, and then returns its result in a string format
+     * <p>This method prints the Modelica path to the console.</p>
+     * @return returns its result in a string format
      */
     public Object modelicaPath()  {
         try{
@@ -261,9 +270,10 @@ public class MopeLSPClient implements IModelicaLanguageClient {
     }
 
     /**
-     * <p>This method allows to send expressions without starting the OMShell</p>
+     * <p>This method allows sending arbitrary OM-API commands to the OMC</p>
      * @param command is an OMShell command to be executed
      * @return an output formatted as a string
+     * @see <a href="https://build.openmodelica.org/Documentation/OpenModelica.Scripting.html">List of OM commands</a>
      */
     public Object sendExpression(String command) {
         CompletableFuture<String> result = server.getModelicaService().sendExpression(command);

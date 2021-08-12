@@ -30,7 +30,7 @@ public class MopeLSPServerLauncher {
     private static ConfigObject configObject;
 
     /**
-     * <p>starts a new server and server-socket</p>
+     * <p>starts a new server opens a socket and starts listening on this socket/p>
      * @throws IOException in case of an I/O error
      */
     public MopeLSPServerLauncher() throws IOException {
@@ -42,8 +42,8 @@ public class MopeLSPServerLauncher {
 
     /**
      * <p>launches the server and accepts the connection of the client</p>
-     * @throws ExecutionException in case of attempting to retrieve the result of a task that aborted by throwing an exception
-     * @throws InterruptedException in case of a thread gets interrupted
+     * The method launchServer also calls the method get() defined in CompletableFuture class and handles InterruptedException by throwing an
+     * AssertionError and ExecutionException by throwing a RuntimeException
      */
     public void launchServer() {
 
@@ -72,11 +72,11 @@ public class MopeLSPServerLauncher {
                     try {
                         listening.get();
                         server.remove(consumer);
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException ie) {
                         Thread.currentThread().interrupt();
-                        e.printStackTrace();
+                        throw new AssertionError("unexpected interrupt", ie);
                     } catch (ExecutionException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                     return null;
                 } );
@@ -88,7 +88,7 @@ public class MopeLSPServerLauncher {
     }
 
     /**
-     * <p>Stops the server by userinput </p>
+     * <p>Stops the server by user when he chooses the shutdown option and hits enter </p>
      * @param server the server to stop
      */
     public static void stopFromConsole(MopeLSPServer server) {
@@ -114,7 +114,15 @@ public class MopeLSPServerLauncher {
     }
 
     /**
-     * <p>Trying to read a configfile from the standard config directory according to the OS is using</p>
+     * <p>Trying to read a configfile from the standard config directory according to the OS</p>
+     * <p>First it tries to read from the standard-config-path on Unix which is "home/username/.config/mope/server.conf".
+     * If it is not a Unix OS it tries to read from the standard-config-path on Windows which is "home\username\mope\server.conf".
+     * If it not a Unix or Windows OS the method tries to read from the Project-folder where the server-config is stored as a backup.
+     * The path is "src/main/java/Server/server.config"
+     * The method also calls the readConfigFile(String path) defined in this class and handles IOException by
+     * trying to read from above mentioned paths. If the reading of a config was not successful or the config-files were corrupt, it throws
+     * an AssertionError.
+     *</p>
      */
     public static void readConfig() {
         String home = System.getProperty("user.home");
@@ -126,11 +134,13 @@ public class MopeLSPServerLauncher {
             configPath = Path.of(home,"\\mope\\server.conf");
             try{
                 readConfigFile(configPath);
-            } catch (Exception ex){
+            } catch (IOException ex){
                 configPath = Path.of("src/main/java/Server/server.config");
                 try {
                     readConfigFile(configPath);
-                } catch (Exception exc) {}
+                } catch (IOException exc) {
+                    throw new AssertionError("fatal error, could not read config file");
+                }
             }
         }
     }

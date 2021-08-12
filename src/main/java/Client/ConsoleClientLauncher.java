@@ -107,7 +107,7 @@ public class ConsoleClientLauncher {
     }
 
     /**
-     * The main method asks for a server ip and for the port and afterwards it starts the client with all its feautures.
+     * The main method asks for a server ipv4 and for the port and afterwards it starts the client with all its feautures.
      * @param args not used
      */
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
