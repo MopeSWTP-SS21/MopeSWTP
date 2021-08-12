@@ -116,7 +116,7 @@ public class MopeLSPServerLauncher {
     /**
      * <p>Trying to read a configfile from the standard config directory according to the OS</p>
      * <p>First it tries to read from the standard-config-path on Unix which is "home/username/.config/mope/server.conf".
-     * If it is not a Unix OS it tries to read from the standard-config-path on Windows which is "home\username\mope\server.conf".
+     * If it is not a Unix OS it tries to read from the standard-config-path on Windows which is "home\\username\\mope\\server.conf".
      * If it not a Unix or Windows OS the method tries to read from the Project-folder where the server-config is stored as a backup.
      * The path is "src/main/java/Server/server.config"
      * The method also calls the readConfigFile(String path) defined in this class and handles IOException by
