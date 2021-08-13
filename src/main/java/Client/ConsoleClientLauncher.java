@@ -27,12 +27,6 @@ public class ConsoleClientLauncher {
     private static final Logger logger = LoggerFactory.getLogger(ConsoleClientLauncher.class);
     public static Future<Void> clientListening;
 
-    static {
-        socket = null;
-        client = null;
-        menu = null;
-    }
-
     public ConsoleClientLauncher(String host, int port) throws IOException {
         ConsoleClientLauncher.host = host;
         ConsoleClientLauncher.port = port;
@@ -40,11 +34,9 @@ public class ConsoleClientLauncher {
         socket = new Socket(host, port);
         menu = new ConsoleMenu(client);
     }
-    public static void setExecutorPool() {
-        executor = Executors.newFixedThreadPool(2);
-    }
 
-    public Future<Void> launchClient() throws IOException {
+    public static Future<Void> launchClient() throws IOException {
+        executor = Executors.newFixedThreadPool(2);
         Launcher<ModelicaLanguageServer> cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
                 .setLocalService(client)
                 .setRemoteInterface(ModelicaLanguageServer.class)
@@ -81,6 +73,12 @@ public class ConsoleClientLauncher {
         logger.info("Client Finished");
     }
 
+    public static void connectToServer() {
+        System.out.println("Serverip: ");
+        host= sc.next();
+        System.out.println("Serverport: ");
+        port = sc.nextInt();
+    }
 
 
     public static void shutdownServer() throws ExecutionException {
@@ -93,12 +91,7 @@ public class ConsoleClientLauncher {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Serverip:");
-        host= sc.next();
-        System.out.println("Serverport:");
-        port = sc.nextInt();
-
-        setExecutorPool();
+        connectToServer();
         ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
         clientListening = launcher.launchClient();

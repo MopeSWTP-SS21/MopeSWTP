@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class MopeDocumentService implements TextDocumentService {
     private ICompilerAdapter compiler;
     private static final Logger logger = LoggerFactory.getLogger(MopeDocumentService.class);
+    private UnsupportedOperationException unsupOpEx = null;
 
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams completionParams) {
@@ -42,16 +43,19 @@ public class MopeDocumentService implements TextDocumentService {
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
         // not yet implemented
+        throw unsupOpEx;
     }
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         // not yet implemented
+        throw unsupOpEx;
     }
 
     @Override
     public void didSave(DidSaveTextDocumentParams params) {
         // not yet implemented
+        throw unsupOpEx;
     }
 
     @Override

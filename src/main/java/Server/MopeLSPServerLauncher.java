@@ -26,14 +26,8 @@ public class MopeLSPServerLauncher {
     private static MopeLSPServer server;
     private static ExecutorService executor;
     private static Socket socket;
-    private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
+    public static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
     private static ConfigObject configObject;
-
-    static {
-        serverSocket = null;
-        server = null;
-        configObject = null;
-    }
 
     public MopeLSPServerLauncher() throws IOException {
         configObject = new ConfigObject();
@@ -41,17 +35,14 @@ public class MopeLSPServerLauncher {
         server = new MopeLSPServer(configObject);
         serverSocket = new ServerSocket(configObject.port);
     }
-    public static void setExecutorPool() {
-        executor = Executors.newCachedThreadPool();
-    }
 
-    public void launchServer() {
+    public static void launchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 
         logger.info("Server socket listening on port " + configObject.port );
         System.out.flush();
-        //executor = Executors.newCachedThreadPool();
+        executor = Executors.newCachedThreadPool();
         executor.submit(() -> {
             while (true) {
                 socket = serverSocket.accept();
@@ -129,7 +120,6 @@ public class MopeLSPServerLauncher {
 
     public static void main(String[] args) {
         try{
-            setExecutorPool();
             MopeLSPServerLauncher launcher = new MopeLSPServerLauncher();
             launcher.launchServer();
             new Thread(() -> stopFromConsole(server)).start();
