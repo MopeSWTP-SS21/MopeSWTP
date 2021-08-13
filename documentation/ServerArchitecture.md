@@ -52,6 +52,9 @@ To do so it
 - adds clients that connect to the Socket
 
 Furthermore this class is responsible to free all the used resources after the Server is shut down. 
+#### DesignPatterns
+Applying the Singleton pattern to the MopeServerLaucher would benefit the codequality
+
 ## MopeLSPServer
 The MopeLSPServer is an implementation of the LSP4J::LanguageServer. It contains Methods like:
 - initialize (initializes the Server, starts compilerProcess and exchanges capabilities with the Client)
