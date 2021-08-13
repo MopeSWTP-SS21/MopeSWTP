@@ -17,7 +17,9 @@ public class DiagnosticHandler {
         this.server = server;
         Diagnostics = new HashMap<>();
     }
-
+    /**
+     * <p>This method should be called when Diagnostics are added, it propagates diagnostic data to all clients</p>
+     */
     public void publishDiagnostics(){
         for(String location : Diagnostics.keySet()){
             var params = new PublishDiagnosticsParams();
@@ -27,6 +29,10 @@ public class DiagnosticHandler {
         }
     }
 
+    /**
+     * <p>Adds diagnostic data to the list containing diagnostics data and publishes the list</p>
+     * @param diagnostics
+     */
     public void addDiagnostics(List<ModelicaDiagnostic> diagnostics){
         if(diagnostics.isEmpty()) return;
         for(ModelicaDiagnostic dia : diagnostics){
@@ -40,6 +46,9 @@ public class DiagnosticHandler {
         publishDiagnostics();
     }
 
+    /**
+     * <p>Empties the whole diagnostic list</p>
+     */
     public void clearDiagnostics(){
         Diagnostics.clear();
     }

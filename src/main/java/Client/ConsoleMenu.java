@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
+/**
+ * <p>A class that covers the user console menu</p>
+ * @author Manuel S. Wächtershäuser, Conrad Lange, Ilmar Bosnak
+ */
 public class ConsoleMenu {
 
     public MopeLSPClient client;
@@ -142,8 +146,7 @@ public class ConsoleMenu {
     }
 
     /**
-     * this Methods reads the user input that is intended to be send to the lspServer
-     * TODO sanitize user Input
+     * This method reads a line of user input from the console that is intended to be send to the lspServer
      * @return the input string
      */
     private String readUserInput(){
@@ -157,6 +160,10 @@ public class ConsoleMenu {
         System.out.print(">");
     }
 
+    /**
+     * <p>This method is responsible for asking the user in a loop what he wants to do once he is connected to the server.</p>
+     * @return  true, if the server should be shut down too; false, if only a disconnect was requested without a server shutdown
+     */
     public boolean run(){
         running = true;
         while(running)

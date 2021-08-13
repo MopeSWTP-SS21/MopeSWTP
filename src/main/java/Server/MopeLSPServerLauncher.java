@@ -29,6 +29,10 @@ public class MopeLSPServerLauncher {
     private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
     private static ConfigObject configObject;
 
+    /**
+     * <p>starts a new server opens a socket and starts listening on this socket/p>
+     * @throws IOException in case of an I/O error
+     */
     public MopeLSPServerLauncher() throws IOException {
         configObject = new ConfigObject();
         readConfig();
@@ -36,6 +40,11 @@ public class MopeLSPServerLauncher {
         serverSocket = new ServerSocket(configObject.port);
     }
 
+    /**
+     * <p>launches the server and accepts the connection of the client</p>
+     * The method launchServer also calls the method get() defined in CompletableFuture class and handles InterruptedException by throwing an
+     * AssertionError and ExecutionException by throwing a RuntimeException
+     */
     public void launchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
@@ -63,10 +72,11 @@ public class MopeLSPServerLauncher {
                     try {
                         listening.get();
                         server.remove(consumer);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new AssertionError("unexpected interrupt", ie);
                     } catch (ExecutionException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                     return null;
                 } );
@@ -77,6 +87,10 @@ public class MopeLSPServerLauncher {
         return ;
     }
 
+    /**
+     * <p>Stops the server by user when he chooses the shutdown option and hits enter </p>
+     * @param server the server to stop
+     */
     public static void stopFromConsole(MopeLSPServer server) {
         logger.info("Press enter for a server shutdown");
         try {
@@ -84,7 +98,7 @@ public class MopeLSPServerLauncher {
                 Thread.sleep(1000);
             }
         } catch (IOException | InterruptedException ie) {
-
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -94,11 +108,22 @@ public class MopeLSPServerLauncher {
             prop.load(bufferedReader);
             configObject.port = Integer.parseInt(prop.getProperty("server.port"));
             configObject.path = prop.getProperty("server.path");
-            logger.info("Read Port " + configObject.port + " from " + path);
+            logger.debug("Read Port " + configObject.port + " from " + configObject.path);
             bufferedReader.close();
         }
     }
 
+    /**
+     * <p>Trying to read a configfile from the standard config directory according to the OS</p>
+     * <p>First it tries to read from the standard-config-path on Unix which is "home/username/.config/mope/server.conf".
+     * If it is not a Unix OS it tries to read from the standard-config-path on Windows which is "home\\username\\mope\\server.conf".
+     * If it not a Unix or Windows OS the method tries to read from the Project-folder where the server-config is stored as a backup.
+     * The path is "src/main/java/Server/server.config"
+     * The method also calls the readConfigFile(String path) defined in this class and handles IOException by
+     * trying to read from above mentioned paths. If the reading of a config was not successful or the config-files were corrupt, it throws
+     * an AssertionError.
+     *</p>
+     */
     public static void readConfig() {
         String home = System.getProperty("user.home");
         Path configPath = Path.of(home,"/.config/mope/server.conf");
@@ -109,11 +134,13 @@ public class MopeLSPServerLauncher {
             configPath = Path.of(home,"\\mope\\server.conf");
             try{
                 readConfigFile(configPath);
-            } catch (Exception ex){
+            } catch (IOException ex){
                 configPath = Path.of("src/main/java/Server/server.config");
                 try {
                     readConfigFile(configPath);
-                } catch (Exception exc) {}
+                } catch (IOException exc) {
+                    throw new AssertionError("fatal error, could not read config file");
+                }
             }
         }
     }
