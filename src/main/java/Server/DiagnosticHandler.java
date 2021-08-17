@@ -19,14 +19,14 @@ public class DiagnosticHandler {
     }
 
     public void publishDiagnostics(){
-        var params = new PublishDiagnosticsParams();
-        for(String location : Diagnostics.keySet()){
 
+        for(String location : Diagnostics.keySet()){
+            var params = new PublishDiagnosticsParams();
             params.setUri(location);
             params.setDiagnostics(Diagnostics.get(location));
-
+            server.publishDiagnosticsToAllClients(params);
         }
-        server.publishDiagnosticsToAllClients(params);
+
     }
 
     public void addDiagnostics(List<ModelicaDiagnostic> diagnostics){
@@ -43,8 +43,9 @@ public class DiagnosticHandler {
     }
 
     public void clearDiagnostics(){
-        for(String key : Diagnostics.keySet())
-        Diagnostics.get(key).clear();
+        for(String key : Diagnostics.keySet()){
+            Diagnostics.get(key).clear();
+        }
     }
 
 }
