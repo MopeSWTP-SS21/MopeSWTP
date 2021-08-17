@@ -27,7 +27,7 @@ public class CompletionProvider {
     /**
      * These Characters mark the beginning of a possible symbol
      */
-    private static final char[] limiter = {'\t',' ', ';', '\n'};
+    private static final char[] limiter = {'\t',' ', ';', '\n',};
     private static final Logger logger = LoggerFactory.getLogger(CompletionProvider.class);
 
     public static List<CompletionItem> complete(CompletionParams params, ICompilerAdapter compiler) throws FileNotFoundException {
@@ -100,7 +100,7 @@ public class CompletionProvider {
         char current;
         while(col >= 0){
             current = selectedLine.charAt(col);
-            if(Arrays.asList(limiter).contains(current) ) break;
+            if(Arrays.asList(limiter).contains(current) || Character.isSpaceChar(current)) break;
             builder.append(current);
             col--;
         }
