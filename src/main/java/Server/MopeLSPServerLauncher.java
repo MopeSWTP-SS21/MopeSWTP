@@ -26,7 +26,7 @@ public class MopeLSPServerLauncher {
     private static MopeLSPServer server;
     private static ExecutorService executor;
     private static Socket socket;
-    private static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
+    public static Logger logger = LoggerFactory.getLogger(MopeLSPServerLauncher.class);
     private static ConfigObject configObject;
 
     public MopeLSPServerLauncher() throws IOException {
@@ -36,7 +36,7 @@ public class MopeLSPServerLauncher {
         serverSocket = new ServerSocket(configObject.port);
     }
 
-    public void launchServer() {
+    public static void launchServer() {
 
         System.setProperty(Log4jLoggerAdapter.ROOT_LOGGER_NAME, "TRACE");
 

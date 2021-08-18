@@ -7,8 +7,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static Server.MopeLSPServerLauncher.logger;
+
 public class MopeWorkspaceService implements WorkspaceService {
+
+    public String error = "invalid command";
     private final ModelicaService modelicaService;
+    private UnsupportedOperationException unsupOpEx = null;
+
     @Override
     public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams workspaceSymbolParams) {
         return null;
@@ -16,12 +22,14 @@ public class MopeWorkspaceService implements WorkspaceService {
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams didChangeConfigurationParams) {
-
+        // not yet implemented
+        throw unsupOpEx;
     }
 
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams didChangeWatchedFilesParams) {
-
+        //not yet implemented
+        throw unsupOpEx;
     }
 
     @Override
@@ -32,26 +40,30 @@ public class MopeWorkspaceService implements WorkspaceService {
             String argument = "";
             if(!args.isEmpty()) argument = args.get(0).toString().replaceAll("\"", "");
             switch(command){
-                case "ExecuteCommand":
+                case "executeCommand":
                     result = modelicaService.sendExpression(argument);
                     break;
-                case "LoadFile":
+                case "loadFile":
                     result = modelicaService.loadFile(argument);
                     break;
-                case "CheckModel":
+                case "checkModel":
                     result = modelicaService.checkModel(argument);
                     break;
-                case "AddPath":
+                case "addPath":
                     result = modelicaService.addModelicaPath(argument);
                     break;
-                case "GetPath":
+                case "getPath":
                     result = modelicaService.getModelicaPath();
                     break;
-                case "LoadModel":
+                case "loadModel":
                     result = modelicaService.loadModel(argument);
                     break;
-                case "Version":
+                case "version":
                     result = modelicaService.getCompilerVersion();
+                    break;
+                default:
+                    result = CompletableFuture.completedFuture(error);
+                    logger.error("Command is invalid, output is: " + result);
                     break;
             }
         // transform the result from CompletableFuture<String> to CompletableFuture<Object>

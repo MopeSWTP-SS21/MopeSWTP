@@ -19,7 +19,6 @@ public class ConsoleClientLauncher {
 
     private static Socket socket;
     public static MopeLSPClient client;
-    private Launcher<ModelicaLanguageServer> cLauncher;
     private static ExecutorService executor;
     private static String host;
     private static int port;
@@ -36,9 +35,9 @@ public class ConsoleClientLauncher {
         menu = new ConsoleMenu(client);
     }
 
-    public Future<Void> launchClient() throws IOException {
+    public static Future<Void> launchClient() throws IOException {
         executor = Executors.newFixedThreadPool(2);
-        cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
+        Launcher<ModelicaLanguageServer> cLauncher = new LSPLauncher.Builder<ModelicaLanguageServer>()
                 .setLocalService(client)
                 .setRemoteInterface(ModelicaLanguageServer.class)
                 .setInput(socket.getInputStream())
@@ -74,6 +73,12 @@ public class ConsoleClientLauncher {
         logger.info("Client Finished");
     }
 
+    public static void connectToServer() {
+        System.out.println("Serverip: ");
+        host= sc.next();
+        System.out.println("Serverport: ");
+        port = sc.nextInt();
+    }
 
 
     public static void shutdownServer() throws ExecutionException {
@@ -86,11 +91,7 @@ public class ConsoleClientLauncher {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Serverip:");
-        host= sc.next();
-        System.out.println("Serverport:");
-        port = sc.nextInt();
-
+        connectToServer();
         ConsoleClientLauncher launcher = new ConsoleClientLauncher(host, port);
 
         clientListening = launcher.launchClient();
