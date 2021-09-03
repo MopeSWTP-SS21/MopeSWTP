@@ -116,10 +116,10 @@ public class ModelicaDiagnostic extends Diagnostic {
 
 
 
-        startP.setLine(Integer.parseInt(startRange[0]));
-        startP.setCharacter(Integer.parseInt(startRange[1]));
-        endP.setLine(Integer.parseInt(endRange[0]));
-        endP.setCharacter(Integer.parseInt(endRange[1]));
+        startP.setLine(Integer.parseInt(startRange[0]) - 1);
+        startP.setCharacter(Integer.parseInt(startRange[1]) -1);
+        endP.setLine(Integer.parseInt(endRange[0])-1);
+        endP.setCharacter(Integer.parseInt(endRange[1])-1);
 
         errorRange.setStart(startP);
         errorRange.setEnd(endP);
